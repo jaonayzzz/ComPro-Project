@@ -1,0 +1,204 @@
+{
+	"configurations" : 
+	[
+		{
+			"abstractTargets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "FLAC::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-FLAC-Debug-66fa71f58c876c6b6fa3.json",
+					"name" : "FLAC",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "Freetype::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-Freetype-Debug-96f1ee1a72cd2b12c03e.json",
+					"name" : "Freetype",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "Git::Git::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-Git__Git-Debug-c8130116de514d348ead.json",
+					"name" : "Git::Git",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "OpenAL::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-OpenAL-Debug-8faf94ba755ff6b9ef5c.json",
+					"name" : "OpenAL",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "OpenGL::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-OpenGL-Debug-f326b70a5c6109734a6c.json",
+					"name" : "OpenGL",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "SFML::Graphics::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-SFML__Graphics-Debug-9204eac6028526cfab95.json",
+					"name" : "SFML::Graphics",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "SFML::System::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-SFML__System-Debug-272eb3f8ff08703a674e.json",
+					"name" : "SFML::System",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "SFML::Window::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-SFML__Window-Debug-d25cfe8af36c7607c6ca.json",
+					"name" : "SFML::Window",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "VORBIS::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-VORBIS-Debug-88bb08026928eec37e73.json",
+					"name" : "VORBIS",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "sfml-audio::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-sfml-audio-Debug-49c316fc2f253acd8fef.json",
+					"name" : "sfml-audio",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "sfml-graphics::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-sfml-graphics-Debug-6c2ccfa6bb3ddb72f803.json",
+					"name" : "sfml-graphics",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "sfml-main::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-sfml-main-Debug-c9d5bae245e076755096.json",
+					"name" : "sfml-main",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "sfml-network::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-sfml-network-Debug-9329cf86644630acb04a.json",
+					"name" : "sfml-network",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "sfml-system::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-sfml-system-Debug-85bb5c3704a0c3c3896e.json",
+					"name" : "sfml-system",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "sfml-window::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-sfml-window-Debug-210bc7aa858b8d6175b6.json",
+					"name" : "sfml-window",
+					"projectIndex" : 0
+				}
+			],
+			"directories" : 
+			[
+				{
+					"abstractTargetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4,
+						5,
+						6,
+						7,
+						8,
+						9,
+						10,
+						11,
+						12,
+						13,
+						14
+					],
+					"build" : ".",
+					"jsonFile" : "directory-.-Debug-f6f22219c74102c3da70.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.16"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"abstractTargetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4,
+						5,
+						6,
+						7,
+						8,
+						9,
+						10,
+						11,
+						12,
+						13,
+						14
+					],
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "FlowerShop",
+					"targetIndexes" : 
+					[
+						0
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "MyGame::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-MyGame-Debug-f46ed5607bfc4310eb6e.json",
+					"name" : "MyGame",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "D:/project/flowershop/build",
+		"source" : "D:/project/flowershop"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 9
+	}
+}
