@@ -1,3 +1,0 @@
-D:/project/flowershop/build/CMakeFiles/MyGame.dir
-D:/project/flowershop/build/CMakeFiles/edit_cache.dir
-D:/project/flowershop/build/CMakeFiles/rebuild_cache.dir
