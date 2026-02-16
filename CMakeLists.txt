@@ -1,68 +1,49 @@
-cmake_minimum_required(VERSION 3.16)
-project(FlowerShop)
+cmake_minimum_required(VERSION 3.20)
+project(MyProgram)
+
+# บังคับใช้ Policy ใหม่เพื่อแก้ปัญหา freetype ที่คุณเจอ
+set(CMAKE_POLICY_DEFAULT_CMP0000 NEW)
+set(CMAKE_POLICY_DEFAULT_CMP0048 NEW)
 
 set(CMAKE_CXX_STANDARD 17)
-
-# ปิด Warning
-if(POLICY CMP0169)
-  cmake_policy(SET CMP0169 OLD)
-endif()
-
-# 1. ค้นหา SFML
-find_package(SFML 2.5 COMPONENTS graphics window system REQUIRED)
-
-# สร้างชื่อเล่นให้ SFML (ป้องกัน Error หาไม่เจอ)
-if(NOT TARGET SFML::Graphics)
-    add_library(SFML::Graphics INTERFACE IMPORTED)
-    target_link_libraries(SFML::Graphics INTERFACE sfml-graphics sfml-window sfml-system)
-    add_library(SFML::Window INTERFACE IMPORTED)
-    target_link_libraries(SFML::Window INTERFACE sfml-window sfml-system)
-    add_library(SFML::System INTERFACE IMPORTED)
-    target_link_libraries(SFML::System INTERFACE sfml-system)
-endif()
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 include(FetchContent)
 
-# --- 2. ดาวน์โหลด ImGui (ใช้ชื่อ Tag v1.90 ที่ถูกต้อง) ---
+# 1. โหลด SFML 3 (ตัวหลักสำหรับกราฟิก)
 FetchContent_Declare(
-  imgui
-  GIT_REPOSITORY https://github.com/ocornut/imgui.git
-  GIT_TAG        v1.90  # <--- แก้เป็นตัวนี้ค่ะ (ตัด .0 ทิ้ง)
+    SFML
+    GIT_REPOSITORY https://github.com/SFML/SFML.git
+    GIT_TAG        3.0.0
 )
-FetchContent_GetProperties(imgui)
-if(NOT imgui_POPULATED)
-  FetchContent_Populate(imgui)
-endif()
+FetchContent_MakeAvailable(SFML)
 
-# --- 3. ดาวน์โหลด ImGui-SFML ---
+# 2. โหลด Dear ImGui (สำหรับสร้างหน้าจอเมนู/ปุ่ม)
 FetchContent_Declare(
-  imgui-sfml
-  GIT_REPOSITORY https://github.com/SFML/imgui-sfml.git
-  GIT_TAG        v2.6
+    imgui
+    GIT_REPOSITORY https://github.com/ocornut/imgui.git
+    GIT_TAG        v1.91.1
 )
-FetchContent_GetProperties(imgui-sfml)
-if(NOT imgui-sfml_POPULATED)
-  FetchContent_Populate(imgui-sfml)
-endif()
+FetchContent_MakeAvailable(imgui)
 
-# --- 4. สร้างเกม ---
-add_executable(MyGame 
-    main.cpp
-    ${imgui_SOURCE_DIR}/imgui.cpp
-    ${imgui_SOURCE_DIR}/imgui_draw.cpp
-    ${imgui_SOURCE_DIR}/imgui_tables.cpp
-    ${imgui_SOURCE_DIR}/imgui_widgets.cpp
-    ${imgui_SOURCE_DIR}/imgui_demo.cpp
-    ${imgui-sfml_SOURCE_DIR}/imgui-SFML.cpp
+# 3. โหลด ImGui-SFML (ตัวเชื่อมที่สำคัญ)
+FetchContent_Declare(
+    imgui-sfml
+    GIT_REPOSITORY https://github.com/SFML/imgui-sfml.git
+    GIT_TAG        v3.0
 )
+set(IMGUI_DIR ${imgui_SOURCE_DIR})
+set(IMGUI_SFML_FIND_SFML OFF)
+FetchContent_MakeAvailable(imgui-sfml)
 
-target_include_directories(MyGame PRIVATE
-    ${imgui_SOURCE_DIR}
-    ${imgui-sfml_SOURCE_DIR}
-    ${SFML_INCLUDE_DIR} 
-)
+# 4. ระบุชื่อไฟล์หลักของโปรแกรม
+add_executable(MyProgram examplemain.cpp)
 
-target_link_libraries(MyGame PRIVATE 
-    SFML::Graphics SFML::Window SFML::System 
-    opengl32
+# 5. เชื่อมต่อ Library ทุกตัวเข้าด้วยกัน
+target_link_libraries(MyProgram 
+    PRIVATE 
+    sfml-graphics 
+    sfml-window 
+    sfml-system 
+    ImGui-SFML::ImGui-SFML
 )
