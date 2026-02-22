@@ -3,42 +3,113 @@
 
 std::vector<Flower> flowerList = {
 
-    {1, "Lotus", "Peace Purity Spirituality", 20, "Condolences"},
-    {2, "White Carnation", "Respect Remembrance", 40, "Condolences"},
-    {3, "White Chrysanthemum", "Condolence Respect Peace", 40, "Condolences"},
-    {4, "White Rose", "Purity Sincerity Respect", 50, "Condolences"},
-    {5, "White Orchid", "Elegance Sincerity", 80, "Condolences"},
-    {6, "White Tulip", "Forgiveness Peace", 100, "Condolences"},
-    {7, "Red Poppy", "Remembrance Bravery", 100, "Condolences"},
-    {8, "White Lily", "Purity Elegance Respect", 120, "Condolences"},
-    {9, "White Hydrangea", "Sincerity Elegance", 150, "Condolences"},
-    {10, "White Anemone", "Sincerity Calmness", 150, "Condolences"},
-    {11, "Marigold", "Prosperity Luck Success", 15, "Congratulations"},
-    {12, "White Daisy", "Innocence Kindness New beginnings", 25, "Congratulations"},
-    {13, "Yellow Daisy", "Cheerfulness Friendship", 25, "Congratulations"},
-    {14, "Sunflower", "Positivity Hope Loyal love", 40, "Congratulations"},
-    {15, "Pink Carnation", "Gratitude Affection", 40, "Congratulations"},
-    {16, "Yellow Chrysanthemum", "Encouragement Longevity Good wishes", 40, "Congratulations"},
-    {17, "Yellow Rose", "Friendship Joy Encouragement", 50, "Congratulations"},
-    {18, "Purple Dahlia", "Elegance Mystery Charm", 60, "Congratulations"},
-    {19, "Purple Orchid", "Luxury Respect Charm", 80, "Congratulations"},
-    {20, "Yellow Tulip", "Happiness Cheerfulness", 100, "Congratulations"},
-    {21, "Purple Iris", "Hope Good news Trust", 120, "Congratulations"},
-    {22, "Red Peony", "Prosperity Honor Good fortune", 250, "Congratulations"},
-    {23, "Jasmine", "Pure love Gratitude", 10, "Love & Care"},
-    {24, "Red Carnation", "Deep love Admiration", 40, "Love & Care"},
-    {25, "Red Rose", "True love Romance Passion", 50, "Love & Care"},
-    {26, "Pink Rose", "Sweetness Admiration Gratitude", 50, "Love & Care"},
-    {27, "Red Dahlia", "Strength Lasting love", 60, "Love & Care"},
-    {28, "Lavender", "Calmness Relaxation Gentle love", 80, "Love & Care"},
-    {29, "Chamomile", "Comfort Calm Gentleness", 80, "Love & Care"},
-    {30, "Red Tulip", "True love Confession", 100, "Love & Care"},
-    {31, "Forget-me-not", "Remembrance True memories", 100, "Love & Care"},
-    {32, "Pink Lily", "Love Tenderness", 120, "Love & Care"},
-    {33, "Blue Hydrangea", "Understanding Deep emotions", 150, "Love & Care"},
-    {34, "Pink Hydrangea", "Love Sweetness Warmth", 150, "Love & Care"},
-    {35, "Red Anemone", "Deep love Strong feelings", 150, "Love & Care"},
-    {36, "Pink Peony", "Romance Happy love", 250, "Love & Care"}
+    {1, "Lotus", "Peace Purity Spirituality", 20, "Condolences",
+     "picture/Lotus.png"},
+
+    {2, "White Carnation", "Respect Remembrance", 40, "Condolences",
+     "picture/White-Carnation.png"},
+
+    {3, "White Chrysanthemum", "Condolence Respect Peace", 40, "Condolences",
+     "picture/White-Chrysanthemum.png"},
+
+    {4, "White Rose", "Purity Sincerity Respect", 50, "Condolences",
+     "picture/White-Rose.png"},
+
+    {5, "White Orchid", "Elegance Sincerity", 80, "Condolences",
+     "picture/White-Orchid.png"},
+
+    {6, "White Tulip", "Forgiveness Peace", 100, "Condolences",
+     "picture/White-Tulip.png"},
+
+    {7, "Red Poppy", "Remembrance Bravery", 100, "Condolences",
+     "picture/Red-Poppy.png"},
+
+    {8, "White Lily", "Purity Elegance Respect", 120, "Condolences",
+     "picture/White-Lily.png"},
+
+    {9, "White Hydrangea", "Sincerity Elegance", 150, "Condolences",
+     "picture/White-Hydrangea.png"},
+
+    {10, "White Anemone", "Sincerity Calmness", 150, "Condolences",
+     "picture/White-Anemone.png"},
+
+    {11, "Marigold", "Prosperity Luck Success", 15, "Congratulations",
+     "picture/Marigold.png"},
+
+    {12, "White Daisy", "Innocence Kindness New beginnings", 25, "Congratulations",
+     "picture/White-Daisy.png"},
+
+    {13, "Yellow Daisy", "Cheerfulness Friendship", 25, "Congratulations",
+     "picture/Yellow-Daisy.png"},
+
+    {14, "Sunflower", "Positivity Hope Loyal love", 40, "Congratulations",
+     "picture/Sunflower.png"},
+
+    {15, "Pink Carnation", "Gratitude Affection", 40, "Congratulations",
+     "picture/Pink-Carnation.png"},
+
+    {16, "Yellow Chrysanthemum", "Encouragement Longevity Good wishes", 40, "Congratulations",
+     "picture/Yellow-Chrysanthemum.png"},
+
+    {17, "Yellow Rose", "Friendship Joy Encouragement", 50, "Congratulations",
+     "picture/Yellow-Rose.png"},
+
+    {18, "Purple Dahlia", "Elegance Mystery Charm", 60, "Congratulations",
+     "picture/Purple-Dahlia.png"},
+
+    {19, "Purple Orchid", "Luxury Respect Charm", 80, "Congratulations",
+     "picture/Purple-Orchid.png"},
+
+    {20, "Yellow Tulip", "Happiness Cheerfulness", 100, "Congratulations",
+     "picture/Yellow-Tulip.png"},
+
+    {21, "Purple Iris", "Hope Good news Trust", 120, "Congratulations",
+     "picture/Purple-Iris.png"},
+
+    {22, "Red Peony", "Prosperity Honor Good fortune", 250, "Congratulations",
+     "picture/Red-Peony.png"},
+
+    {23, "Jasmine", "Pure love Gratitude", 10, "Love & Care",
+     "picture/Jasmine.png"},
+
+    {24, "Red Carnation", "Deep love Admiration", 40, "Love & Care",
+     "picture/Red-Carnation.png"},
+
+    {25, "Red Rose", "True love Romance Passion", 50, "Love & Care",
+     "picture/Red-Rose.png"},
+
+    {26, "Pink Rose", "Sweetness Admiration Gratitude", 50, "Love & Care",
+     "picture/Pink-Rose.png"},
+
+    {27, "Red Dahlia", "Strength Lasting love", 60, "Love & Care",
+     "picture/Red-Dahlia.png"},
+
+    {28, "Lavender", "Calmness Relaxation Gentle love", 80, "Love & Care",
+     "picture/Lavender.png"},
+
+    {29, "Chamomile", "Comfort Calm Gentleness", 80, "Love & Care",
+     "picture/Chamomile.png"},
+
+    {30, "Red Tulip", "True love Confession", 100, "Love & Care",
+     "picture/Red-Tulip.png"},
+
+    {31, "Forget-me-not", "Remembrance True memories", 100, "Love & Care",
+     "picture/Forget-me-not.png"},
+
+    {32, "Pink Lily", "Love Tenderness", 120, "Love & Care",
+     "picture/Pink-Lily.png"},
+
+    {33, "Blue Hydrangea", "Understanding Deep emotions", 150, "Love & Care",
+     "picture/Blue-Hydrangea.png"},
+
+    {34, "Pink Hydrangea", "Love Sweetness Warmth", 150, "Love & Care",
+     "picture/Pink-Hydrangea.png"},
+
+    {35, "Red Anemone", "Deep love Strong feelings", 150, "Love & Care",
+     "picture/Red-Anemone.png"},
+
+    {36, "Pink Peony", "Romance Happy love", 250, "Love & Care",
+     "picture/Pink-Peony.png"}
 };
 
 std::vector<Container> containerList = {
