@@ -1,0 +1,30 @@
+_deps/sfml-build/src/SFML/Window/CMakeFiles/sfml-window.dir/Touch.cpp.o: \
+  /Users/macintoshhd/Documents/Project/ComPro-Project/build/_deps/sfml-src/src/SFML/Window/Touch.cpp \
+  /Users/macintoshhd/Documents/Project/ComPro-Project/build/_deps/sfml-src/src/SFML/Window/InputImpl.hpp \
+  /Users/macintoshhd/Documents/Project/ComPro-Project/build/_deps/sfml-src/include/SFML/Config.hpp \
+  /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/TargetConditionals.h \
+  /Users/macintoshhd/Documents/Project/ComPro-Project/build/_deps/sfml-src/include/SFML/Window/Keyboard.hpp \
+  /Users/macintoshhd/Documents/Project/ComPro-Project/build/_deps/sfml-src/include/SFML/Window/Export.hpp \
+  /Users/macintoshhd/Documents/Project/ComPro-Project/build/_deps/sfml-src/include/SFML/Window/Mouse.hpp \
+  /Users/macintoshhd/Documents/Project/ComPro-Project/build/_deps/sfml-src/include/SFML/System/Vector2.hpp \
+  /Users/macintoshhd/Documents/Project/ComPro-Project/build/_deps/sfml-src/include/SFML/System/Export.hpp \
+  /Users/macintoshhd/Documents/Project/ComPro-Project/build/_deps/sfml-src/include/SFML/System/Angle.hpp \
+  /Users/macintoshhd/Documents/Project/ComPro-Project/build/_deps/sfml-src/include/SFML/System/Angle.inl \
+  /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/cassert \
+  /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__config \
+  /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__config_site \
+  /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__configuration/abi.h \
+  /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__configuration/compiler.h \
+  /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__configuration/platform.h \
+  /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__configuration/availability.h \
+  /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__configuration/language.h \
+  /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/assert.h \
+  /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/sys/cdefs.h \
+  /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/sys/_symbol_aliasing.h \
+  /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/sys/_posix_availability.h \
+  /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/17/include/ptrcheck.h \
+  /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/_assert.h \
+  /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/_bounds.h \
+  /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/_static_assert.h \
+  /Users/macintoshhd/Documents/Project/ComPro-Project/build/_deps/sfml-src/include/SFML/System/Vector2.inl \
+  /Users/macintoshhd/Documents/Project/ComPro-Project/build/_deps/sfml-src/include/SFML/Window/Touch.hpp

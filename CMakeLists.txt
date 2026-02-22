@@ -36,7 +36,7 @@ set(IMGUI_DIR ${imgui_SOURCE_DIR})
 set(IMGUI_SFML_FIND_SFML OFF)
 FetchContent_MakeAvailable(imgui-sfml)
 
-# 4. ระบุชื่อไฟล์หลักของโปรแกรม//
+# 4. ระบุชื่อไฟล์หลักของโปรแกรม
 add_executable(MyProgram
     examplemain.cpp
     ui_mainmenu.cpp

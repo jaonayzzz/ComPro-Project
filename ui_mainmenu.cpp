@@ -102,6 +102,6 @@ void drawMainMenu(AppState& state, UserSelection& selection)
     if (ImGui::Button("Exit")) {
         state = AppState::EXIT;
     }
-//
+
     ImGui::End();
 }
