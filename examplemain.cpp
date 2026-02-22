@@ -6,6 +6,7 @@
 #include "data_models.h"
 #include "ui_mainmenu.h"
 #include "config.h"
+#include "i_chom.cpp"
 
 #include <iostream>
 
@@ -43,12 +44,7 @@ window.setFramerateLimit(TARGET_FPS);
                 break;
 
             case AppState::CUSTOM_MODE:
-                ImGui::Begin("Custom Mode");
-                ImGui::Text("Custom Mode is not implemented yet.");
-                if (ImGui::Button("Back to Main Menu")) {
-                    currentState = AppState::MAIN_MENU;
-                }
-                ImGui::End();
+                drawShop();
                 break;
 
             case AppState::RANDOM_MODE:
