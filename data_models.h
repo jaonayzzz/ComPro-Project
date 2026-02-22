@@ -9,6 +9,7 @@ struct Flower {
     std::string meaning;
     int price;
     std::string occasion;
+    std::string imagePath;
 };
 
 struct Container {
