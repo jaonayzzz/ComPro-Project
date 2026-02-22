@@ -37,7 +37,11 @@ set(IMGUI_SFML_FIND_SFML OFF)
 FetchContent_MakeAvailable(imgui-sfml)
 
 # 4. ระบุชื่อไฟล์หลักของโปรแกรม
-add_executable(MyProgram examplemain.cpp)
+add_executable(MyProgram
+    examplemain.cpp
+    ui_mainmenu.cpp
+    data_repository.cpp
+)
 
 # 5. เชื่อมต่อ Library ทุกตัวเข้าด้วยกัน
 target_link_libraries(MyProgram 
