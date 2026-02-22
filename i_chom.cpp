@@ -5,35 +5,8 @@
 #include <iostream>
 #include <optional>
 
-int main() {
-    int currentPage = 0; // 0=เลือกดอกไม้ , 1=สรุปรวมรายการ
-
-    // 1. สร้าง Window (SFML 3.0 ใช้ sf::VideoMode พร้อมพารามิเตอร์แบบใหม่ได้)
-    sf::RenderWindow window(sf::VideoMode({1000, 800}), "Flower Shop UI");
-    window.setFramerateLimit(60);
-
-    // 2. Initialize ImGui-SFML
-    if (!ImGui::SFML::Init(window)) return -1;
-
-    sf::Clock deltaClock;
-    
-    // --- Main Loop (ต้องครอบคลุมทั้ง Event, Update และ Render) ---
-    while (window.isOpen()) {
-        
-        // Event Polling (แบบใหม่ของ SFML 3.0)
-        while (const std::optional<sf::Event> event = window.pollEvent()) {
-            ImGui::SFML::ProcessEvent(window, *event);
-
-            if (event->is<sf::Event::Closed>()) {
-                window.close();
-            }
-        }
-
-        // Update ImGui
-        ImGui::SFML::Update(window, deltaClock.restart());
-        
-        // เลือกดอกไม้
-       
+void drawShop(){
+        int currentPage=0;
         //setting แถบ flower shop
         ImGui::PushStyleColor(ImGuiCol_TitleBgActive, ImVec4(0.05f, 0.10f, 0.20f, 1.0f)); // สีแถบตอนที่กำลังใช้งาน
         ImGui::PushStyleColor(ImGuiCol_TitleBg, ImVec4(0.10f, 0.15f, 0.30f, 1.0f)); // สีแถบตอนที่ไม่ได้คลิก 
@@ -166,13 +139,4 @@ int main() {
         ImGui::PopStyleVar(2); // ล้างสีพื้นหลัง flower shop 
         ImGui::End(); // จบการทำงาน แถบ flower shop 
 
-        // 6. Rendering
-        window.clear(sf::Color(45, 45, 45)); // ล้างหน้าจอด้วยสีเทาเข้ม
-        ImGui::SFML::Render(window);
-        window.display();
     }
-
-    // 7. Cleanup
-    ImGui::SFML::Shutdown();
-    return 0;
-}
