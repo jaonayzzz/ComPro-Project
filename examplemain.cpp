@@ -1,0 +1,75 @@
+#include <SFML/Graphics.hpp>
+#include <imgui.h>
+#include <imgui-SFML.h>
+
+#include "app_state.h"
+#include "data_models.h"
+#include "ui_mainmenu.h"
+#include "config.h"
+
+#include <iostream>
+
+int main() {
+    sf::RenderWindow window(
+    sf::VideoMode({WINDOW_WIDTH, WINDOW_HEIGHT}),
+    WINDOW_TITLE
+);
+window.setFramerateLimit(TARGET_FPS);
+
+    if (!ImGui::SFML::Init(window)) {
+        std::cerr << "Failed to init ImGui-SFML\n";
+        return -1;
+    }
+
+    sf::Clock deltaClock;
+
+    AppState currentState = AppState::MAIN_MENU;
+    UserSelection userSelection;
+
+    userSelection.isCustomMode = true;
+
+    while (window.isOpen()) {
+        while (const std::optional event = window.pollEvent()) {
+    ImGui::SFML::ProcessEvent(window, *event);
+    if (event->is<sf::Event::Closed>()) {
+        window.close();
+    }
+}
+
+        ImGui::SFML::Update(window, deltaClock.restart());
+        switch (currentState) {
+            case AppState::MAIN_MENU:
+                drawMainMenu(currentState, userSelection);
+                break;
+
+            case AppState::CUSTOM_MODE:
+                ImGui::Begin("Custom Mode");
+                ImGui::Text("Custom Mode is not implemented yet.");
+                if (ImGui::Button("Back to Main Menu")) {
+                    currentState = AppState::MAIN_MENU;
+                }
+                ImGui::End();
+                break;
+
+            case AppState::RANDOM_MODE:
+                ImGui::Begin("Random Mode");
+                ImGui::Text("Random Mode is not implemented yet.");
+                if (ImGui::Button("Back to Main Menu")) {
+                    currentState = AppState::MAIN_MENU;
+                }
+                ImGui::End();
+                break;
+
+            case AppState::EXIT:
+                window.close();
+                break;
+        }
+
+        window.clear(sf::Color(245, 245, 245));
+        ImGui::SFML::Render(window);
+        window.display();
+    }
+
+    ImGui::SFML::Shutdown();
+    return 0;
+}
