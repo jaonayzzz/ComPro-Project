@@ -60,17 +60,6 @@ void drawMainMenu(AppState& state, UserSelection& selection)
     );
 
     ImGui::Spacing();
-    ImGui::Text("Set Budget");
-    ImGui::InputInt("##Budget", &budget);
-
-    if (budget < selectedContainer.minTotal) {
-        ImGui::TextColored(
-            ImVec4(1.f, 0.f, 0.f, 1.f),
-            "Warning: Budget is lower than minimum possible price!"
-        );
-    }
-
-    ImGui::Spacing();
     ImGui::Separator();
     ImGui::Spacing();
 
@@ -78,7 +67,6 @@ void drawMainMenu(AppState& state, UserSelection& selection)
         selection.occasion = occasionItems[occasionIndex];
         selection.containerType = selectedContainer.type;
         selection.containerSize = selectedContainer.size;
-        selection.budget = budget;
         selection.isCustomMode = true;
 
         state = AppState::CUSTOM_MODE;
@@ -90,7 +78,6 @@ void drawMainMenu(AppState& state, UserSelection& selection)
         selection.occasion = occasionItems[occasionIndex];
         selection.containerType = selectedContainer.type;
         selection.containerSize = selectedContainer.size;
-        selection.budget = budget;
         selection.isCustomMode = false;
 
         state = AppState::RANDOM_MODE;

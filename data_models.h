@@ -27,7 +27,6 @@ struct UserSelection {
     std::string occasion;
     std::string containerType;
     std::string containerSize;
-    int budget;
     bool isCustomMode;
 };
 

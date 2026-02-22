@@ -26,7 +26,6 @@ window.setFramerateLimit(TARGET_FPS);
     AppState currentState = AppState::MAIN_MENU;
     UserSelection userSelection;
 
-    userSelection.budget = 500;
     userSelection.isCustomMode = true;
 
     while (window.isOpen()) {
