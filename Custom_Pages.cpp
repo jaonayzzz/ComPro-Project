@@ -81,7 +81,7 @@ void Custom_Pages(){
 
             // ปุ่ม Next (ไหลตามเนื้อหา)
             float nextBtnW = 100.0f;
-            ImGui::SetCursorPosX(ImGui::GetWindowSize().x - nextBtnW - 30.0f);
+            ImGui::SetCursorPosX(WINDOW_WIDTH - nextBtnW - 30.0f);
             
             ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.0f, 0.45f, 0.45f, 1.0f)); // สีปุ่มปกติ
             ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.0f, 0.6f, 0.6f, 1.0f)); //สีเมื่อวางเมาส์: เขียว
@@ -97,7 +97,7 @@ void Custom_Pages(){
         else if (currentPage == 1){
         // setting "Summary of your order"
         float textWidth = ImGui::CalcTextSize("Summary of your order").x; // คำนวณหาความกว้างของข้อความ
-        float centerX = (ImGui::GetWindowSize().x - textWidth*1.5) * 0.5f; // หาตำแหน่งที่เริ่มพิมพ์ 
+        float centerX = (WINDOW_WIDTH - textWidth*1.5) * 0.5f; // หาตำแหน่งที่เริ่มพิมพ์ 
         ImGui::SetCursorPosX(centerX); // ย้าย Cursor ไปที่ตำแหน่งนั้นก่อนพิมพ์ Text
         ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.1f, 0.1f, 0.44f, 1.0f)); //สี text
         ImGui::SetWindowFontScale(1.5f); // ขยายตัวอักษรทั้งหน้าต่างเป็น 1.5 เท่า
@@ -133,7 +133,7 @@ void Custom_Pages(){
 }
 void Selectyourpieces(){
     float textWidth = ImGui::CalcTextSize("Select your pieces").x; // คำนวณหาความกว้างของข้อความ
-        float centerX = (ImGui::GetWindowSize().x - textWidth*1.5) * 0.5f; // หาตำแหน่งที่เริ่มพิมพ์ 
+        float centerX = (WINDOW_WIDTH - textWidth*1.5) * 0.5f; // หาตำแหน่งที่เริ่มพิมพ์ 
         ImGui::SetCursorPosX(centerX); // ย้าย Cursor ไปที่ตำแหน่งนั้นก่อนพิมพ์ Text
         ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.1f, 0.1f, 0.44f, 1.0f)); //สี text
         ImGui::SetWindowFontScale(1.5f); // ขยายตัวอักษรทั้งหน้าต่างเป็น 1.5 เท่า
