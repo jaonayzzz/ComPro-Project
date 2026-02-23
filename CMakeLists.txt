@@ -41,7 +41,6 @@ add_executable(MyProgram
     main.cpp
     ui_mainmenu.cpp
     data_repository.cpp
-    Custom_Page.cpp
     FlowerRenderer.cpp
     font_manager.cpp
 )
