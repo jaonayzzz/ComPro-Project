@@ -15,10 +15,10 @@ void LoadFonts()
         std::filesystem::current_path().parent_path().string();
 
     const std::string regularPath =
-        base + "/fonts/Mali-Regular.ttf";
+        base + "/fonts/EBGaramond-Regular.ttf"; //มาแก้ฟอนต์ที่นี่
 
     const std::string semiBoldPath =
-        base + "/fonts/Mali-SemiBold.ttf";
+        base + "/fonts/EBGaramond-SemiBoldItalic.ttf"; //มาแก้ฟอนต์ที่นี่
 
     std::cout << "Loading Thai fonts...\n";
 
