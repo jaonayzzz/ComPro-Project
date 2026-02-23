@@ -6,7 +6,7 @@
 #include "data_models.h"
 #include "ui_mainmenu.h"
 #include "config.h"
-#include "Custom_Page.h"
+#include "Custom_Pages.cpp"
 #include "font_manager.h"
 
 #include <iostream>
@@ -56,7 +56,7 @@ int main()
         break;
 
     case AppState::CUSTOM_MODE:
-        drawShop(window, currentState, userSelection);
+        Custom_Pages();
         break;
 
     case AppState::RANDOM_MODE:
