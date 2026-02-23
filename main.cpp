@@ -26,7 +26,6 @@ int main()
         return -1;
     }
 
-    // ⭐ โหลดฟอนต์ (ครั้งเดียว)
     LoadFonts();
 
     sf::Clock deltaClock;
@@ -46,7 +45,6 @@ int main()
 
     ImGui::SFML::Update(window, deltaClock.restart());
 
-    // ⭐ ต้อง clear ก่อนวาดทุกอย่าง
     window.clear(sf::Color(245, 245, 245));
 
     switch (currentState)
@@ -56,7 +54,7 @@ int main()
         break;
 
     case AppState::CUSTOM_MODE:
-        drawShop(window, currentState, userSelection);
+        drawShop();
         break;
 
     case AppState::RANDOM_MODE:
