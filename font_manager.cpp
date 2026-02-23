@@ -15,10 +15,10 @@ void LoadFonts()
         std::filesystem::current_path().parent_path().string();
 
     const std::string regularPath =
-        base + "/fonts/EBGaramond-Regular.ttf"; //มาแก้ฟอนต์ที่นี่
+        base + "/fonts/EBGaramond-Regular.ttf"; //เปลี่ยนฟอนต์ที่นี่
 
     const std::string semiBoldPath =
-        base + "/fonts/EBGaramond-SemiBoldItalic.ttf"; //มาแก้ฟอนต์ที่นี่
+        base + "/fonts/EBGaramond-SemiBoldItalic.ttf"; //เปลี่ยนฟอนต์ที่นี่
 
     std::cout << "Loading Thai fonts...\n";
 
@@ -31,14 +31,14 @@ void LoadFonts()
 
     FONT_BODY = io.Fonts->AddFontFromFileTTF(
         regularPath.c_str(),
-        22.f,
+        22.f, //ปรับขนาดฟอนต์ที่นี่
         nullptr,
         ranges.Data
     );
 
     FONT_TITLE = io.Fonts->AddFontFromFileTTF(
         semiBoldPath.c_str(),
-        36.f,
+        36.f, //ปรับขนาดฟอนต์ที่นี่
         nullptr,
         ranges.Data
     );
