@@ -3,7 +3,7 @@
 #include "app_state.h"
 #include "data_models.h"
 
-void drawMainMenu(
+void drawShop(
     sf::RenderWindow& window,
     AppState& state,
     UserSelection& selection

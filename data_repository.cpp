@@ -2,114 +2,42 @@
 #include <vector>
 
 std::vector<Flower> flowerList = {
-
-    {1, "Lotus", "Peace Purity Spirituality", 20, "Condolences",
-     "picture/Lotus.png"},
-
-    {2, "White Carnation", "Respect Remembrance", 40, "Condolences",
-     "picture/White-Carnation.png"},
-
-    {3, "White Chrysanthemum", "Condolence Respect Peace", 40, "Condolences",
-     "picture/White-Chrysanthemum.png"},
-
-    {4, "White Rose", "Purity Sincerity Respect", 50, "Condolences",
-     "picture/White-Rose.png"},
-
-    {5, "White Orchid", "Elegance Sincerity", 80, "Condolences",
-     "picture/White-Orchid.png"},
-
-    {6, "White Tulip", "Forgiveness Peace", 100, "Condolences",
-     "picture/White-Tulip.png"},
-
-    {7, "Red Poppy", "Remembrance Bravery", 100, "Condolences",
-     "picture/Red-Poppy.png"},
-
-    {8, "White Lily", "Purity Elegance Respect", 120, "Condolences",
-     "picture/White-Lily.png"},
-
-    {9, "White Hydrangea", "Sincerity Elegance", 150, "Condolences",
-     "picture/White-Hydrangea.png"},
-
-    {10, "White Anemone", "Sincerity Calmness", 150, "Condolences",
-     "picture/White-Anemone.png"},
-
-    {11, "Marigold", "Prosperity Luck Success", 15, "Congratulations",
-     "picture/Marigold.png"},
-
-    {12, "White Daisy", "Innocence Kindness New beginnings", 25, "Congratulations",
-     "picture/White-Daisy.png"},
-
-    {13, "Yellow Daisy", "Cheerfulness Friendship", 25, "Congratulations",
-     "picture/Yellow-Daisy.png"},
-
-    {14, "Sunflower", "Positivity Hope Loyal love", 40, "Congratulations",
-     "picture/Sunflower.png"},
-
-    {15, "Pink Carnation", "Gratitude Affection", 40, "Congratulations",
-     "picture/Pink-Carnation.png"},
-
-    {16, "Yellow Chrysanthemum", "Encouragement Longevity Good wishes", 40, "Congratulations",
-     "picture/Yellow-Chrysanthemum.png"},
-
-    {17, "Yellow Rose", "Friendship Joy Encouragement", 50, "Congratulations",
-     "picture/Yellow-Rose.png"},
-
-    {18, "Purple Dahlia", "Elegance Mystery Charm", 60, "Congratulations",
-     "picture/Purple-Dahlia.png"},
-
-    {19, "Purple Orchid", "Luxury Respect Charm", 80, "Congratulations",
-     "picture/Purple-Orchid.png"},
-
-    {20, "Yellow Tulip", "Happiness Cheerfulness", 100, "Congratulations",
-     "picture/Yellow-Tulip.png"},
-
-    {21, "Purple Iris", "Hope Good news Trust", 120, "Congratulations",
-     "picture/Purple-Iris.png"},
-
-    {22, "Red Peony", "Prosperity Honor Good fortune", 250, "Congratulations",
-     "picture/Red-Peony.png"},
-
-    {23, "Jasmine", "Pure love Gratitude", 10, "Love & Care",
-     "picture/Jasmine.png"},
-
-    {24, "Red Carnation", "Deep love Admiration", 40, "Love & Care",
-     "picture/Red-Carnation.png"},
-
-    {25, "Red Rose", "True love Romance Passion", 50, "Love & Care",
-     "picture/Red-Rose.png"},
-
-    {26, "Pink Rose", "Sweetness Admiration Gratitude", 50, "Love & Care",
-     "picture/Pink-Rose.png"},
-
-    {27, "Red Dahlia", "Strength Lasting love", 60, "Love & Care",
-     "picture/Red-Dahlia.png"},
-
-    {28, "Lavender", "Calmness Relaxation Gentle love", 80, "Love & Care",
-     "picture/Lavender.png"},
-
-    {29, "Chamomile", "Comfort Calm Gentleness", 80, "Love & Care",
-     "picture/Chamomile.png"},
-
-    {30, "Red Tulip", "True love Confession", 100, "Love & Care",
-     "picture/Red-Tulip.png"},
-
-    {31, "Forget-me-not", "Remembrance True memories", 100, "Love & Care",
-     "picture/Forget-me-not.png"},
-
-    {32, "Pink Lily", "Love Tenderness", 120, "Love & Care",
-     "picture/Pink-Lily.png"},
-
-    {33, "Blue Hydrangea", "Understanding Deep emotions", 150, "Love & Care",
-     "picture/Blue-Hydrangea.png"},
-
-    {34, "Pink Hydrangea", "Love Sweetness Warmth", 150, "Love & Care",
-     "picture/Pink-Hydrangea.png"},
-
-    {35, "Red Anemone", "Deep love Strong feelings", 150, "Love & Care",
-     "picture/Red-Anemone.png"},
-
-    {36, "Pink Peony", "Romance Happy love", 250, "Love & Care",
-     "picture/Pink-Peony.png"}
+    {1,  FlowerType::Lotus,              "Lotus",              20,  "Condolences", sf::Color(230, 200, 220)},
+    {2,  FlowerType::WhiteCarnation,     "White Carnation",    40,  "Condolences", sf::Color::White},
+    {3,  FlowerType::WhiteChrysanthemum, "White Chrysanthemum",40,  "Condolences", sf::Color(245,245,245)},
+    {4,  FlowerType::WhiteRose,          "White Rose",         50,  "Condolences", sf::Color::White},
+    {5,  FlowerType::WhiteOrchid,        "White Orchid",       80,  "Condolences", sf::Color(250,250,255)},
+    {6,  FlowerType::WhiteTulip,         "White Tulip",        100, "Condolences", sf::Color(245,245,245)},
+    {7,  FlowerType::RedPoppy,           "Red Poppy",          100, "Condolences", sf::Color(200, 50, 50)},
+    {8,  FlowerType::WhiteLily,          "White Lily",         120, "Condolences", sf::Color::White},
+    {9,  FlowerType::WhiteHydrangea,     "White Hydrangea",    150, "Condolences", sf::Color(240,240,240)},
+    {10, FlowerType::WhiteAnemone,       "White Anemone",      150, "Condolences", sf::Color(235,235,235)},
+    {11, FlowerType::Marigold,           "Marigold",           15,  "Congratulations", sf::Color(255,165,0)},
+    {12, FlowerType::WhiteDaisy,         "White Daisy",        25,  "Congratulations", sf::Color::White},
+    {13, FlowerType::YellowDaisy,        "Yellow Daisy",       25,  "Congratulations", sf::Color(255,235,59)},
+    {14, FlowerType::Sunflower,          "Sunflower",          40,  "Congratulations", sf::Color(255,200,0)},
+    {15, FlowerType::PinkCarnation,      "Pink Carnation",     40,  "Congratulations", sf::Color(255,182,193)},
+    {16, FlowerType::YellowChrysanthemum,"Yellow Chrysanthemum",40, "Congratulations", sf::Color(255,215,0)},
+    {17, FlowerType::YellowRose,         "Yellow Rose",        50,  "Congratulations", sf::Color(255,223,0)},
+    {18, FlowerType::PurpleDahlia,       "Purple Dahlia",      60,  "Congratulations", sf::Color(128,0,128)},
+    {19, FlowerType::PurpleOrchid,       "Purple Orchid",      80,  "Congratulations", sf::Color(160,32,240)},
+    {20, FlowerType::YellowTulip,        "Yellow Tulip",       100, "Congratulations", sf::Color(255,215,0)},
+    {21, FlowerType::PurpleIris,         "Purple Iris",        120, "Congratulations", sf::Color(138,43,226)},
+    {22, FlowerType::RedPeony,           "Red Peony",          250, "Congratulations", sf::Color(178,34,34)},
+    {23, FlowerType::Jasmine,            "Jasmine",            10,  "Love & Care", sf::Color(245,245,220)},
+    {24, FlowerType::RedCarnation,       "Red Carnation",      40,  "Love & Care", sf::Color(220,20,60)},
+    {25, FlowerType::RedRose,            "Red Rose",           50,  "Love & Care", sf::Color(178,34,34)},
+    {26, FlowerType::PinkRose,           "Pink Rose",          50,  "Love & Care", sf::Color(255,105,180)},
+    {27, FlowerType::RedDahlia,           "Red Dahlia",         60,  "Love & Care", sf::Color(165,42,42)},
+    {28, FlowerType::Lavender,           "Lavender",           80,  "Love & Care", sf::Color(230,230,250)},
+    {29, FlowerType::Chamomile,          "Chamomile",          80,  "Love & Care", sf::Color(255,250,205)},
+    {30, FlowerType::RedTulip,            "Red Tulip",          100, "Love & Care", sf::Color(220,20,60)},
+    {31, FlowerType::ForgetMeNot,        "Forget-me-not",      100, "Love & Care", sf::Color(100,149,237)},
+    {32, FlowerType::PinkLily,           "Pink Lily",          120, "Love & Care", sf::Color(255,182,193)},
+    {33, FlowerType::BlueHydrangea,      "Blue Hydrangea",     150, "Love & Care", sf::Color(70,130,180)},
+    {34, FlowerType::PinkHydrangea,      "Pink Hydrangea",     150, "Love & Care", sf::Color(255,192,203)},
+    {35, FlowerType::RedAnemone,         "Red Anemone",        150, "Love & Care", sf::Color(139,0,0)},
+    {36, FlowerType::PinkPeony,          "Pink Peony",         250, "Love & Care", sf::Color(255,160,180)},
 };
 
 std::vector<Container> containerList = {

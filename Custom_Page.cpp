@@ -1,135 +1,187 @@
-#include <SFML/Graphics.hpp>
+#include "Custom_Page.h"
+#include "FlowerRenderer.h"
+#include "data_models.h"
+#include "config.h"
+#include "font_manager.h"
+
 #include <imgui.h>
 #include <imgui-SFML.h>
-#include <SFML/System/Clock.hpp>
+#include <vector>
 #include <iostream>
-#include <optional>
+#include <algorithm>
 
-void drawShop(){
-        int currentPage=0;
-        //setting แถบ flower shop
-        ImGui::PushStyleColor(ImGuiCol_TitleBgActive, ImVec4(0.05f, 0.10f, 0.20f, 1.0f)); // สีแถบตอนที่กำลังใช้งาน
-        ImGui::PushStyleColor(ImGuiCol_TitleBg, ImVec4(0.10f, 0.15f, 0.30f, 1.0f)); // สีแถบตอนที่ไม่ได้คลิก 
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 15.0f);// ปรับความโค้งมนของมุมหน้าต่าง
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);// ปรับความหนาของเส้นขอบให้บางลงหรือหายไป
-        ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.96f, 0.96f, 0.96f, 1.0f)); //ปรับสีพื้นหลังหน้าต่าง : silver
-        ImGui::SetNextWindowPos(ImVec2(20, 20), ImGuiCond_Always);// กำหนดตำแหน่ง (X, Y) 
-        ImGui::SetNextWindowSize(ImVec2(960, 760), ImGuiCond_Always);// fixed ขนาดโดยใช้ ImGuiCond_Always
-        ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, 1.0f, 1.0f)); //สี text "Flower shop" : ขาว
-        ImGui::Begin("Flower Shop", nullptr, ImGuiWindowFlags_NoResize);// ใส่'ImGuiWindowFlags_NoResize' ในฟังก์ชัน Begin , NULL คือพารามิเตอร์สำหรับปุ่มปิด (ถ้าไม่ใช้ให้ใส่ NULL หรือ nullptr)
-        ImGui::PopStyleColor(1); //ล้างสี Text"flower shop" 
+// ======================================================
+// ตะกร้าสินค้าและสถานะหน้า (Internal State)
+// ======================================================
+static std::vector<Flower> cart;
+static int currentPage = 0; // 0 = หน้าร้านค้า, 1 = หน้าสรุปรายการ
+
+// ======================================================
+// ฟังก์ชันเรียงลำดับดอกไม้ (Sort by Occasion Priority)
+// ======================================================
+static std::vector<Flower> sortByOccasionPriority(const std::string& selectedOccasion) {
+    std::vector<Flower> primary;
+    std::vector<Flower> secondary;
+
+    for (const auto& f : flowerList) {
+        if (f.occasion == selectedOccasion)
+            primary.push_back(f);
+        else
+            secondary.push_back(f);
+    }
+    primary.insert(primary.end(), secondary.begin(), secondary.end());
+    return primary;
+}
+
+// ======================================================
+// MAIN SHOP UI
+// ======================================================
+void drawShop(sf::RenderWindow& window, AppState& state, UserSelection& selection) {
+    // ล็อคขนาดหน้าจอเสมือน (Virtual Resolution) เพื่อไม่ให้อัตราส่วนเพี้ยน
+    const float V_WIDTH = 1280.f;
+    const float V_HEIGHT = 720.f;
+
+    // --- 1. วาดพื้นหลัง Gradient ---
+    sf::VertexArray bg(sf::PrimitiveType::TriangleStrip, 4);
+    bg[0].position = {0, 0}; bg[1].position = {V_WIDTH, 0};
+    bg[2].position = {0, V_HEIGHT}; bg[3].position = {V_WIDTH, V_HEIGHT};
+    bg[0].color = BG_GRADIENT_TOP_LEFT; bg[1].color = BG_GRADIENT_TOP_RIGHT;
+    bg[2].color = BG_GRADIENT_BOTTOM_LEFT; bg[3].color = BG_GRADIENT_BOTTOM_RIGHT;
+    window.draw(bg);
+
+    // --- 2. ตั้งค่า ImGui Overlay (ไร้หน้าต่าง) ---
+    ImGui::SetNextWindowPos({0, 0});
+    ImGui::SetNextWindowSize({V_WIDTH, V_HEIGHT});
+    ImGui::Begin("ShopOverlay", nullptr, 
+        ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoMove);
+
+    ImGui::PushFont(FONT_BODY);
+
+    if (currentPage == 0) {
+        // ==================================================
+        // PAGE 0 — SELECT FLOWERS
+        // ==================================================
         
-        if (currentPage == 0){
-        // setting "Select your pieces"
-        float textWidth = ImGui::CalcTextSize("Select your pieces").x; // คำนวณหาความกว้างของข้อความ
-        float centerX = (ImGui::GetWindowSize().x - textWidth*1.5) * 0.5f; // หาตำแหน่งที่เริ่มพิมพ์ 
-        ImGui::SetCursorPosX(centerX); // ย้าย Cursor ไปที่ตำแหน่งนั้นก่อนพิมพ์ Text
-        ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.1f, 0.1f, 0.44f, 1.0f)); //สี text
-        ImGui::SetWindowFontScale(1.5f); // ขยายตัวอักษรทั้งหน้าต่างเป็น 1.5 เท่า
-        ImGui::Text("Select your pieces", ImVec2(100, 80));
-        ImGui::SetWindowFontScale(1.0f); // คืนค่ากลับเป็นปกติ
-        ImGui::PopStyleColor(1); //ล้างสี text
+        // Header
+        ImGui::SetCursorPos({50, 40});
+        ImGui::PushFont(FONT_TITLE);
+        ImGui::TextColored(ImColor(255, 255, 255), "DESIGN YOUR BOUQUET");
+        ImGui::PopFont();
 
-        //การวาด Grid สี่เหลี่ยมขอบมน 
-        int rows = 6;            
-        int columns = 6;         
-        float boxSize = 120.0f;
-        float boxSpacingX = 20.0f;
-        float boxSpacingY = 40.0f; 
+        ImGui::SetCursorPos({50, 85});
+        ImGui::Text("Occasion Mode: %s", selection.occasion.empty() ? "General" : selection.occasion.c_str());
 
-        // คำนวณ StartX ให้กึ่งกลาง (อิงจาก Cursor เพื่อให้ Scroll ได้)
-        float totalContentWidth = (columns * boxSize) + ((columns - 1) * boxSpacingX);
-        ImVec2 currentCursorPos = ImGui::GetCursorScreenPos();
-        float startX = currentCursorPos.x + (ImGui::GetContentRegionAvail().x - totalContentWidth) * 0.5f;
-        float startY = currentCursorPos.y + 20.0f;
+        // ปุ่มย้อนกลับ
+        ImGui::SetCursorPos({V_WIDTH - 180, 40});
+        if (ImGui::Button("<< Back", {130, 40})) {
+            state = AppState::MAIN_MENU;
+        }
 
-        ImDrawList* draw_list = ImGui::GetWindowDrawList();
+        // --- พื้นที่เลื่อนดูดอกไม้ (Scroll Area) ---
+        ImGui::SetCursorPos({0, 140});
+        ImGui::PushStyleColor(ImGuiCol_ChildBg, ImVec4(0, 0, 0, 0.2f)); 
+        // แก้ไข Flag เป็น AlwaysVerticalScrollbar ตามที่ระบบแจ้ง Error
+        ImGui::BeginChild("FlowerScrollArea", {V_WIDTH, 460}, false, ImGuiWindowFlags_AlwaysVerticalScrollbar);
 
-        for (int r = 0; r < rows; r++) {
-            for (int c = 0; c < columns; c++) {
-                int i = r * columns + c;
-                ImGui::PushID(i);
+        std::vector<Flower> flowers = sortByOccasionPriority(selection.occasion);
+        int cols = 5;
+        float boxSize = 190.f;
+        float gapX = 30.f;
+        float gapY = 40.f;
+        float startX = (V_WIDTH - (cols * boxSize + (cols - 1) * gapX)) / 2.f;
 
-                float currentX = startX + (c * (boxSize + boxSpacingX));
-                float currentY = startY + (r * (boxSize + boxSpacingY));
+        for (int i = 0; i < (int)flowers.size(); ++i) {
+            int r = i / cols;
+            int c = i % cols;
+            float posX = startX + c * (boxSize + gapX);
+            float posY = r * (boxSize + gapY);
 
-                // วาดสี่เหลี่ยม Silver
-                draw_list->AddRectFilled(
-                    ImVec2(currentX, currentY), 
-                    ImVec2(currentX + boxSize, currentY + boxSize), 
-                    ImColor(0.88f, 0.89f, 0.91f, 1.0f), 20.0f
-                );
-
-                // ปุ่ม Add ภายในสี่เหลี่ยม
-                float btnW = 50.0f;
-                float btnH = 20.0f;
-                ImGui::SetCursorScreenPos(ImVec2(currentX + (boxSize * 0.5f) - (btnW * 0.5f), currentY + boxSize - (btnH + 10.0f)));
-                    
-                ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.0f, 0.45f, 0.45f, 1.0f)); // สีปุ่มปกติ
-                ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.0f, 0.6f, 0.6f, 1.0f)); //สีเมื่อวางเมาส์: เขียว
-                ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.0f, 0.35f, 0.35f, 1.0f)); // สีตอนกดปุ่ม: เขียว
-                ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 15.0f); // ปรับความโค้งของปุ่มให้ดูละมุน (Rounding)
-                if (ImGui::Button("Add", ImVec2(btnW, btnH))) {
-                    std::cout << "Added flower #" << i + 1 << " to cart!" << std::endl;
-                    //std::cin >> ; 
-                }
-                ImGui::PopStyleVar(1);
-                ImGui::PopStyleColor(3);
-                ImGui::PopID();
-                }
-            }
-            // setting ปุ่ม "Next"
-            // ย้าย Cursor ไปต่อท้ายเนื้อหาเพื่อให้ปุ่ม Next เลื่อนตาม
-            ImGui::SetCursorScreenPos(ImVec2(startX, startY + (rows * (boxSize + boxSpacingY)) + 20.0f));
-
-            // ปุ่ม Next (ไหลตามเนื้อหา)
-            float nextBtnW = 100.0f;
-            ImGui::SetCursorPosX(ImGui::GetWindowSize().x - nextBtnW - 30.0f);
+            ImGui::PushID(i);
+            ImGui::SetCursorPos({posX, posY});
             
-            ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.0f, 0.45f, 0.45f, 1.0f)); // สีปุ่มปกติ
-            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.0f, 0.6f, 0.6f, 1.0f)); //สีเมื่อวางเมาส์: เขียว
-            ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.0f, 0.35f, 0.35f, 1.0f)); // สีตอนกดปุ่ม: เขียว
-            ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 10.0f); // ปรับความโค้งของปุ่มให้ดูละมุน (Rounding)
-            if (ImGui::Button("Next >>", ImVec2(nextBtnW, 40))) {
-                currentPage = 1;
+            // --- ลำดับเลเยอร์ 1: วาด Card Background ก่อน ---
+            ImDrawList* dl = ImGui::GetWindowDrawList();
+            ImVec2 p1 = ImGui::GetCursorScreenPos();
+            ImVec2 p2 = {p1.x + boxSize, p1.y + boxSize};
+            
+            bool isPrimary = (flowers[i].occasion == selection.occasion);
+            // ปรับสีการ์ดให้มืดลง (Dark Theme) เพื่อให้ดอกไม้เด่นขึ้น
+            ImColor cardColor = isPrimary ? ImColor(180, 60, 100, 200) : ImColor(40, 40, 45, 180);
+            
+            dl->AddRectFilled(p1, p2, cardColor, 15.f);
+            if(isPrimary) dl->AddRect(p1, p2, ImColor(255, 255, 255, 180), 15.f, 0, 2.5f);
+
+            // --- ลำดับเลเยอร์ 2: วาดดอกไม้ทับบน Card ---
+            // เรียกใช้ FlowerRenderer หลังจากวาด RectFilled เพื่อให้ดอกไม้อยู่เลเยอร์บน
+            FlowerRenderer::draw(window, flowers[i].type, 
+                sf::Vector2f(p1.x + boxSize/2.f, p1.y + boxSize/2.f - 15.f), 90.f, 0.f);
+
+            // --- ลำดับเลเยอร์ 3: วาดตัวหนังสือและปุ่ม ---
+            ImGui::SetCursorPos({posX + 15, posY + boxSize - 55});
+            ImGui::Text("%s", flowers[i].name.c_str());
+            
+            ImGui::SetCursorPos({posX + 15, posY + boxSize - 35});
+            ImGui::TextColored(ImColor(255, 215, 0), "%d THB", flowers[i].price);
+
+            ImGui::SetCursorPos({posX + boxSize - 55, posY + boxSize - 40});
+            if (ImGui::Button("+", {45, 30})) {
+                cart.push_back(flowers[i]);
             }
-            ImGui::PopStyleVar(1); //ล้างสี Next
-            ImGui::PopStyleColor(3); //ล้างสี Next
+            ImGui::PopID();
         }
+        ImGui::EndChild();
+        ImGui::PopStyleColor();
 
-        else if (currentPage == 1){
-        // setting "Summary of your order"
-        float textWidth = ImGui::CalcTextSize("Summary of your order").x; // คำนวณหาความกว้างของข้อความ
-        float centerX = (ImGui::GetWindowSize().x - textWidth*1.5) * 0.5f; // หาตำแหน่งที่เริ่มพิมพ์ 
-        ImGui::SetCursorPosX(centerX); // ย้าย Cursor ไปที่ตำแหน่งนั้นก่อนพิมพ์ Text
-        ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.1f, 0.1f, 0.44f, 1.0f)); //สี text
-        ImGui::SetWindowFontScale(1.5f); // ขยายตัวอักษรทั้งหน้าต่างเป็น 1.5 เท่า
-        ImGui::Text("Summary of your order", ImVec2(100, 80));
-        ImGui::SetWindowFontScale(1.0f); // คืนค่ากลับเป็นปกติ
-        ImGui::PopStyleColor(1); //ล้างสี
+        // Footer
+        ImGui::SetCursorPos({50, V_HEIGHT - 70});
+        ImGui::Text("Bouquet Items: %d", (int)cart.size());
 
-        // Setting "Back"
-        float windowW = ImGui::GetWindowSize().x;
-        float windowH = ImGui::GetWindowSize().y;
-        float btnW = 100.0f;
-        float btnH = 40.0f;
-        float paddingX = 20.0f; // ระยะห่างจากขอบ (ปรับให้เท่ากับหน้าแรก)
-        float paddingY = 10.0f; // ระยะห่างจากขอบ (ปรับให้เท่ากับหน้าแรก)
-        ImGui::SetCursorPos(ImVec2(windowW - btnW - paddingX, windowH - btnH - paddingY));// ตั้งค่าตำแหน่ง (อ้างอิงภายใน Window)
-        // วาดปุ่ม Back พร้อมสไตล์
-        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.20f, 0.30f, 0.60f, 1.0f));
-        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.30f, 0.45f, 0.80f, 1.0f));
-        ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.15f, 0.20f, 0.45f, 1.0f));
-        ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 10.0f);
-        if (ImGui::Button("<< Back", ImVec2(btnW, btnH))) {
-            currentPage = 0; // กลับไปหน้าเลือกดอกไม้
+        ImGui::SetCursorPos({V_WIDTH - 220, V_HEIGHT - 85});
+        if (ImGui::Button("Checkout >", {170, 55})) {
+            if(!cart.empty()) currentPage = 1;
         }
-        ImGui::PopStyleVar(1); // ล้างสีปุ่ม 
-        ImGui::PopStyleColor(3);
-                }
+    } 
+    else {
+        // ==================================================
+        // PAGE 1 — ORDER SUMMARY (แบบใบเสร็จ)
+        // ==================================================
+        ImGui::SetNextWindowPos({V_WIDTH/2.f, V_HEIGHT/2.f}, ImGuiCond_Always, {0.5f, 0.5f});
+        ImGui::SetNextWindowSize({500, 600});
+        
+        ImGui::Begin("Receipt", nullptr, ImGuiWindowFlags_NoDecoration);
+        
+        ImGui::PushFont(FONT_TITLE);
+        ImGui::Text("Order Summary");
+        ImGui::PopFont();
+        ImGui::Separator();
+        
+        int total = 0;
+        ImGui::BeginChild("ItemsList", {0, 380}, true);
+        for (int i = 0; i < (int)cart.size(); ++i) {
+            ImGui::Text("%d. %s", i + 1, cart[i].name.c_str());
+            ImGui::SameLine(ImGui::GetWindowWidth() - 90);
+            ImGui::Text("%d", cart[i].price);
+            total += cart[i].price;
+        }
+        ImGui::EndChild();
 
-        //ล้างสี ปุ่ม"flower shop"
-        ImGui::PopStyleColor(3); // ล้างสีพื้นหลัง flower shop 
-        ImGui::PopStyleVar(2); // ล้างสีพื้นหลัง flower shop 
-        ImGui::End(); // จบการทำงาน แถบ flower shop 
+        ImGui::Spacing();
+        ImGui::Separator();
+        ImGui::Text("Total Price:");
+        ImGui::SameLine(ImGui::GetWindowWidth() - 120);
+        ImGui::TextColored(ImColor(0, 200, 0), "%d THB", total);
+
+        ImGui::Spacing();
+        if (ImGui::Button("<< Edit", {120, 45})) currentPage = 0;
+        ImGui::SameLine();
+        if (ImGui::Button("Confirm Order", {330, 45})) {
+            cart.clear();
+            currentPage = 0;
+            state = AppState::MAIN_MENU;
+        }
+        ImGui::End();
+    }
+
+    ImGui::PopFont();
+    ImGui::End(); 
 }

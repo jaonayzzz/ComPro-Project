@@ -1,15 +1,54 @@
 #pragma once
-
 #include <string>
 #include <vector>
+#include <SFML/Graphics/Color.hpp>
+
+enum class FlowerType {
+    Lotus,
+    WhiteCarnation,
+    WhiteChrysanthemum,
+    WhiteRose,
+    WhiteOrchid,
+    WhiteTulip,
+    RedPoppy,
+    WhiteLily,
+    WhiteHydrangea,
+    WhiteAnemone,
+    Marigold,
+    WhiteDaisy,
+    YellowDaisy,
+    Sunflower,
+    PinkCarnation,
+    YellowChrysanthemum,
+    YellowRose,
+    PurpleDahlia,
+    PurpleOrchid,
+    YellowTulip,
+    PurpleIris,
+    RedPeony,
+    Jasmine,
+    RedCarnation,
+    RedRose,
+    PinkRose,
+    RedDahlia,
+    Lavender,
+    Chamomile,
+    RedTulip,
+    ForgetMeNot,
+    PinkLily,
+    BlueHydrangea,
+    PinkHydrangea,
+    RedAnemone,
+    PinkPeony
+};
 
 struct Flower {
     int id;
+    FlowerType type;
     std::string name;
-    std::string meaning;
     int price;
     std::string occasion;
-    std::string imagePath;
+    sf::Color primaryColor;
 };
 
 struct Container {

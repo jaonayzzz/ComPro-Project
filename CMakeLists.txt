@@ -38,9 +38,12 @@ FetchContent_MakeAvailable(imgui-sfml)
 
 # 4. ระบุชื่อไฟล์หลักของโปรแกรม
 add_executable(MyProgram
-    examplemain.cpp
+    main.cpp
     ui_mainmenu.cpp
     data_repository.cpp
+    Custom_Page.cpp
+    FlowerRenderer.cpp
+    font_manager.cpp
 )
 
 # 5. เชื่อมต่อ Library ทุกตัวเข้าด้วยกัน

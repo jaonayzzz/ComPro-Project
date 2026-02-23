@@ -30,7 +30,7 @@ const unsigned int WINDOW_WIDTH  = 1280;
 // ความสูงของหน้าต่าง (หน่วย: pixel)
 const unsigned int WINDOW_HEIGHT = 720;
 
-// จำกัดเฟรมเรต เพื่อไม่ให้กินทรัพยากรเครื่องมากเกินไป
+// จำกัดเฟรมเรต
 const unsigned int TARGET_FPS    = 60;
 
 // ชื่อเกมที่แสดงบน Title Bar ของหน้าต่าง
