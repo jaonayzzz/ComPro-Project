@@ -6,7 +6,7 @@
 #include "data_models.h"
 #include "ui_mainmenu.h"
 #include "config.h"
-#include "Custom_Pages.cpp"
+#include "Custom_Pages.h"
 #include "font_manager.h"
 
 #include <iostream>
