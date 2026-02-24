@@ -136,15 +136,24 @@ void drawMainMenu(
     ImGui::Separator();
     ImGui::Spacing();
 
-    // จัดปุ่มให้อยู่ตรงกลางมากขึ้น
+    auto updateSelection = [&]() {
+        selection.occasion = occasionItems[occasionIndex]; // เก็บชื่อโอกาส
+        selection.containerType = selected.type;           // เก็บชนิดภาชนะ
+        selection.containerSize = selected.size;           // เก็บขนาด
+    };
+
     ImGui::SetCursorPosX(35); 
-    if (ImGui::Button("Custom Mode", {200,45}))
+    if (ImGui::Button("Custom Mode", {200,45})) {
+        updateSelection(); // <- เรียกฟังก์ชันเก็บค่า
         state = AppState::CUSTOM_MODE;
+    }
 
     ImGui::SameLine();
 
-    if (ImGui::Button("Random Mode", {200,45}))
+    if (ImGui::Button("Random Mode", {200,45})) {
+        updateSelection(); // <- เรียกฟังก์ชันเก็บค่า
         state = AppState::RANDOM_MODE;
+    }
 
     ImGui::Spacing();
     ImGui::SetCursorPosX((ImGui::GetWindowSize().x - 120) * 0.5f);
