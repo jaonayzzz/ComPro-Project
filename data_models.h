@@ -70,5 +70,12 @@ struct UserSelection {
     bool isCustomMode;
 };
 
+struct BudgetRange {
+    int min;
+    int max;
+};
+
 extern std::vector<Flower> flowerList;
 extern std::vector<Container> containerList;
+
+BudgetRange calculateActualBudget(const std::string& occasion, const Container& container);
