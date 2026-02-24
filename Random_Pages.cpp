@@ -47,73 +47,60 @@ Container selectContainer(const UserSelection& userSel){
 
  
 vector<Flower> findBestBouquet(const vector<Flower>& pool, const Container& selectedContainer, int budget, bool prioritizeCount) {
-    if (pool.empty()) return {};
     
     srand(time(0));
-    int flowerBudget = budget - selectedContainer.basePrice;
     
-    // เรียงลำดับดอกไม้ใน pool จากถูกไปแพง
-    vector<Flower> sortedPool = pool;
-    sort(sortedPool.begin(), sortedPool.end(), [](const Flower& a, const Flower& b) {
-        return a.price < b.price;
-    });
-
-    // ตรวจสอบคณิตศาสตร์เบื้องต้น: งบพอสำหรับดอกไม้ที่ถูกที่สุดตามจำนวนขั้นต่ำหรือไม่
-    int absoluteMinPrice = 0;
-    for(int i = 0; i < selectedContainer.minF && i < sortedPool.size(); i++) {
-        absoluteMinPrice += sortedPool[i].price;
-    }
-    if (flowerBudget < absoluteMinPrice) return {}; // งบไม่พอจริงๆ ส่งค่าว่างกลับไป
-
+    int flowerBudget = budget - selectedContainer.basePrice;
     vector<Flower> bestBouquet;
     int bestFlowerCount = 0;
-    int minChange = 1e9;
+    int minChange = flowerBudget;
 
-    for (int i = 0; i < 2000; ++i) { // เพิ่มรอบการสุ่ม
+    for (int i = 0; i < 1000; ++i) {
         vector<Flower> currentTry;
         int currentTotal = 0;
+        int retryCount = 0;
 
-        // กลยุทธ์สุ่ม: 500 รอบแรกสุ่มอิสระ, 1500 รอบหลังเน้นดอกถูกเพื่อให้รอดเงื่อนไข minF
-        bool forceCheap = (i > 500);
-
-        while ((int)currentTry.size() < selectedContainer.maxF) {
-            Flower picked;
-            if (forceCheap) {
-                // สุ่มเลือกเฉพาะในกลุ่มดอกไม้ที่ราคาถูก (1/3 ของ pool)
-                int cheapRange = max(1, (int)sortedPool.size() / 3);
-                picked = sortedPool[rand() % cheapRange];
-            } else {
-                picked = pool[rand() % pool.size()];
-            }
+        while ((int)currentTry.size() < selectedContainer.maxF && !pool.empty()) {
+            int randomIndex = rand() % pool.size();
+            const Flower& picked = pool[randomIndex];
 
             if (currentTotal + picked.price <= flowerBudget) {
                 currentTry.push_back(picked);
                 currentTotal += picked.price;
+                retryCount = 0;
             } else {
-                break; // งบเต็ม
+                retryCount++;
+                if (retryCount > 30) break;
             }
         }
-// ตรวจสอบเงื่อนไขจำนวนดอกขั้นต่ำ
+
         if ((int)currentTry.size() >= selectedContainer.minF) {
             int change = flowerBudget - currentTotal;
-            int flowerCount = (int)currentTry.size();
+            int flowerCount = currentTry.size();
 
             if (prioritizeCount) {
-                if (flowerCount > bestFlowerCount || (flowerCount == bestFlowerCount && change < minChange)) {
+                // สุ่มใหม่: จำนวนดอกสำคัญกว่า
+                if (flowerCount > bestFlowerCount ||
+                   (flowerCount == bestFlowerCount && change < minChange)) {
                     bestFlowerCount = flowerCount;
                     minChange = change;
                     bestBouquet = currentTry;
                 }
             } else {
-                if (change < minChange || (change == minChange && flowerCount > bestFlowerCount)) {
+                // ปกติ: เงินทอนน้อยสำคัญกว่า
+                if (change < minChange ||
+                   (change == minChange && flowerCount > bestFlowerCount)) {
                     minChange = change;
                     bestFlowerCount = flowerCount;
                     bestBouquet = currentTry;
                 }
             }
         }
-        if (minChange == 0) break; // เจอชุดที่สมบูรณ์แบบแล้ว
+
+        if (prioritizeCount && bestFlowerCount == selectedContainer.maxF && minChange == 0) break;
+        if (!prioritizeCount && minChange == 0) break;
     }
+
     return bestBouquet;
 }
 
