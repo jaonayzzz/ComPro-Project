@@ -9,7 +9,7 @@ void drawSummaryPage(AppState& state, UserSelection& selection) {
     ImGui::SetNextWindowSize({500, 600});
 
     ImGui::Begin("Order Summary", nullptr, ImGuiWindowFlags_NoResize);
-
+    ImGui::PushFont(FONT_BODY);
     ImGui::Text("Your Bouquet Summary");
     ImGui::Separator();
 
@@ -27,6 +27,6 @@ void drawSummaryPage(AppState& state, UserSelection& selection) {
         selection.selectedFlowers.clear(); // ล้างข้อมูลเก่า
         state = AppState::MAIN_MENU;
     }
-
+    ImGui::PopFont();
     ImGui::End();
 }
