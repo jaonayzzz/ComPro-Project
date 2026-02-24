@@ -124,13 +124,18 @@ void drawMainMenu(
 
     ImGui::Combo("##Container", &containerIndex, items.data(), (int)items.size());
 
+    // ======================================================
+    // คำนวณราคาตรงนี้
+    // ======================================================
     const Container& selected = containerList[containerIndex];
+    const char* selectedOccasion = occasionItems[occasionIndex];
+    BudgetRange actualPrice = calculateActualBudget(selectedOccasion, selected);
 
     ImGui::Text("Flowers: %d - %d | Base Price: %d",
         selected.minF, selected.maxF, selected.basePrice);
 
     ImGui::Text("Estimated Price: %d - %d",
-        selected.minTotal, selected.maxTotal);
+        actualPrice.min, actualPrice.max);
 
     ImGui::Spacing();
     ImGui::Separator();
