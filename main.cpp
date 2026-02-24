@@ -10,6 +10,7 @@
 #include "font_manager.h"
 #include <iostream>
 #include <optional>
+#include "Summary_Page.cpp"
 
 int main()
 {
@@ -49,7 +50,6 @@ int main()
         temp.loadFromFile(file);
         flowerTextures.push_back(temp);
     }
-
     sf::Clock deltaClock;
     AppState currentState = AppState::MAIN_MENU;
     UserSelection userSelection;
@@ -84,6 +84,10 @@ int main()
         if (ImGui::Button("Back"))
             currentState = AppState::MAIN_MENU;
         ImGui::End();*/
+        break;
+
+    case AppState::SUMMARY: // เพิ่ม case นี้
+        drawSummaryPage(currentState, userSelection);
         break;
 
     case AppState::EXIT:

@@ -68,6 +68,9 @@ struct UserSelection {
     std::string containerType;
     std::string containerSize;
     bool isCustomMode;
+
+    std::vector<Flower> selectedFlowers; // เก็บดอกไม้ที่สุ่มได้หรือเลือกเอง
+    int totalAmount = 0;
 };
 
 struct BudgetRange {

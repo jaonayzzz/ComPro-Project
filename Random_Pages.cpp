@@ -183,8 +183,12 @@ void Random_Pages(sf::RenderWindow& window, AppState& currentState, UserSelectio
         vector<Flower> pool = buildPool(userSelection.occasion);
         selectedContainer = selectContainer(userSelection);
         bestBouquet = findBestBouquet(pool, selectedContainer, budget, false);
+    
+        // --- จุดที่เพิ่ม: บันทึกค่าลงข้อมูลกลาง ---
+        userSelection.selectedFlowers = bestBouquet; 
+        userSelection.totalAmount = budget; // หรือคำนวณจากราคาดอกไม้จริง + basePrice
         hasResult = true;
-    }
+        }
 
     if(hasResult){
         ImGui::Spacing();
@@ -206,11 +210,21 @@ void Random_Pages(sf::RenderWindow& window, AppState& currentState, UserSelectio
                 vector<Flower> pool = buildPool(userSelection.occasion);
                 selectedContainer = selectContainer(userSelection);
                 bestBouquet = findBestBouquet(pool, selectedContainer, budget, true);
+                userSelection.selectedFlowers = bestBouquet;
             }
         }
     }
     ImGui::Spacing();
     ImGui::Separator();
+
+    // ภายใน Random_Pages.cpp ส่วนที่แสดงผลลัพธ์
+if (hasResult && !bestBouquet.empty()) {
+    if (ImGui::Button("Confirm Order")) {
+        // บันทึกดอกไม้ลงใน UserSelection ก่อนย้ายหน้า
+        userSelection.selectedFlowers = bestBouquet; 
+        currentState = AppState::SUMMARY;
+    }
+}
 
     if(ImGui::Button("Back")){
         hasResult = false;
