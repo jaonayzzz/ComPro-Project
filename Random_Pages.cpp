@@ -6,8 +6,9 @@
 #include <optional>
 #include <cstdlib>
 #include <ctime>
-
+#include <algorithm>
 #include "config.h"
+#include "font_manager.h"
 #include "data_models.h"
 #include "app_state.h"
 using namespace std;
@@ -46,60 +47,73 @@ Container selectContainer(const UserSelection& userSel){
 
  
 vector<Flower> findBestBouquet(const vector<Flower>& pool, const Container& selectedContainer, int budget, bool prioritizeCount) {
+    if (pool.empty()) return {};
     
     srand(time(0));
-    
     int flowerBudget = budget - selectedContainer.basePrice;
+    
+    // เรียงลำดับดอกไม้ใน pool จากถูกไปแพง
+    vector<Flower> sortedPool = pool;
+    sort(sortedPool.begin(), sortedPool.end(), [](const Flower& a, const Flower& b) {
+        return a.price < b.price;
+    });
+
+    // ตรวจสอบคณิตศาสตร์เบื้องต้น: งบพอสำหรับดอกไม้ที่ถูกที่สุดตามจำนวนขั้นต่ำหรือไม่
+    int absoluteMinPrice = 0;
+    for(int i = 0; i < selectedContainer.minF && i < sortedPool.size(); i++) {
+        absoluteMinPrice += sortedPool[i].price;
+    }
+    if (flowerBudget < absoluteMinPrice) return {}; // งบไม่พอจริงๆ ส่งค่าว่างกลับไป
+
     vector<Flower> bestBouquet;
     int bestFlowerCount = 0;
-    int minChange = flowerBudget;
+    int minChange = 1e9;
 
-    for (int i = 0; i < 1000; ++i) {
+    for (int i = 0; i < 2000; ++i) { // เพิ่มรอบการสุ่ม
         vector<Flower> currentTry;
         int currentTotal = 0;
-        int retryCount = 0;
 
-        while ((int)currentTry.size() < selectedContainer.maxF && !pool.empty()) {
-            int randomIndex = rand() % pool.size();
-            const Flower& picked = pool[randomIndex];
+        // กลยุทธ์สุ่ม: 500 รอบแรกสุ่มอิสระ, 1500 รอบหลังเน้นดอกถูกเพื่อให้รอดเงื่อนไข minF
+        bool forceCheap = (i > 500);
+
+        while ((int)currentTry.size() < selectedContainer.maxF) {
+            Flower picked;
+            if (forceCheap) {
+                // สุ่มเลือกเฉพาะในกลุ่มดอกไม้ที่ราคาถูก (1/3 ของ pool)
+                int cheapRange = max(1, (int)sortedPool.size() / 3);
+                picked = sortedPool[rand() % cheapRange];
+            } else {
+                picked = pool[rand() % pool.size()];
+            }
 
             if (currentTotal + picked.price <= flowerBudget) {
                 currentTry.push_back(picked);
                 currentTotal += picked.price;
-                retryCount = 0;
             } else {
-                retryCount++;
-                if (retryCount > 30) break;
+                break; // งบเต็ม
             }
         }
-
+// ตรวจสอบเงื่อนไขจำนวนดอกขั้นต่ำ
         if ((int)currentTry.size() >= selectedContainer.minF) {
             int change = flowerBudget - currentTotal;
-            int flowerCount = currentTry.size();
+            int flowerCount = (int)currentTry.size();
 
             if (prioritizeCount) {
-                // สุ่มใหม่: จำนวนดอกสำคัญกว่า
-                if (flowerCount > bestFlowerCount ||
-                   (flowerCount == bestFlowerCount && change < minChange)) {
+                if (flowerCount > bestFlowerCount || (flowerCount == bestFlowerCount && change < minChange)) {
                     bestFlowerCount = flowerCount;
                     minChange = change;
                     bestBouquet = currentTry;
                 }
             } else {
-                // ปกติ: เงินทอนน้อยสำคัญกว่า
-                if (change < minChange ||
-                   (change == minChange && flowerCount > bestFlowerCount)) {
+                if (change < minChange || (change == minChange && flowerCount > bestFlowerCount)) {
                     minChange = change;
                     bestFlowerCount = flowerCount;
                     bestBouquet = currentTry;
                 }
             }
         }
-
-        if (prioritizeCount && bestFlowerCount == selectedContainer.maxF && minChange == 0) break;
-        if (!prioritizeCount && minChange == 0) break;
+        if (minChange == 0) break; // เจอชุดที่สมบูรณ์แบบแล้ว
     }
-
     return bestBouquet;
 }
 
@@ -132,17 +146,52 @@ void Random_Pages(sf::RenderWindow& window, AppState& currentState, UserSelectio
     static bool hasResult = false;
     static int budget = 0;
 
-    ImGui::Begin("Random Bouquet");
+    
+    sf::VertexArray bg(sf::PrimitiveType::TriangleStrip, 4);
+    bg[0].position = {0.f, 0.f};
+    bg[1].position = {(float)WINDOW_WIDTH, 0.f};
+    bg[2].position = {0.f, (float)WINDOW_HEIGHT};
+    bg[3].position = {(float)WINDOW_WIDTH, (float)WINDOW_HEIGHT};
 
-    ImGui::Begin("Random Bouquet");
+    bg[0].color = BG_GRADIENT_TOP_LEFT;
+    bg[1].color = BG_GRADIENT_TOP_RIGHT;
+    bg[2].color = BG_GRADIENT_BOTTOM_LEFT;
+    bg[3].color = BG_GRADIENT_BOTTOM_RIGHT;
+
+    window.draw(bg);
     // DEBUG LINE: เพิ่มเพื่อเช็คว่าค่ามาจริงไหม
+    static int actualMinBudget = 0;
 
+    // คำนวณงบขั้นต่ำที่ต้องใช้จริงตามโอกาส
+    vector<Flower> pool = buildPool(userSelection.occasion);
+    Container currentContainer = selectContainer(userSelection);
+
+    if(!pool.empty()) {
+        vector<int> prices;
+        for(auto& f : pool) prices.push_back(f.price);
+        sort(prices.begin(), prices.end());
+
+        int flowerSum = 0;
+        for(int i=0; i < currentContainer.minF && i < prices.size(); i++) flowerSum += prices[i];
+        actualMinBudget = currentContainer.basePrice + flowerSum;
+    }
+
+    ImGui::Begin("Random Bouquet");
+    ImGui::PushFont(FONT_BODY);
+
+    // แสดงข้อมูล Guide ให้ผู้ใช้
     ImGui::Text("Occasion : %s", userSelection.occasion.c_str());
-    ImGui::Text("Container :%s %s",userSelection.containerType.c_str(), userSelection.containerSize.c_str());
+    ImGui::Text("Required Budget for this selection: at least % d THB", actualMinBudget);
+
+    if(budget < actualMinBudget && budget > 0) {
+        ImGui::TextColored(ImVec4(1, 0, 0, 1), "Warning: Budget is lower than required min!");
+    }
+
     ImGui::Separator();
     ImGui::InputInt("Budget(THB)", &budget);
     ImGui::Spacing();
 
+    
     if(ImGui::Button("Generate") && budget > 0){
         vector<Flower> pool = buildPool(userSelection.occasion);
         selectedContainer = selectContainer(userSelection);
@@ -182,5 +231,6 @@ void Random_Pages(sf::RenderWindow& window, AppState& currentState, UserSelectio
         budget = 0;
         currentState = AppState::MAIN_MENU;
     }
+    ImGui::PopFont();
     ImGui::End();
 }
