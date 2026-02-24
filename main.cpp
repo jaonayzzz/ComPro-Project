@@ -5,7 +5,8 @@
 #include "data_models.h"
 #include "ui_mainmenu.h"
 #include "config.h"
-#include "Custom_Pages.h"
+#include "Custom_Pages.cpp"
+#include "Random_Pages.cpp"
 #include "font_manager.h"
 #include <iostream>
 #include <optional>
@@ -53,11 +54,12 @@ int main()
         break;
 
     case AppState::RANDOM_MODE:
-        ImGui::Begin("Random Mode");
+        Random_Pages(window, currentState, userSelection);
+        /*ImGui::Begin("Random Mode");
         ImGui::Text("Random Mode is not implemented yet.");
         if (ImGui::Button("Back"))
             currentState = AppState::MAIN_MENU;
-        ImGui::End();
+        ImGui::End();*/
         break;
 
     case AppState::EXIT:
@@ -72,3 +74,4 @@ int main()
     ImGui::SFML::Shutdown();
     return 0;
 }
+
