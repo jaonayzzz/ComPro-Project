@@ -1,5 +1,6 @@
 #include "data_models.h"
 #include <vector>
+#include <algorithm>
 
 std::vector<Flower> flowerList = {
     {1,  FlowerType::Lotus,              "Lotus",              20,  "Condolences", sf::Color(230, 200, 220)},
@@ -41,12 +42,31 @@ std::vector<Flower> flowerList = {
 };
 
 std::vector<Container> containerList = {
-    {"Vase", "S", 1, 3, 29, 39, 779},
-    {"Vase", "M", 4, 5, 69, 109, 1319},
-    {"Vase", "L", 6, 7, 99, 159, 1849},
-    {"Bouquet", "S", 3, 6, 19, 49, 1519},
-    {"Bouquet", "M", 7, 10, 29, 99, 2529},
-    {"Bouquet", "L", 11, 15, 39, 149, 3789},
-    {"Basket", "M", 10, 15, 69, 169, 3819},
-    {"Basket", "L", 16, 23, 119, 279, 5869}
+    {"Vase", "S", 1, 3, 29, 0, 0},
+    {"Vase", "M", 4, 5, 69, 0, 0},
+    {"Vase", "L", 6, 7, 99, 0, 0},
+    {"Bouquet", "S", 3, 6, 19, 0, 0},
+    {"Bouquet", "M", 7, 10, 29, 0, 0},
+    {"Bouquet", "L", 11, 15, 39, 0, 0},
+    {"Basket", "M", 10, 15, 69, 0, 0},
+    {"Basket", "L", 16, 23, 119, 0, 0}
 };
+
+BudgetRange calculateActualBudget(const std::string& occasion, const Container& container) {
+    std::vector<int> prices;
+    
+    for (const auto& f : flowerList) {
+        if (f.occasion == occasion) {
+            prices.push_back(f.price);
+        }
+    }
+
+    if (prices.empty()) return { container.basePrice, container.basePrice };
+
+    std::sort(prices.begin(), prices.end());
+
+    int minTotal = container.basePrice + (prices.front() * container.minF);
+    int maxTotal = container.basePrice + (prices.back() * container.maxF);
+
+    return { minTotal, maxTotal };
+}
