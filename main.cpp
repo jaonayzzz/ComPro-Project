@@ -6,6 +6,7 @@
 #include "ui_mainmenu.h"
 #include "config.h"
 #include "Custom_Pages.cpp"
+#include "Random_Pages.cpp"
 #include "font_manager.h"
 #include <iostream>
 #include <optional>
