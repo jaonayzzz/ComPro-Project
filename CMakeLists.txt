@@ -41,9 +41,9 @@ add_executable(MyProgram
     main.cpp
     ui_mainmenu.cpp
     data_repository.cpp
-    Custom_Page.cpp
     FlowerRenderer.cpp
     font_manager.cpp
+    
 )
 
 # 5. เชื่อมต่อ Library ทุกตัวเข้าด้วยกัน
