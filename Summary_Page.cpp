@@ -12,6 +12,9 @@ void drawSummaryPage(AppState& state, UserSelection& selection) {
     ImGui::PushFont(FONT_BODY);
     ImGui::Text("Your Bouquet Summary");
     ImGui::Separator();
+    ImGui::Text("Occasion: %s", selection.occasion.c_str());
+    ImGui::Text("Container: %s (%s)", selection.containerType.c_str(), selection.containerSize.c_str());
+    ImGui::Separator();
 
     int totalFlowerPrice = 0;
     // แสดงรายการดอกไม้ที่เลือกไว้ใน selectedFlowers
