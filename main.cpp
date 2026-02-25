@@ -11,6 +11,7 @@
 #include <iostream>
 #include <optional>
 #include "Summary_Page.cpp"
+#include "ui_start.h"
 
 int main()
 {
@@ -29,6 +30,8 @@ int main()
    
     // ⭐ โหลดฟอนต์ (ครั้งเดียว)
     LoadFonts();
+
+    initStartScreen();
     //โหลดรูปภาพ
     std::vector<sf::Texture> flowerTextures;
     static std::vector<std::string> fileNames = {
@@ -51,7 +54,7 @@ int main()
         flowerTextures.push_back(temp);
     }
     sf::Clock deltaClock;
-    AppState currentState = AppState::MAIN_MENU;
+    AppState currentState = AppState::START_SCREEN;
     UserSelection userSelection;
     userSelection.isCustomMode = true;
 
@@ -69,6 +72,10 @@ int main()
 
     switch (currentState)
     {
+    case AppState::START_SCREEN:
+        drawStartScreen(window, currentState);
+        break;
+        
     case AppState::MAIN_MENU:
         drawMainMenu(window, currentState, userSelection);
         break;

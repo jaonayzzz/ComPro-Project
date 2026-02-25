@@ -43,7 +43,7 @@ add_executable(MyProgram
     data_repository.cpp
     FlowerRenderer.cpp
     font_manager.cpp
-    
+    ui_start.cpp
 )
 
 # 5. เชื่อมต่อ Library ทุกตัวเข้าด้วยกัน

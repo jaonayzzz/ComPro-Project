@@ -25,7 +25,7 @@
 // ======================================================
 
 // ความกว้างของหน้าต่าง (หน่วย: pixel)
-const unsigned int WINDOW_WIDTH  = 1280;
+const unsigned int WINDOW_WIDTH  = 1100;
 
 // ความสูงของหน้าต่าง (หน่วย: pixel)
 const unsigned int WINDOW_HEIGHT = 720;
@@ -34,7 +34,7 @@ const unsigned int WINDOW_HEIGHT = 720;
 const unsigned int TARGET_FPS    = 60;
 
 // ชื่อเกมที่แสดงบน Title Bar ของหน้าต่าง
-const char WINDOW_TITLE[] = "Flower Shop Game";
+const char WINDOW_TITLE[] = "Chonampay Florist";
 
 
 
@@ -91,7 +91,7 @@ const ImVec4 COLOR_TEXT =
 // พื้นหลังหน้าต่าง ImGui
 // ขาว
 const ImVec4 COLOR_WINDOW_BG =
-    ImVec4(1.00f, 1.00f, 1.00f, 0.95f);
+    ImVec4(1.00f, 0.98f, 0.95f, 0.92f);
 
 
 // ----------------------
@@ -99,17 +99,15 @@ const ImVec4 COLOR_WINDOW_BG =
 // ----------------------
 // สีปุ่มปกติ ชมพูพาสเทล
 const ImVec4 COLOR_BUTTON =
-    ImVec4(1.00f, 0.75f, 0.85f, 1.00f);
+    ImVec4(0.98f, 0.72f, 0.80f, 1.00f);
 
 // สีปุ่มตอนเอาเมาส์ไปชี้ เข้มขึ้น
 const ImVec4 COLOR_BUTTON_HOVER =
-    ImVec4(1.00f, 0.65f, 0.80f, 1.00f);
+    ImVec4(0.95f, 0.65f, 0.75f, 1.00f);
 
 // สีปุ่มตอนกด เข้มที่สุด
 const ImVec4 COLOR_BUTTON_ACTIVE =
-    ImVec4(1.00f, 0.55f, 0.75f, 1.00f);
-
-
+    ImVec4(1.00f, 0.93f, 0.90f, 1.00f);
 // ----------------------
 // Frame / Combo / Input
 // ----------------------

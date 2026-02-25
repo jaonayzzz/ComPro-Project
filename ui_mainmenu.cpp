@@ -26,28 +26,23 @@ void drawMainMenu(
     // ======================================================
     // Background Gradient
     // ======================================================
-    sf::VertexArray bg(sf::PrimitiveType::TriangleStrip, 4);
-    bg[0].position = {0.f, 0.f};
-    bg[1].position = {(float)WINDOW_WIDTH, 0.f};
-    bg[2].position = {0.f, (float)WINDOW_HEIGHT};
-    bg[3].position = {(float)WINDOW_WIDTH, (float)WINDOW_HEIGHT};
+    static sf::Texture menuBgTexture;
+    static sf::Sprite* menuBgSprite = nullptr;
+    static bool bgLoaded = false;
 
-    bg[0].color = BG_GRADIENT_TOP_LEFT;
-    bg[1].color = BG_GRADIENT_TOP_RIGHT;
-    bg[2].color = BG_GRADIENT_BOTTOM_LEFT;
-    bg[3].color = BG_GRADIENT_BOTTOM_RIGHT;
-
-    window.draw(bg);
-
-    // ======================================================
-    // Floating Flowers
-    // ======================================================
-    if (flowerList.size() >= 36)
+    if (!bgLoaded)
     {
-        FlowerRenderer::draw(window, flowerList[0].type,  {300, 260}, 120, time * 20);
-        FlowerRenderer::draw(window, flowerList[13].type, {980, 260}, 140, -time * 15);
-        FlowerRenderer::draw(window, flowerList[25].type, {640, 560}, 100, time * 10);
+        menuBgTexture.loadFromFile("../picture/Background.png");
+        menuBgSprite = new sf::Sprite(menuBgTexture);
+        menuBgSprite->setScale(sf::Vector2f(
+            (float)WINDOW_WIDTH / menuBgTexture.getSize().x,
+            (float)WINDOW_HEIGHT / menuBgTexture.getSize().y
+        ));
+        bgLoaded = true;
     }
+
+    menuBgSprite->setColor(sf::Color(255,255,255,180));
+    window.draw(*menuBgSprite);
 
     // ======================================================
     // ImGui Theme
@@ -63,6 +58,8 @@ void drawMainMenu(
     style.Colors[ImGuiCol_FrameBgActive] = COLOR_FRAME_BG_ACTIVE;
     style.Colors[ImGuiCol_PopupBg] = COLOR_POPUP_BG;
 
+    style.FrameBorderSize  = 1.5f;
+    style.WindowBorderSize = 0.f;
     style.WindowRounding = ROUND_WINDOW;
     style.FrameRounding = ROUND_FRAME;
     style.PopupRounding = ROUND_POPUP;
@@ -78,7 +75,7 @@ void drawMainMenu(
     );
     ImGui::SetNextWindowSize({480, 460});
 
-    ImGui::Begin("Flower Boutique", nullptr,
+    ImGui::Begin("Chonampay Florist", nullptr,
         ImGuiWindowFlags_NoTitleBar |
         ImGuiWindowFlags_NoResize |
         ImGuiWindowFlags_NoCollapse |
@@ -92,10 +89,10 @@ void drawMainMenu(
     ImGui::PushStyleVar(ImGuiStyleVar_Alpha, anim);
     
     // จัดตัวอักษรให้อยู่กึ่งกลางหน้าต่าง ImGui
-    float titleWidth = ImGui::CalcTextSize("Flower Boutique").x;
+    float titleWidth = ImGui::CalcTextSize("Chonampay Florist").x;
     ImGui::SetCursorPosX((ImGui::GetWindowSize().x - titleWidth) * 0.5f);
     
-    ImGui::Text("Flower Boutique");
+    ImGui::Text("Chonampay Florist");
     ImGui::PopStyleVar();
     ImGui::PopFont();
 
