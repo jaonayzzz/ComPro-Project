@@ -81,7 +81,7 @@ int main()
         break;
 
     case AppState::CUSTOM_MODE:
-        Custom_Pages(flowerTextures);
+    Custom_Pages(flowerTextures, currentState); 
         break;
 
     case AppState::RANDOM_MODE:
