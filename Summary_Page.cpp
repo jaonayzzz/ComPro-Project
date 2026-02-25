@@ -2,9 +2,12 @@
 #include <imgui.h>
 #include "app_state.h"
 #include "data_models.h"
+#include "FlowerRender.h"
 #include "config.h"
 
-void drawSummaryPage(AppState& state, UserSelection& selection) {
+void drawSummaryPage(sf::RenderWindow& window,AppState& state, UserSelection& selection,const std::vector<sf::Texture>& flowerTextures) {
+    
+    renderBouquet(window, selection, flowerTextures);
     ImGui::SetNextWindowPos({WINDOW_WIDTH * 0.5f, WINDOW_HEIGHT * 0.5f}, ImGuiCond_Always, {0.5f, 0.5f});
     ImGui::SetNextWindowSize({500, 600});
 

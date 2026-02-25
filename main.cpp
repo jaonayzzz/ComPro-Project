@@ -11,6 +11,7 @@
 #include <iostream>
 #include <optional>
 #include "Summary_Page.cpp"
+#include "FlowerRender.cpp"
 #include "ui_start.h"
 
 int main()
@@ -94,7 +95,7 @@ int main()
         break;
 
     case AppState::SUMMARY: // เพิ่ม case นี้
-        drawSummaryPage(currentState, userSelection);
+        drawSummaryPage(window,currentState, userSelection,flowerTextures);
         break;
 
     case AppState::EXIT:
@@ -103,6 +104,11 @@ int main()
     }
 
     ImGui::SFML::Render(window);
+
+    if (currentState == AppState::SUMMARY) {
+    renderBouquet(window, userSelection, flowerTextures);
+    }
+
     window.display();
 }
 
