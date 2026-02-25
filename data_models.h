@@ -46,9 +46,10 @@ struct Flower {
     int id;
     FlowerType type;
     std::string name;
+    std::string meaning;
     int price;
     std::string occasion;
-    sf::Color primaryColor;
+    std::string imagePath;
 };
 
 struct Container {
