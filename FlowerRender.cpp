@@ -2,15 +2,30 @@
 #include <vector>
 
 void renderBouquet(sf::RenderWindow& window, const UserSelection& selection, const std::vector<sf::Texture>& flowerTextures) {
-    // 1. จัดการภาชนะ (เลเยอร์ล่างสุด)
+    // 0.จัดการพื้นหลัง
+     sf::VertexArray bg(sf::PrimitiveType::TriangleStrip, 4);
+    bg[0].position = {0.f, 0.f};
+    bg[1].position = {(float)WINDOW_WIDTH, 0.f};
+    bg[2].position = {0.f, (float)WINDOW_HEIGHT};
+    bg[3].position = {(float)WINDOW_WIDTH, (float)WINDOW_HEIGHT};
+
+    bg[0].color = BG_GRADIENT_TOP_LEFT;
+    bg[1].color = BG_GRADIENT_TOP_RIGHT;
+    bg[2].color = BG_GRADIENT_BOTTOM_LEFT;
+    bg[3].color = BG_GRADIENT_BOTTOM_RIGHT;
+
+    window.draw(bg);
+
+    
+    // 1. จัดการภาชนะ 
     sf::Texture containerTex;
     std::string path = "picture/" + selection.containerType + "-" + selection.containerSize + ".png";
     
     if (containerTex.loadFromFile(path)) {
         sf::Sprite containerSprite(containerTex);
         // กำหนดตำแหน่งที่ภาชนะจะวางบนผืนผ้าใบ (เช่น กึ่งกลางจอ)
-        sf::Vector2f canvasCenter(WINDOW_WIDTH / 2.f, WINDOW_HEIGHT / 2.f);
-        
+        sf::Vector2f canvasCenter(WINDOW_WIDTH *0.75f, WINDOW_HEIGHT / 2.f);
+        containerSprite.setScale({ 0.5f, 0.5f });
         containerSprite.setOrigin({ (float)containerTex.getSize().x / 2.f, (float)containerTex.getSize().y / 2.f });
         containerSprite.setPosition(canvasCenter);
         window.draw(containerSprite); // วาดภาชนะก่อนเสมอเพื่อให้เป็นเลเยอร์ล่าง
@@ -149,7 +164,7 @@ void renderBouquet(sf::RenderWindow& window, const UserSelection& selection, con
             
             flowerSprite.setOrigin({flowerSprite.getLocalBounds().size.x / 2.f, flowerSprite.getLocalBounds().size.y / 2.f});
             flowerSprite.setPosition(positions[i]);
-            flowerSprite.setScale({ 0.5f, 0.5f });
+            flowerSprite.setScale({ 0.045f, 0.045f });
 
             window.draw(flowerSprite); // ดอกไม้จะทับบนภาชนะเพราะวาดทีหลัง
         }

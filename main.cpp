@@ -105,9 +105,7 @@ int main()
 
     ImGui::SFML::Render(window);
 
-    if (currentState == AppState::SUMMARY) {
-    renderBouquet(window, userSelection, flowerTextures);
-    }
+    
 
     window.display();
 }

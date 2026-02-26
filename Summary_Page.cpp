@@ -8,8 +8,9 @@
 void drawSummaryPage(sf::RenderWindow& window,AppState& state, UserSelection& selection,const std::vector<sf::Texture>& flowerTextures) {
     
     renderBouquet(window, selection, flowerTextures);
-    ImGui::SetNextWindowPos({WINDOW_WIDTH * 0.5f, WINDOW_HEIGHT * 0.5f}, ImGuiCond_Always, {0.5f, 0.5f});
-    ImGui::SetNextWindowSize({500, 600});
+
+    ImGui::SetNextWindowPos({20.f, 20.f}, ImGuiCond_Always); 
+    ImGui::SetNextWindowSize({350.f, (float)WINDOW_HEIGHT - 40.f});
 
     ImGui::Begin("Order Summary", nullptr, ImGuiWindowFlags_NoResize);
     ImGui::PushFont(FONT_BODY);
