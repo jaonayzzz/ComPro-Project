@@ -1,4 +1,18 @@
-#include "main.h"
+#include <SFML/Graphics.hpp>
+#include <imgui.h>
+#include <imgui-SFML.h>
+#include "app_state.h"
+#include "data_models.h"
+#include "ui_mainmenu.h"
+#include "config.h"
+#include "Custom_Pages.h"
+#include "Random_Pages.cpp"
+#include "font_manager.h"
+#include <iostream>
+#include <optional>
+#include "Summary_Page.cpp"
+#include "FlowerRender.cpp"
+#include "ui_start.h"
 
 int main()
 {
@@ -68,7 +82,7 @@ int main()
         break;
 
     case AppState::CUSTOM_MODE:
-        Custom_Pages(flowerTextures, currentState); 
+    Custom_Pages(flowerTextures, currentState); 
         break;
 
     case AppState::RANDOM_MODE:
@@ -78,21 +92,21 @@ int main()
         if (ImGui::Button("Back"))
             currentState = AppState::MAIN_MENU;
         ImGui::End();*/
-
         break;
 
     case AppState::SUMMARY: // เพิ่ม case นี้
         drawSummaryPage(window,currentState, userSelection,flowerTextures);
         break;
-    case AppState::CARD:
-        card(userSelection.selectedFlowers,currentState,userSelection.occasion);
-        break;
+
     case AppState::EXIT:
         window.close();
         break;
     }
 
     ImGui::SFML::Render(window);
+
+    
+
     window.display();
 }
 

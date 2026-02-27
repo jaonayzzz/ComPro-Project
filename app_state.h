@@ -5,6 +5,5 @@ enum class AppState {
     CUSTOM_MODE,
     RANDOM_MODE,
     SUMMARY,
-    CARD,
     EXIT
 };
