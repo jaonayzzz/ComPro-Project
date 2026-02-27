@@ -13,6 +13,7 @@
 #include "Summary_Page.cpp"
 #include "FlowerRender.cpp"
 #include "ui_start.h"
+#include "card.cpp"
 
 int main()
 {
@@ -97,7 +98,9 @@ int main()
     case AppState::SUMMARY: // เพิ่ม case นี้
         drawSummaryPage(window,currentState, userSelection,flowerTextures);
         break;
-
+    case AppState::CARD:
+        card(userSelection.selectedFlowers,currentState,userSelection.occasion);
+        break;
     case AppState::EXIT:
         window.close();
         break;
