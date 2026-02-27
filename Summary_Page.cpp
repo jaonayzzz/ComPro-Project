@@ -30,9 +30,9 @@ void drawSummaryPage(sf::RenderWindow& window,AppState& state, UserSelection& se
     ImGui::Separator();
     ImGui::Text("Total Price: %d THB", totalFlowerPrice);
     
-    if (ImGui::Button("Back to Menu", {120, 40})) {
+    if (ImGui::Button("Back", {120, 40})) {
         selection.selectedFlowers.clear(); // ล้างข้อมูลเก่า
-        state = AppState::MAIN_MENU;
+        state = AppState::RANDOM_MODE;
     }
     ImGui::PopFont();
     ImGui::End();
