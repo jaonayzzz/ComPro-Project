@@ -61,7 +61,18 @@ int main()
             // สำคัญ: เซ็ตให้ Texture ทำงานราบรื่น (Smooth)
             flower.texture.setSmooth(true);
         }
-}
+    }
+    for (const auto& path : fileNames) {
+        sf::Texture tex;
+        if (tex.loadFromFile(path)) {
+            tex.setSmooth(true);
+            flowerTextures.push_back(tex); // ดันรูปเก็บเข้าตะกร้า
+        } else {
+            std::cerr << "Could not load image: " << path << std::endl;
+            // ใส่ Texture เปล่าๆ เข้าไปกันพัง เผื่อไฟล์ภาพหาย
+            flowerTextures.push_back(sf::Texture()); 
+        }
+    }
     
     sf::Clock deltaClock;
     AppState currentState = AppState::START_SCREEN;
