@@ -217,8 +217,18 @@ void ShowReceiptModal(bool* open, const std::vector<Flower>& items, const std::s
 
 void DrawOrderSystemUI(OrderCardData& cardData,bool &isCustommode,string &finalmsg) {
     // กำหนดขนาดหน้าต่างหลัก
+    ImVec2 center = GetMainViewport()->GetCenter();
+    SetNextWindowPos(center,ImGuiCond_Appearing,ImVec2(0.5f,0.5f));
     ImGui::SetNextWindowSize(ImVec2(800, 500), ImGuiCond_FirstUseEver);
-    ImGui::Begin("Flower Shop - Custom Order & Card System");
+    ImGuiWindowFlags flags = ImGuiWindowFlags_NoResize   |
+                             ImGuiWindowFlags_NoCollapse |
+                             ImGuiWindowFlags_NoTitleBar |
+                             ImGuiWindowFlags_NoMove;
+    ImGui::Begin("Flower Shop - Custom Order & Card System",nullptr,flags);
+
+    float windowHeight = ImGui::GetWindowHeight();
+    float contentHeight = 420.0f; // อิงจากความสูงของการ์ด (cardSize.y) ที่เราตั้งไว้
+    ImGui::SetCursorPosY((windowHeight - contentHeight) / 2.0f);
 
     // สร้างตาราง 2 คอลัมน์ (ซ้าย: กรอกข้อมูล, ขวา: พรีวิวการ์ด)
     if (ImGui::BeginTable("OrderTable", 2, ImGuiTableFlags_BordersInnerV)) {
@@ -226,7 +236,14 @@ void DrawOrderSystemUI(OrderCardData& cardData,bool &isCustommode,string &finalm
         // ==========================================
         // คอลัมน์ที่ 1: ส่วนฟอร์มกรอกข้อมูลออเดอร์ (Input)
         // ==========================================
+        PushFont(FONT_BODY);
         ImGui::TableNextColumn();
+        ImVec2 formSize(300.0f, 420.0f); // ล็อคความกว้างฟอร์มให้เท่ากับความกว้างการ์ด
+        float leftColumnWidth = ImGui::GetColumnWidth();
+        ImGui::SetCursorPosX(ImGui::GetCursorPosX() + (leftColumnWidth - formSize.x) / 2.0f);
+
+        BeginChild("FormArea", formSize, false, ImGuiWindowFlags_NoScrollbar);
+
         ImGui::Text("Card Details");
         ImGui::Separator();
         ImGui::Spacing();
@@ -234,6 +251,7 @@ void DrawOrderSystemUI(OrderCardData& cardData,bool &isCustommode,string &finalm
         // ช่องกรอกชื่อผู้รับ (To)
         ImGui::Text("Recipient (To):");
         // IM_ARRAYSIZE เป็น Macro ของ ImGui ที่ช่วยหาขนาดของ char array อัตโนมัติ
+
         ImGui::InputText("##To", cardData.recipient, IM_ARRAYSIZE(cardData.recipient)); 
         
         ImGui::Spacing();
@@ -272,6 +290,8 @@ void DrawOrderSystemUI(OrderCardData& cardData,bool &isCustommode,string &finalm
             show_receipt = true; 
         }
         ImGui::PopStyleColor(2); // คืนค่าสีปุ่ม
+        PopFont();
+        EndChild();
 
 
         // ==========================================
@@ -287,6 +307,7 @@ void DrawOrderSystemUI(OrderCardData& cardData,bool &isCustommode,string &finalm
         // เริ่มวาดการ์ด (นำเทคนิคตกแต่งจากโค้ดที่แล้วมาใช้)
         ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 12.0f);
         ImGui::PushStyleColor(ImGuiCol_ChildBg, ImVec4(1.0f, 0.98f, 0.94f, 1.0f)); 
+        PushFont(FONT_BODY);
         
         // ใส่ ID ให้ Child Window
         ImGui::BeginChild("CardPreview", cardSize, true, ImGuiWindowFlags_NoScrollbar);
@@ -324,6 +345,7 @@ void DrawOrderSystemUI(OrderCardData& cardData,bool &isCustommode,string &finalm
         ImGui::EndChild();
         ImGui::PopStyleColor(); // จบสีพื้นหลังการ์ด
         ImGui::PopStyleVar();   // จบการทำให้ขอบมน
+        PopFont();
 
         ImGui::EndTable();
     }

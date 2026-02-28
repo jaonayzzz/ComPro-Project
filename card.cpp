@@ -59,7 +59,11 @@ void card(const std::vector<Flower>& u, AppState& appstate,
         }
         ImGui::SameLine(0.f, 60.f);
         if (ImGui::Button("No", ImVec2(80, 30))) {
-            currentpage = 5; //go to print receipt
+            currentpage = 5; //ต้องแก้เซม go to print receipt
+        }
+        SetCursorPos(ImVec2((windowWidth - 80.f)*0.5f,290.f));
+        if(Button("Back",ImVec2(80,30))){
+            currentpage = 0; //ต้องแก้อยู่ ลิ้งกับ random หรือ custom
         }
 
         ImGui::PopStyleColor(2);
