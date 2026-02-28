@@ -32,29 +32,18 @@ int main()
    
     // ⭐ โหลดฟอนต์ (ครั้งเดียว)
     LoadFonts();
-
+    std::vector<Flower> selectedFlowers;
     initStartScreen();
+
     //โหลดรูปภาพ
-    std::vector<sf::Texture> flowerTextures;
-    static std::vector<std::string> fileNames = {
-        "picture/Lotus.png", "picture/White-Carnation.png", "picture/White-Chrysanthemum.png",
-        "picture/White-Rose.png", "picture/White-Orchid.png", "picture/White-Tulip.png",
-        "picture/Red-Poppy.png", "picture/White-Lily.png", "picture/White-Hydrangea.png",
-        "picture/White-Anemone.png", "picture/Marigold.png", "picture/White-Daisy.png",
-        "picture/Yellow-Daisy.png", "picture/Sunflower.png", "picture/Pink-Carnation.png",
-        "picture/Yellow-Chrysanthemum.png", "picture/Yellow-Rose.png", "picture/Purple-Dahlia.png",
-        "picture/Purple-Orchid.png", "picture/Yellow-Tulip.png", "picture/Purple-Iris.png",
-        "picture/Red-Peony.png", "picture/Jasmine.png", "picture/Red-Carnation.png",
-        "picture/Red-Rose.png", "picture/Pink-Rose.png", "picture/Red-Dahlia.png",
-        "picture/Lavender.png", "picture/Chamomile.png", "picture/Red-Tulip.png",
-        "picture/Forget-Me-Not.png", "picture/Pink-Lily.png", "picture/Blue-Hydrangea.png",
-        "picture/Pink-Hydrangea.png", "picture/Red-Anemone.png", "picture/Pink-Peony.png"
-    };
-    for (const auto& file : fileNames) { 
-        sf::Texture temp;
-        temp.loadFromFile(file);
-        flowerTextures.push_back(temp);
+    for (auto& flower : flowerList) {
+    // โหลดรูปโดยใช้ path ที่ระบุไว้ใน flower.imagePath
+    if (!flower.texture.loadFromFile(flower.imagePath)) {
+        // ถ้าโหลดไม่ได้ (เช่น พิมพ์ path ผิด หรือหาไฟล์ไม่เจอ)
+        std::cerr << "Could not load image: " << flower.imagePath << std::endl;
     }
+}
+    
     sf::Clock deltaClock;
     AppState currentState = AppState::START_SCREEN;
     UserSelection userSelection;
@@ -83,7 +72,7 @@ int main()
         break;
 
     case AppState::CUSTOM_MODE:
-    Custom_Pages(flowerTextures, currentState); 
+    Custom_Pages(flowerList, selectedFlowers, currentState); 
         break;
 
     case AppState::RANDOM_MODE:
