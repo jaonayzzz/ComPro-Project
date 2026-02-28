@@ -4,6 +4,13 @@
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics.hpp>
 
+enum class EntrySource {
+    NONE,
+    PRESET,
+    RANDOM,
+    CUSTOM
+};
+
 enum class FlowerType {
     Lotus,
     WhiteCarnation,
@@ -72,6 +79,11 @@ struct UserSelection {
     std::string containerSize;
     bool isCustomMode;
 
+    EntrySource source = EntrySource::NONE;
+    std::string presetName;
+    std::string presetImagePath;
+    std::vector<std::string> flowers;
+
     std::vector<Flower> selectedFlowers; // เก็บดอกไม้ที่สุ่มได้หรือเลือกเอง
     int totalAmount = 0;
 };
@@ -81,6 +93,19 @@ struct BudgetRange {
     int max;
 };
 
+struct FlowerPreset
+{
+    std::string name;
+    std::string occasion;
+    std::string containerType;
+    std::string containerSize;
+    int price;
+    std::string imagePath;
+    std::vector<std::string> flowers;
+    sf::Texture texture;
+};
+
+extern std::vector<FlowerPreset> developerPresets;
 extern std::vector<Flower> flowerList;
 extern std::vector<Container> containerList;
 

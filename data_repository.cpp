@@ -70,3 +70,58 @@ BudgetRange calculateActualBudget(const std::string& occasion, const Container& 
 
     return { minTotal, maxTotal };
 }
+
+std::vector<FlowerPreset> developerPresets = {
+    {
+        "Just Pink",
+        "Love & Care",
+        "Bouquet",
+        "L",
+        1149,
+        "../picture/Pao_Preset.png",
+        {
+            "Pink Carnation", "Pink Carnation", "Pink Carnation", "Pink Carnation",
+            "Pink Lily", "Pink Lily", "Pink Lily", "Pink Lily",
+            "Pink Hydrangea", "Pink Hydrangea", "Pink Hydrangea"
+        }
+    },
+    {
+        "Just love u",
+        "Love & Care",
+        "Bouquet",
+        "L",
+        1389,
+        "../picture/Am_Preset.png",
+        {
+            "Sunflower", "Forget-me-not", "Forget-me-not", "Pink Rose", 
+            "Blue Hydrangea", "White Rose", "Pink Peony", "Pink Hydrangea", 
+            "Pink Carnation", "White Carnation"
+        }
+    },
+    {
+        "Can't wait",
+        "Condolences",
+        "Vase",
+        "L",
+        1499,
+        "../picture/Nay_Preset.png",
+        {
+            "White Hydrangea", "White Hydrangea", "White Hydrangea", 
+            "Lotus", "White Carnation", "White Carnation", "White Carnation", 
+            "Red Poppy", "Red Poppy", "Red Poppy", "White Lily"
+        }
+    },
+        {
+        "Waited a long time",
+        "Love & Care",
+        "Bouquet",
+        "L",
+        1259,
+        "../picture/Chom_Preset.png",
+        {
+            "Pink Hydrangea", "Pink Hydrangea", "Pink Hydrangea", "Pink Hydrangea", "Pink Hydrangea",
+            "Pink Lily", "Pink Lily", "Pink Lily", "Pink Lily", "Pink Lily",
+            "Lavender", "Lavender", "Sunflower"
+        }
+    }
+};

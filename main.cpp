@@ -14,6 +14,7 @@
 #include "FlowerRender.cpp"
 #include "ui_start.h"
 #include "card.cpp"
+#include "ui_preset_page.h"
 
 int main()
 {
@@ -100,6 +101,10 @@ int main()
         if (ImGui::Button("Back"))
             currentState = AppState::MAIN_MENU;
         ImGui::End();*/
+        break;
+
+    case AppState::PRESET_PAGE:
+        drawPresetPage(window, currentState, userSelection);
         break;
 
     case AppState::SUMMARY: // เพิ่ม case นี้

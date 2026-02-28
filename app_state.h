@@ -4,6 +4,7 @@ enum class AppState {
     MAIN_MENU,
     CUSTOM_MODE,
     RANDOM_MODE,
+    PRESET_PAGE,
     SUMMARY,
     CARD,
     EXIT

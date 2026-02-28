@@ -44,6 +44,7 @@ add_executable(MyProgram
     FlowerRenderer.cpp
     font_manager.cpp
     ui_start.cpp
+    ui_preset_page.cpp
 )
 
 # 5. เชื่อมต่อ Library ทุกตัวเข้าด้วยกัน

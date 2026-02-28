@@ -156,6 +156,13 @@ void drawMainMenu(
         updateSelection(); // <- เรียกฟังก์ชันเก็บค่า
         state = AppState::RANDOM_MODE;
     }
+    
+    ImGui::Spacing();
+    float presetBtnWidth = 200.0f; 
+    ImGui::SetCursorPosX((ImGui::GetWindowSize().x - presetBtnWidth) * 0.5f);
+    if (ImGui::Button("Preset Mode", {presetBtnWidth, 45})) {
+        state = AppState::PRESET_PAGE;
+    }
 
     ImGui::Spacing();
     ImGui::SetCursorPosX((ImGui::GetWindowSize().x - 120) * 0.5f);
