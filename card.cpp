@@ -1,9 +1,11 @@
-#include "Card.h"
+#include "card.h"
 #include "app_state.h"
 
 using namespace ImGui;
 
-void card(const std::vector<Flower>& u, AppState& appstate, std::string occassions) {
+void card(const std::vector<Flower>& u, AppState& appstate, 
+    std::string occassions){
+    //,sf::RenderWindow &window,UserSelection &selection,vector<sf::Texture> &flowerTextures) {
 
     float windowWidth    = 480.f;
     static float receiptheight = 0.0f; //initial height of receipt
@@ -32,6 +34,7 @@ void card(const std::vector<Flower>& u, AppState& appstate, std::string occassio
         );
         ImGui::SetNextWindowSize(ImVec2(300.f, 450.f), ImGuiCond_Always);
     }
+    if(currentpage != 5){
     ImGui::Begin("Card Menu", nullptr, flags);
     
     // ---- PAGE 0: Would you like some card? ----
@@ -56,7 +59,7 @@ void card(const std::vector<Flower>& u, AppState& appstate, std::string occassio
         }
         ImGui::SameLine(0.f, 60.f);
         if (ImGui::Button("No", ImVec2(80, 30))) {
-            currentpage = 2; //go to print receipt
+            currentpage = 5; //go to print receipt
         }
 
         ImGui::PopStyleColor(2);
@@ -79,12 +82,17 @@ void card(const std::vector<Flower>& u, AppState& appstate, std::string occassio
             // set message ครั้งเดียวตอนกดปุ่ม ไม่ใช่ทุก frame
             randindex = rand()%5;
             message     = getRandomMessage(occassions, randindex);
+            isCustommode = false;
             currentpage = 3; //โชว์ข้อความแรนด้อม
         }
 
         ImGui::SetCursorPos(ImVec2(190.f, 260.f));
         if (ImGui::Button("Custom", ImVec2(100, 30))) {
-            currentpage = 4; //go to func custom
+            memset(cardData.message,0,sizeof(cardData.message));
+            memset(cardData.recipient, 0, sizeof(cardData.recipient));
+            memset(cardData.sender, 0, sizeof(cardData.sender));
+            isCustommode = true;
+            currentpage = 5; //go to func custom
         }
 
         ImGui::SetCursorPos(ImVec2((windowWidth - 80.f) * 0.5f, 310.f));
@@ -108,34 +116,38 @@ void card(const std::vector<Flower>& u, AppState& appstate, std::string occassio
 
         // ✅ ใช้ showRandomCard() แทน randomCard()
         // วาด UI ทุก frame — message ถูก set ไปแล้วตอนกดปุ่ม Random
-        showRandomCard(message, randindex);
+        showRandomCard(message,finalmessage,randindex);
 
-        float betweenwidth = 80.f;
-        float gap          = 40.f;
-        float totalwidth   = (betweenwidth * 2) + gap;
+        float buttonwidth = 100.f;
+        float buttonheight  = 30.f;
+        float spacing = GetStyle().ItemSpacing.x;
+        float totalwidth   = (buttonwidth * 3) + (spacing * 2);
         ImGui::SetCursorPos(ImVec2((windowWidth - totalwidth) * 0.5f, 380.f));
 
-        if (ImGui::Button("< Back", ImVec2(betweenwidth, 30))) {
+        if (ImGui::Button("< Back", ImVec2(buttonwidth, buttonheight))) {
             message     = "";
             randindex   = 0;
             currentpage = 1;
         }
-        SameLine(0.f,gap);
-        if(Button("Re-Random",ImVec2(betweenwidth,30))){
-            message     = "";
-            randindex   = 0;
-            showRandomCard(message,randindex);
+        SameLine(0.f,spacing);
+        if(Button("Re-Random",ImVec2(buttonwidth,buttonheight))){
+            memset(nameBuf,0,sizeof(nameBuf));
+            randindex   = rand()%5;
+            message     = getRandomMessage(occassions, randindex);
+            isCustommode = false;
         }
-        ImGui::SameLine(0.f, gap);
-        if (ImGui::Button("confirm >", ImVec2(betweenwidth, 30))) {
-            currentpage = 2;
+        ImGui::SameLine(0.f, spacing);
+        if (ImGui::Button("confirm >", ImVec2(buttonwidth, buttonheight))) {
+            strncpy(cardData.message,finalmessage.c_str(),sizeof(cardData.message));
+            cardData.message[sizeof(cardData.message)-1] = '\0';
+            currentpage = 5;
             //receiptheight = 0.0f;
         }
         ImGui::PopFont();
     }
 
     // ---- PAGE 4: Custom Card ----
-    else if (currentpage == 4) {
+    /*else if (currentpage == 4) {
         ImGui::PushFont(FONT_TITLE);
         float textwid = ImGui::CalcTextSize("Please write your card here!").x;
         ImGui::SetCursorPos(ImVec2((windowWidth - textwid) / 2.f, 50.f));
@@ -155,16 +167,22 @@ void card(const std::vector<Flower>& u, AppState& appstate, std::string occassio
         }
         ImGui::SameLine(0.f, 120.f);
         if (ImGui::Button("confirm >", ImVec2(80, 30))) {
-            currentpage = 2;
+            currentpage = 5;
         }
 
         ImGui::PopFont();
-    }
-
+    }*/
+    
     // ---- PAGE 2: Receipt ----
-    else if (currentpage == 2) {
+    /*else if (currentpage == 2) {
         show_receipt = true;
         ShowReceiptModal(&show_receipt, u, message,receiptheight);
+    }*/
+    ImGui::End();
+    } 
+    
+    if(currentpage == 5){
+        //renderBouquet(window,selection,flowerTextures);
+        DrawOrderSystemUI(cardData,isCustommode,finalmessage);
     }
-    ImGui::End(); 
 }

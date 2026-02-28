@@ -15,13 +15,24 @@
 #include "font_manager.h"
 
 using namespace std;
+using namespace ImGui;
 
+struct OrderCardData {
+    char recipient[64] = "";
+    char sender[64] = "";
+    char message[256] = "";
+    //sf::Texture coverImage;
+};
 
+OrderCardData cardData;
 
 static int         currentpage  = 0;
 static std::string message      = "";
+static string finalmessage = "";
 static bool        show_receipt = false;
 static int         randindex    = 0;
+static char nameBuf[128] = "";
+static bool isCustommode = false;
 
 struct cards {
     string occasion, greeting;
@@ -57,7 +68,7 @@ static string getRandomMessage(string occasions, int random) {
 }
 
 //draw ui random
-static void showRandomCard(string& message, int random) {
+static void showRandomCard(string& message,string &finalmsg, int random) {
     float windowWidth = ImGui::GetWindowWidth(); 
 
     ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(1.0f, 1.0f, 1.0f, 1.0f));
@@ -78,20 +89,20 @@ static void showRandomCard(string& message, int random) {
         ImGui::TextUnformatted(before.c_str());
         ImGui::SameLine();
 
-        static char nameBuf[128] = "";
         ImGui::PushItemWidth(inputw);
         string inputLabel = "##nameInput" + to_string(random);
-        ImGui::InputText(inputLabel.c_str(), nameBuf, sizeof(nameBuf));
+        InputText(inputLabel.c_str(),nameBuf,sizeof(nameBuf));
         ImGui::PopItemWidth();
 
         ImGui::SameLine();
         ImGui::TextUnformatted(after.c_str());
 
-        message = before + string(nameBuf) + after;
+        finalmsg = before + string(nameBuf) + after;
     } else {
         float textwidth = ImGui::CalcTextSize(message.c_str()).x;
         ImGui::SetCursorPosX((windowWidth - textwidth) * 0.5f);
         ImGui::TextUnformatted(message.c_str());
+        finalmsg = message;
     }
 
     ImGui::PopStyleColor(2); 
@@ -196,10 +207,126 @@ void ShowReceiptModal(bool* open, const std::vector<Flower>& items, const std::s
         }
 
         ImGui::PopStyleColor(4);
-        ImGui::PopStyleVar();
+        ImGui::PopStyleVar(1);
         ImGui::EndPopup();
     } else {
         ImGui::PopStyleColor(4);
-        ImGui::PopStyleVar(); 
+        ImGui::PopStyleVar(1); 
     }
+}
+
+void DrawOrderSystemUI(OrderCardData& cardData,bool &isCustommode,string &finalmsg) {
+    // กำหนดขนาดหน้าต่างหลัก
+    ImGui::SetNextWindowSize(ImVec2(800, 500), ImGuiCond_FirstUseEver);
+    ImGui::Begin("Flower Shop - Custom Order & Card System");
+
+    // สร้างตาราง 2 คอลัมน์ (ซ้าย: กรอกข้อมูล, ขวา: พรีวิวการ์ด)
+    if (ImGui::BeginTable("OrderTable", 2, ImGuiTableFlags_BordersInnerV)) {
+        
+        // ==========================================
+        // คอลัมน์ที่ 1: ส่วนฟอร์มกรอกข้อมูลออเดอร์ (Input)
+        // ==========================================
+        ImGui::TableNextColumn();
+        ImGui::Text("Card Details");
+        ImGui::Separator();
+        ImGui::Spacing();
+
+        // ช่องกรอกชื่อผู้รับ (To)
+        ImGui::Text("Recipient (To):");
+        // IM_ARRAYSIZE เป็น Macro ของ ImGui ที่ช่วยหาขนาดของ char array อัตโนมัติ
+        ImGui::InputText("##To", cardData.recipient, IM_ARRAYSIZE(cardData.recipient)); 
+        
+        ImGui::Spacing();
+
+        // ช่องกรอกชื่อผู้ส่ง (From)
+        ImGui::Text("Sender (From):");
+        ImGui::InputText("##From", cardData.sender, IM_ARRAYSIZE(cardData.sender));
+        
+        ImGui::Spacing();
+
+        // ช่องกรอกข้อความอวยพร (Message) แบบหลายบรรทัด
+        ImGui::Text("Greeting Message:");
+        // ImVec2(-FLT_MIN, ...) หมายถึงให้ความกว้างขยายเต็มพื้นที่ที่เหลือ ส่วนความสูงกำหนดไว้ที่ประมาณ 4 บรรทัด
+        if(!isCustommode){
+            ImGui::InputTextMultiline("##Message", cardData.message, IM_ARRAYSIZE(cardData.message), 
+                                  ImVec2(-FLT_MIN, ImGui::GetTextLineHeight() * 4),ImGuiInputTextFlags_ReadOnly);
+        }else{
+            ImGui::InputTextMultiline("##Message", cardData.message, IM_ARRAYSIZE(cardData.message), 
+                                  ImVec2(-FLT_MIN, ImGui::GetTextLineHeight() * 4));
+        }
+        
+
+        ImGui::Spacing();
+        ImGui::Spacing();
+        ImGui::Separator();
+        ImGui::Spacing();
+
+        // ปุ่มยืนยันออเดอร์และพิมพ์ใบเสร็จ
+        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.2f, 0.6f, 0.3f, 1.0f)); // เปลี่ยนปุ่มเป็นสีเขียว
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.3f, 0.7f, 0.4f, 1.0f));
+        if (ImGui::Button("Confirm Order & Generate Receipt", ImVec2(-FLT_MIN, 40))) {
+            // โค้ดสำหรับบันทึกข้อมูล ตัดสต๊อกดอกไม้ หรือสร้างไฟล์ใบเสร็จรับเงิน
+            printf("Order Confirmed for: %s\n", cardData.recipient);
+            printf("Generating Receipt...\n");
+            finalmsg = string(cardData.message);
+            show_receipt = true; 
+        }
+        ImGui::PopStyleColor(2); // คืนค่าสีปุ่ม
+
+
+        // ==========================================
+        // คอลัมน์ที่ 2: ส่วนแสดงผลการ์ดพรีวิว (Live Preview)
+        // ==========================================
+        ImGui::TableNextColumn();
+        
+        // จัดการ์ดให้อยู่กึ่งกลางของคอลัมน์ขวา
+        ImVec2 cardSize(300, 420);
+        float columnWidth = ImGui::GetColumnWidth();
+        ImGui::SetCursorPosX(ImGui::GetCursorPosX() + (columnWidth - cardSize.x) / 2.0f);
+        
+        // เริ่มวาดการ์ด (นำเทคนิคตกแต่งจากโค้ดที่แล้วมาใช้)
+        ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 12.0f);
+        ImGui::PushStyleColor(ImGuiCol_ChildBg, ImVec4(1.0f, 0.98f, 0.94f, 1.0f)); 
+        
+        // ใส่ ID ให้ Child Window
+        ImGui::BeginChild("CardPreview", cardSize, true, ImGuiWindowFlags_NoScrollbar);
+
+        // 1. รูปภาพหน้าการ์ด (อิงจากชนิดดอกไม้ที่ลูกค้าเลือก)
+        ImVec2 imageSize(260, 180); 
+        ImGui::SetCursorPosX((ImGui::GetWindowWidth() - imageSize.x) / 2.0f);
+        ImGui::SetCursorPosY(15.0f);
+        //ImGui::Image(cardData.coverImage, imageSize);
+        ImGui::Spacing();
+        ImGui::Separator();
+        ImGui::Spacing();
+
+        // 2. ผู้รับ (To)
+        ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.2f, 0.2f, 0.2f, 1.0f));
+        ImGui::Text("To: %s", cardData.recipient); // ดึงค่าจาก char array มาแสดงสดๆ
+        ImGui::Spacing();
+
+        // 3. ข้อความ (Message)
+        ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.7f, 0.3f, 0.4f, 1.0f));
+        ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 10.0f);
+        ImGui::TextWrapped("%s", cardData.message);
+        ImGui::PopStyleColor();
+        ImGui::Spacing();
+
+        // 4. ผู้ส่ง (From)
+        std::string fromText = "From: " + std::string(cardData.sender);
+        float textWidth = ImGui::CalcTextSize(fromText.c_str()).x;
+        ImGui::SetCursorPosX(ImGui::GetWindowWidth() - textWidth - 15.0f); 
+        ImGui::SetCursorPosY(cardSize.y - 40.0f); 
+        ImGui::Text("%s", fromText.c_str());
+        
+        ImGui::PopStyleColor(); // จบส่วนสีตัวอักษร
+        
+        ImGui::EndChild();
+        ImGui::PopStyleColor(); // จบสีพื้นหลังการ์ด
+        ImGui::PopStyleVar();   // จบการทำให้ขอบมน
+
+        ImGui::EndTable();
+    }
+
+    ImGui::End();
 }
