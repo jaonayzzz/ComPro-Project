@@ -8,22 +8,25 @@
 #include <string>
 #include <map>
 #include <algorithm>
+#ifndef CUSTOM_PAGES_H
+#define CUSTOM_PAGES_H
 
 #include "config.h"
 #include "font_manager.h"
 #include "ui_mainmenu.h"
 #include "data_models.h"
 #include "FlowerRenderer.h"
+#include "for_testing.h"
 
-void Selectyourpieces();
-void Summary();
+inline void SendYourFeelings();
+inline void OrderSummary();
 
-void Custom_Pages(std::vector<Flower>& flowerList,std::vector<Flower>& selectedFlowers,AppState& state,UserSelection& selection){
+inline void Custom_Pages(std::vector<Flower>& flowerList,std::vector<Flower>& selectedFlowers,AppState& state,UserSelection& selection){
     static int currentPage = 0; 
-    int totalP = 0;
+    static float notificationTimer = 0.0f; // 0 คือไม่แสดง, > 0 คือกำลังแสดง
+    float displayDuration = 2.0f;          // ให้แสดงค้างไว้ 2 วินาที
     std::map<std::string, int> flowerCounts;
-    std::map<std::string, int> flowerPrices; 
-        Selectyourpieces();
+    std::map<std::string, int> flowerPrices;
 
         ImGui::PushStyleColor(ImGuiCol_TitleBgActive, ImVec4(0.05f, 0.10f, 0.20f, 1.0f)); 
         ImGui::PushStyleColor(ImGuiCol_TitleBg, ImVec4(0.10f, 0.15f, 0.30f, 1.0f)); 
@@ -52,9 +55,10 @@ void Custom_Pages(std::vector<Flower>& flowerList,std::vector<Flower>& selectedF
 
         if (currentPage == 0){
             ImGui::PushFont(FONT_TITLE);    
-            Selectyourpieces();
+            SendYourFeelings();
             ImGui::PopFont();
             
+            bool isFull = (selectedFlowers.size() >= (size_t)max);
             float footerHeight = 70.0f; 
             ImGui::BeginChild("FlowerScrollZone", ImVec2(0, -footerHeight), false, ImGuiWindowFlags_None);
             ImDrawList* draw_list = ImGui::GetWindowDrawList();
@@ -73,9 +77,12 @@ void Custom_Pages(std::vector<Flower>& flowerList,std::vector<Flower>& selectedF
                                 windowPos.y + (row * (boxSize + spacing)));
             ImVec2 boxMax = ImVec2(boxPos.x + boxSize, boxPos.y + boxSize);
 
+            // ถ้าเต็ม: ใช้สีขาวที่จางมาก (Alpha 60) | ถ้าไม่เต็ม: สีขาวปกติ (Alpha 150)
+            ImU32 boxBgCol = isFull ? ImColor(255, 255, 255, 60) : ImColor(255, 255, 255, 150);
+            ImU32 borderCol = isFull ? ImColor(200, 200, 200, 100) : ImColor(255, 255, 255, 255);
             // --- 1. วาดพื้นหลังกล่อง ---
-            draw_list->AddRectFilled(boxPos, boxMax, ImColor(255, 255, 255, 150), 12.0f); // กล่องสีขาว
-            draw_list->AddRect(boxPos, boxMax, ImColor(255, 255, 255, 255), 12.0f, 0, 1.0f); // ขอบ
+            draw_list->AddRectFilled(boxPos, boxMax,boxBgCol, 12.0f); // กล่องสีขาว
+            draw_list->AddRect(boxPos, boxMax,borderCol, 12.0f, 0, 1.0f); // ขอบ
 
             // --- 2. วาดรูปดอกไม้ (เขยิบขึ้นบนนิดนึง) ---
             if (i < (int)flowerList.size()) {
@@ -109,15 +116,20 @@ void Custom_Pages(std::vector<Flower>& flowerList,std::vector<Flower>& selectedF
             ImGui::InvisibleButton("FlowerBtn", ImVec2(boxSize, boxSize));
 
             if (ImGui::IsItemHovered()) {
-                // ไฮไลต์ขอบเมื่อเอาเมาส์วาง
+            if (isFull) {
+                ImGui::BeginTooltip();
+                ImGui::TextColored(ImVec4(0.8f, 0.2f, 0.2f, 1.0f), "Container Full (%d/%d)", (int)selectedFlowers.size(), max);
+                ImGui::EndTooltip();
+            } else {
+                // ไฮไลต์สีทองปกติถ้ายังเลือกได้
                 draw_list->AddRect(boxPos, boxMax, ImColor(255, 215, 0, 255), 12.0f, 0, 2.0f);
-
-                // แสดงเฉพาะความหมายใน Tooltip
+                
                 ImGui::BeginTooltip();
                 ImGui::TextColored(ImVec4(1.0f, 0.5f, 0.8f, 1.0f), "Meaning:");
-                ImGui::TextWrapped("%s", flowerList[i].meaning.c_str()); // ใช้ Wrapped เผื่อความหมายยาว
+                ImGui::TextWrapped("%s", flowerList[i].meaning.c_str());
                 ImGui::EndTooltip();
             }
+    }
             ImGui::SetItemAllowOverlap();//ให้คลิกปุ่มบนแถบได้แม้ตำแหน่งทับซ้อนกัน
             ImVec2 winPos = ImGui::GetWindowPos();
             ImVec2 winSize = ImGui::GetWindowSize();
@@ -125,10 +137,15 @@ void Custom_Pages(std::vector<Flower>& flowerList,std::vector<Flower>& selectedF
             ImVec2 barMin = ImVec2(winPos.x, winPos.y + winSize.y - barHeight);
             bool mouseOnBar = (ImGui::GetIO().MousePos.y >= barMin.y);
             if (ImGui::IsItemClicked() && ImGui::GetIO().MousePos.y < barMin.y) {
-                selectedFlowers.push_back(flowerList[i]);
-                std::cout << "Added to cart: " << flowerList[i].name << std::endl;
+                if (!isFull) {
+            selectedFlowers.push_back(flowerList[i]);
+            } else {
+                // ถ้าเต็มแล้ว ให้เริ่มจับเวลาเพื่อแสดง Pop-up
+                notificationTimer = (float)ImGui::GetTime();
+            }
                 
             }
+            
             
             ImGui::PopID();
             }
@@ -167,6 +184,7 @@ void Custom_Pages(std::vector<Flower>& flowerList,std::vector<Flower>& selectedF
 
             
             // --- 1. เตรียมข้อมูล ---
+            int totalP = 0;
             totalP=totalP+selectedCont.basePrice;
             for(const auto& f : selectedFlowers) totalP += f.price;
 
@@ -177,9 +195,10 @@ void Custom_Pages(std::vector<Flower>& flowerList,std::vector<Flower>& selectedF
 
             // --- 3. วาดจำนวนดอกไม้ (ฝั่งซ้าย) ---
             ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.85f, 0.45f, 0.55f, 1.0f)); // สีชมพูพาสเทลเข้ม
-            std::string txtItems = "Selected: " + std::to_string(selectedFlowers.size()) + " pieces";
-            ImGui::SetCursorScreenPos(ImVec2(winPos.x + leftPadding, textY));
+            std::string txtItems = "Selected: " + std::to_string(selectedFlowers.size())+" / " + std::to_string(selectedCont.maxF) + " pieces";
+            ImGui::SetCursorScreenPos(ImVec2(winPos.x + leftPadding, textY)) ;
             ImGui::Text("%s", txtItems.c_str());
+
 
             // --- 4. วาดราคา (ถัดไปทางขวา) ---
             // นายสามารถปรับระยะห่างระหว่าง "ชิ้น" กับ "ราคา" ได้ที่ค่า gap
@@ -210,89 +229,136 @@ void Custom_Pages(std::vector<Flower>& flowerList,std::vector<Flower>& selectedF
         else if (currentPage == 1) {
             
         ImGui::PushFont(FONT_TITLE);
-        Summary();
+        OrderSummary();
         ImGui::PopFont();
-      
+
         // --- 1. เตรียมข้อมูล (เหมือนเดิม) ---
-    flowerCounts.clear();
-    flowerPrices.clear();
-    for (const auto& flower : selectedFlowers) {
-        flowerCounts[flower.name]++;
-        flowerPrices[flower.name] = flower.price;
-    }
+        flowerCounts.clear();
+        flowerPrices.clear();
+        for (const auto& flower : selectedFlowers) {
+            flowerCounts[flower.name]++;
+            flowerPrices[flower.name] = flower.price;
+        }
 
-    // --- 2. คำนวณขอบเขตของสี่เหลี่ยม (ฝั่งซ้าย) ---
-    ImDrawList* drawList = ImGui::GetWindowDrawList();
-    ImVec2 winPos = ImGui::GetWindowPos();
-    ImVec2 winSize = ImGui::GetWindowSize();
+        // --- 2. คำนวณขอบเขตของสี่เหลี่ยม (ฝั่งซ้าย) ---
+        ImDrawList* drawList = ImGui::GetWindowDrawList();
+        ImVec2 winPos = ImGui::GetWindowPos();
+        ImVec2 winSize = ImGui::GetWindowSize();
 
-    float padding = 20.0f; 
-    float centerX = winPos.x + (winSize.x / 2.0f); // เส้นกึ่งกลางหน้าต่าง
-    
-    // พิกัดสี่เหลี่ยม: เริ่มจากขอบซ้ายหน้าต่าง จนถึง (กึ่งกลาง - 10.0f)
-    ImVec2 rectMin = ImVec2(winPos.x + padding, winPos.y + 100.0f); // 100.0f คือเผื่อที่ให้ Title "Summary"
-    ImVec2 rectMax = ImVec2(centerX - 10.0f, winPos.y + winSize.y - 80.0f); // 80.0f คือเผื่อที่ให้ปุ่ม Back/Next
-
-    // วาดสี่เหลี่ยมขอบมน (พื้นหลังขาวโปร่งแสงเล็กน้อยเพื่อให้ตัวหนังสือดำอ่านง่าย)
-    drawList->AddRectFilled(rectMin, rectMax, ImColor(255, 255, 255, 180), 15.0f);
-    drawList->AddRect(rectMin, rectMax, ImColor(255, 255, 255, 255), 15.0f, 0, 1.5f); // เส้นขอบ
-
-    // --- 3. แสดงข้อมูลภายในสี่เหลี่ยม ---
-    // ใช้ CursorPos เพื่อกำหนดให้ ImGui วาดข้อความเริ่มจากมุมซ้ายบนของสี่เหลี่ยม
-    float textInsidePadding = 15.0f;
-    ImGui::SetCursorScreenPos(ImVec2(rectMin.x + textInsidePadding, rectMin.y + textInsidePadding));
-
-    // เริ่มกลุ่มรายการ (หุ้มด้วย Group เพื่อให้จัดการตำแหน่งง่ายขึ้น)
-    ImGui::BeginGroup();
-    
-    ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.1f, 0.1f, 0.3f, 1.0f)); // เปลี่ยนสี text เป็นสีเข้มเพื่อให้เด่นบนพื้นขาว
-    
-    
-    ImGui::Text("Your Selection Detail:");
-    ImGui::BulletText("%s (%s) - %d THB", type.c_str(), size.c_str(), selectedCont.basePrice);
-    ImVec2 currentCursorPos = ImGui::GetCursorScreenPos(); // ดึงตำแหน่งปัจจุบันของตัวหนังสือ
-
-    //วาดเส้นกั้น
-    float lineMargin = 10.0f; // ระยะห่างจากขอบกล่องซ้าย-ขวา
-    float lineY = currentCursorPos.y + 5.0f; // ให้เส้นอยู่ต่ำกว่าตัวหนังสือบรรทัดบนเล็กน้อย
-    // วาดเส้นจาก (ซ้ายของกล่อง + margin) ไปยัง (ขวาของกล่อง - margin)
-    drawList->AddLine(
-        ImVec2(rectMin.x + lineMargin, lineY), 
-        ImVec2(rectMax.x - lineMargin, lineY), 
-        ImColor(200, 200, 200, 255), // สีเทา
-        1.0f                         // ความหนาของเส้น
-    );
-    // เลื่อน Cursor ลงมาด้านล่างเส้น เพื่อให้ตัวหนังสือบรรทัดถัดไปไม่ทับเส้น
-    ImGui::SetCursorScreenPos(ImVec2(currentCursorPos.x, lineY + 10.0f));
-
-    // แสดงรายการดอกไม้
-    for (auto const& [name, count] : flowerCounts) {
-        int unitPrice = flowerPrices[name];
-        int totalForEach = unitPrice * count;
-
-        ImGui::BulletText("%s [%d] x%d", name.c_str(), unitPrice, count);
+        float padding = 20.0f; 
+        float centerX = winPos.x + (winSize.x / 2.0f); // เส้นกึ่งกลางหน้าต่าง
         
-        // ชิดขวาภายในขอบเขตสี่เหลี่ยม (ไม่ใช่ขอบหน้าต่าง)
-        ImGui::SameLine(rectMax.x - rectMin.x - 100.0f); 
-        ImGui::Text("%d THB", totalForEach);
-    }
-    //วาดเส้นกั้น
-    ImVec2 totallineCursorPos = ImGui::GetCursorScreenPos(); // ดึงตำแหน่งปัจจุบันของตัวหนังสือ
-    float line2Margin = 15.0f; 
-    float line2Y = totallineCursorPos.y + 2.0f;
-    drawList->AddLine(
-        ImVec2(rectMin.x + line2Margin, line2Y), 
-        ImVec2(rectMax.x - line2Margin, line2Y), 
-        ImColor(200, 200, 200, 255), // สีเทา
-        1.0f                         // ความหนาของเส้น
-    );
-    ImVec2 totalCursorPos = ImGui::GetCursorScreenPos(); // ดึงตำแหน่งปัจจุบันของตัวหนังสือ
-    float linetotalY = totallineCursorPos.y + 2.0f;
-    // เลื่อน Cursor ลงมาด้านล่างเส้น เพื่อให้ตัวหนังสือบรรทัดถัดไปไม่ทับเส้น
-    ImGui::SetCursorScreenPos(ImVec2(totalCursorPos.x, linetotalY + 10.0f));
-    ImGui::BulletText("Total : %d", totalP);
-    ImGui::PopStyleColor(1);
-    ImGui::EndGroup();
+        // พิกัดสี่เหลี่ยม: เริ่มจากขอบซ้ายหน้าต่าง จนถึง (กึ่งกลาง - 10.0f)
+        ImVec2 rectMin = ImVec2(winPos.x + padding, winPos.y + 100.0f); // 100.0f คือเผื่อที่ให้ Title "Summary"
+        ImVec2 rectMax = ImVec2(centerX - 10.0f, winPos.y + winSize.y - 80.0f); // 80.0f คือเผื่อที่ให้ปุ่ม Back/Next
+
+        // วาดสี่เหลี่ยมขอบมน (พื้นหลังขาวโปร่งแสงเล็กน้อยเพื่อให้ตัวหนังสือดำอ่านง่าย)
+        drawList->AddRectFilled(rectMin, rectMax, ImColor(255, 255, 255, 180), 15.0f);
+        drawList->AddRect(rectMin, rectMax, ImColor(255, 255, 255, 255), 15.0f, 0, 1.5f); // เส้นขอบ
+
+        // --- 3. แสดงข้อมูลภายในสี่เหลี่ยม ---
+        // ใช้ CursorPos เพื่อกำหนดให้ ImGui วาดข้อความเริ่มจากมุมซ้ายบนของสี่เหลี่ยม
+        float textInsidePadding = 15.0f;
+        ImGui::SetCursorScreenPos(ImVec2(rectMin.x + textInsidePadding, rectMin.y + textInsidePadding));
+
+        // เริ่มกลุ่มรายการ (หุ้มด้วย Group เพื่อให้จัดการตำแหน่งง่ายขึ้น)
+        ImGui::BeginGroup();
+        
+        ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.1f, 0.1f, 0.3f, 1.0f)); // เปลี่ยนสี text เป็นสีเข้มเพื่อให้เด่นบนพื้นขาว
+        
+        
+        ImGui::Text("Your Selection Detail:");
+        ImGui::BulletText("%s (%s) - %d THB", type.c_str(), size.c_str(), selectedCont.basePrice);
+        ImVec2 currentCursorPos = ImGui::GetCursorScreenPos(); // ดึงตำแหน่งปัจจุบันของตัวหนังสือ
+
+        //วาดเส้นกั้น
+        float lineMargin = 10.0f; // ระยะห่างจากขอบกล่องซ้าย-ขวา
+        float lineY = currentCursorPos.y + 5.0f; // ให้เส้นอยู่ต่ำกว่าตัวหนังสือบรรทัดบนเล็กน้อย
+        // วาดเส้นจาก (ซ้ายของกล่อง + margin) ไปยัง (ขวาของกล่อง - margin)
+        drawList->AddLine(
+            ImVec2(rectMin.x + lineMargin, lineY), 
+            ImVec2(rectMax.x - lineMargin, lineY), 
+            ImColor(200, 200, 200, 255), // สีเทา
+            1.0f                         // ความหนาของเส้น
+        );
+        // เลื่อน Cursor ลงมาด้านล่างเส้น เพื่อให้ตัวหนังสือบรรทัดถัดไปไม่ทับเส้น
+        ImGui::SetCursorScreenPos(ImVec2(currentCursorPos.x, lineY + 10.0f));
+
+        // แสดงรายการดอกไม้
+        int totalFlower = 0;
+        for (auto const& [name, count] : flowerCounts) {
+            totalFlower +=count;
+            int unitPrice = flowerPrices[name];
+            int totalForEach = unitPrice * count;
+            ImGui::PushID(name.c_str());
+
+            ImGui::Text("%s [%d]", name.c_str(), unitPrice);
+            // 3. ส่วนของราคารวม (ชิดขวาแบบเป๊ะๆ)
+            std::string priceStr = std::to_string(totalForEach) + " THB";
+            float priceTextWidth = ImGui::CalcTextSize(priceStr.c_str()).x;
+            
+            // คำนวณ SameLine โดยเอาความกว้างสี่เหลี่ยม ลบความกว้างตัวหนังสือ และลบระยะห่างจากขอบ (Padding)
+            float rightPadding = 20.0f; 
+            ImGui::SameLine(rectMax.x - rectMin.x - priceTextWidth - rightPadding); 
+            ImGui::Text("%s", priceStr.c_str());
+
+            ImGui::SameLine(rectMax.x - rectMin.x - 170.0f); //ปรับให้การเพิ่มลดมาอยู่บรรทัดเดียวกับดอกไม้
+            // 1. ปุ่มลบ (ลดจำนวน)
+            if (ImGui::Button("-", ImVec2(15, 15))) {
+                // ค้นหาดอกไม้ชื่อนี้ในตะกร้า แล้วลบออก 1 ชิ้น
+                auto it = std::find_if(selectedFlowers.begin(), selectedFlowers.end(), [&](const Flower& f) {
+                    return f.name == name;
+                });
+                if (it != selectedFlowers.end()) {
+                    selectedFlowers.erase(it);
+                }
+            }
+            ImGui::SameLine();
+            ImGui::Text("%d", count); // แสดงจำนวนปัจจุบัน
+            ImGui::SameLine();
+
+            // 2. ปุ่มบวก (เพิ่มจำนวนจากที่มีอยู่แล้ว)
+            if (ImGui::Button("+", ImVec2(15, 15))) {
+                // เช็คก่อนว่าจำนวนรวมทั้งหมดไม่เกิน Max ของภาชนะ
+                if (selectedFlowers.size() < selectedCont.maxF) {
+                    
+                    // ค้นหาดอกไม้ "ต้นแบบ" จากในตะกร้า selectedFlowers เองเลย
+                    auto it = std::find_if(selectedFlowers.begin(), selectedFlowers.end(), [&](const Flower& f) {
+                        return f.name == name;
+                    });
+
+                    if (it != selectedFlowers.end()) {
+                        // ก๊อปปี้ดอกไม้ตัวเดิมที่มีอยู่ในตะกร้า เพิ่มเข้าไปอีก 1
+                        selectedFlowers.push_back(*it); 
+                    }
+                }
+            }
+            ImGui::PopID();
+        }
+        //วาดเส้นกั้น
+        ImVec2 totallineCursorPos = ImGui::GetCursorScreenPos(); // ดึงตำแหน่งปัจจุบันของตัวหนังสือ
+        float line2Margin = 15.0f; 
+        float line2Y = totallineCursorPos.y + 2.0f;
+        drawList->AddLine(
+            ImVec2(rectMin.x + line2Margin, line2Y), 
+            ImVec2(rectMax.x - line2Margin, line2Y), 
+            ImColor(200, 200, 200, 255), // สีเทา
+            1.0f                         // ความหนาของเส้น
+        );
+        selection.selectedFlowers = selectedFlowers;//ส่งข้อมูลไป  flowerrender
+        int totalAll = selectedCont.basePrice; // เริ่มต้นด้วยราคาภาชนะ
+        for (auto const& [name, count] : flowerCounts) {
+            totalAll += (flowerPrices[name] * count); // บวกราคาดอกไม้แต่ละชนิดเข้าไป
+        }
+        selection.totalAmount = totalAll;
+        ImVec2 totalCursorPos = ImGui::GetCursorScreenPos(); // ดึงตำแหน่งปัจจุบันของตัวหนังสือ
+        float linetotalY = totallineCursorPos.y + 2.0f;
+        // เลื่อน Cursor ลงมาด้านล่างเส้น เพื่อให้ตัวหนังสือบรรทัดถัดไปไม่ทับเส้น
+        ImGui::SetCursorScreenPos(ImVec2(totalCursorPos.x, linetotalY + 10.0f));
+        ImGui::Text("Total Flower: %d", totalFlower);
+        ImGui::Text("Total Price: %d", totalAll);
+        ImGui::PopStyleColor(1);
+        ImGui::EndGroup();
 
     
         const float marginSide = 30.0f;    // ห่างจากขอบขวา 20
@@ -333,24 +399,4 @@ void Custom_Pages(std::vector<Flower>& flowerList,std::vector<Flower>& selectedF
 
 
 }
-
-void Selectyourpieces() {
-    float textWidth = ImGui::CalcTextSize("Select your flower").x;
-    float centerX = (WINDOW_WIDTH*0.9f - textWidth*1.0f) * 0.5f; 
-    ImGui::SetCursorPosX(centerX); 
-    ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.1f, 0.1f, 0.44f, 1.0f)); 
-    ImGui::SetWindowFontScale(1.0f); 
-    ImGui::Text("Select your flower");
-    ImGui::SetWindowFontScale(1.0f); 
-    ImGui::PopStyleColor(1); 
-}
-void Summary() {
-    float textWidth = ImGui::CalcTextSize("Summary").x;
-    float centerX = (WINDOW_WIDTH*0.9f - textWidth*1.0f) * 0.5f; 
-    ImGui::SetCursorPosX(centerX); 
-    ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.1f, 0.1f, 0.44f, 1.0f)); 
-    ImGui::SetWindowFontScale(1.0f); 
-    ImGui::Text("Summary");
-    ImGui::SetWindowFontScale(1.0f); 
-    ImGui::PopStyleColor(1); 
-}
+#endif
