@@ -3,6 +3,7 @@
 #include <vector>
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics.hpp>
+#include "app_state.h"
 
 enum class EntrySource {
     NONE,
@@ -86,6 +87,17 @@ struct UserSelection {
 
     std::vector<Flower> selectedFlowers; // เก็บดอกไม้ที่สุ่มได้หรือเลือกเอง
     int totalAmount = 0;
+
+    AppState getReturnState() const
+    {
+        switch (source)
+        {
+            case EntrySource::CUSTOM: return AppState::CUSTOM_MODE;
+            case EntrySource::RANDOM: return AppState::RANDOM_MODE;
+            case EntrySource::PRESET: return AppState::PRESET_PAGE;
+            default: return AppState::MAIN_MENU;
+        }
+    }
 };
 
 struct BudgetRange {

@@ -112,7 +112,7 @@ std::vector<FlowerPreset> developerPresets = {
         }
     },
         {
-        "Waited a long time",
+        "1DerFull",
         "Love & Care",
         "Bouquet",
         "L",

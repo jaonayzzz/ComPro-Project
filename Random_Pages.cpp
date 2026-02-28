@@ -22,7 +22,7 @@ vector<Flower> buildPool(string targetOccasion){
     return pool;
 }//ฟังก์ชันนี้เราจะคัดดอกไม่ตามโอการมาไว้ใน pool ซึ่งจะเอาไว้ใช้สุ่มดอกออกมาต่อไป
 
-Container selectContainer(const UserSelection& userSel){
+Container selectContainer(UserSelection& userSel){
     Container result;
     bool foundContainer = false;
 
@@ -106,7 +106,7 @@ vector<Flower> findBestBouquet(const vector<Flower>& pool, const Container& sele
 
 
 // แสดงผล
-void runBouquetLogic(const UserSelection& userSel, int budget) {
+void runBouquetLogic(UserSelection& userSel, int budget) {
     vector<Flower> pool = buildPool(userSel.occasion);
     Container selectedContainer = selectContainer(userSel);
     vector<Flower> bestBouquet = findBestBouquet(pool, selectedContainer, budget, userSel.isCustomMode);
@@ -221,7 +221,8 @@ void Random_Pages(sf::RenderWindow& window, AppState& currentState, UserSelectio
 if (hasResult && !bestBouquet.empty()) {
     if (ImGui::Button("Confirm Order")) {
         // บันทึกดอกไม้ลงใน UserSelection ก่อนย้ายหน้า
-        userSelection.selectedFlowers = bestBouquet; 
+        userSelection.selectedFlowers = bestBouquet;
+        userSelection.source = EntrySource::RANDOM; // บันทึกว่ามาจากโหมดไหน 
         currentState = AppState::SUMMARY;
     }
 }

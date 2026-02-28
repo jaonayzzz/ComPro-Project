@@ -88,7 +88,7 @@ void drawPresetPage(
             ImGui::PushID(i);
             ImGui::BeginGroup();
 
-            ImGui::PushStyleColor(ImGuiCol_ChildBg, ImVec4(1.0f, 1.0f, 1.0f, 0.65f));
+            ImGui::PushStyleColor(ImGuiCol_ChildBg, ImVec4(0.88f, 0.95f, 1.00f, 0.90f));
             if (ImGui::BeginChild("CardFrame", ImVec2(cardWidth, cardHeight), true, 
                 ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse)) 
             {
@@ -140,6 +140,7 @@ void drawPresetPage(
                     selection.containerSize = preset.containerSize;
                     selection.flowers = preset.flowers;
                     selection.totalAmount = preset.price;
+                    selection.source = EntrySource::PRESET;
                     state = AppState::SUMMARY;
                 }
                 ImGui::PopStyleColor(3);

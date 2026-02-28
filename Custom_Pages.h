@@ -18,7 +18,7 @@
 void Selectyourpieces();
 void Summary();
 
-void Custom_Pages(std::vector<Flower>& flowerList,std::vector<Flower>& selectedFlowers,AppState& state,const UserSelection& selection){
+void Custom_Pages(std::vector<Flower>& flowerList,std::vector<Flower>& selectedFlowers,AppState& state,UserSelection& selection){
     static int currentPage = 0; 
     int totalP = 0;
     std::map<std::string, int> flowerCounts;
@@ -321,6 +321,7 @@ void Custom_Pages(std::vector<Flower>& flowerList,std::vector<Flower>& selectedF
         ImGui::SetCursorPosX(secondBtnPosX);
 
         if (ImGui::Button("Next >>", ImVec2(bWidth, bHeight))) {
+            selection.source = EntrySource::CUSTOM; //เก็บข้อมูลว่าเข้ามาจากไหน
             state = AppState::SUMMARY;
         }
     }

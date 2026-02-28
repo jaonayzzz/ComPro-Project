@@ -61,7 +61,8 @@ int main()
             // สำคัญ: เซ็ตให้ Texture ทำงานราบรื่น (Smooth)
             flower.texture.setSmooth(true);
         }
-    }
+}
+        
     for (const auto& path : fileNames) {
         sf::Texture tex;
         if (tex.loadFromFile(path)) {
@@ -73,7 +74,6 @@ int main()
             flowerTextures.push_back(sf::Texture()); 
         }
     }
-    
     sf::Clock deltaClock;
     AppState currentState = AppState::START_SCREEN;
     UserSelection userSelection;

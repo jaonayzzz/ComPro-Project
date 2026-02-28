@@ -32,7 +32,7 @@ void drawSummaryPage(sf::RenderWindow& window,AppState& state, UserSelection& se
     
     if (ImGui::Button("Back", {120, 40})) {
         selection.selectedFlowers.clear(); // ล้างข้อมูลเก่า
-        state = AppState::RANDOM_MODE;
+        state = selection.getReturnState(); // กลับไปยังหน้าที่ผู้ใช้เข้ามา
     }
     if (ImGui::Button("Next", {120, 40})) { 
         state = AppState::CARD;
