@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <SFML/Graphics/Color.hpp>
+#include <SFML/Graphics.hpp>
 
 enum class FlowerType {
     Lotus,
@@ -50,6 +51,7 @@ struct Flower {
     int price;
     std::string occasion;
     std::string imagePath;
+    sf::Texture texture; // เพิ่มตัวนี้เข้ามาเพื่อเก็บรูปที่โหลดแล้ว
 };
 
 struct Container {
