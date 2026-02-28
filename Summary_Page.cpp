@@ -34,6 +34,9 @@ void drawSummaryPage(sf::RenderWindow& window,AppState& state, UserSelection& se
         selection.selectedFlowers.clear(); // ล้างข้อมูลเก่า
         state = AppState::RANDOM_MODE;
     }
+    if (ImGui::Button("Next", {120, 40})) { 
+        state = AppState::CARD;
+    }
     ImGui::PopFont();
     ImGui::End();
 }
