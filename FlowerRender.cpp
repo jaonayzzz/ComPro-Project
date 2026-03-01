@@ -1,4 +1,5 @@
 #include "FlowerRenderer.h"
+#include "config.h"
 #include <vector>
 
 void renderBouquet(sf::RenderWindow& window, const UserSelection& selection, const std::vector<sf::Texture>& flowerTextures) {

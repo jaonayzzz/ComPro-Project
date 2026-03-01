@@ -15,6 +15,7 @@
 #include "ui_start.h"
 #include "card.cpp"
 #include "ui_preset_page.h"
+#include "confirm.cpp"
 
 int main()
 {
@@ -77,6 +78,7 @@ int main()
     sf::Clock deltaClock;
     AppState currentState = AppState::START_SCREEN;
     UserSelection userSelection;
+    OrderCardData Cardsdata;
     userSelection.isCustomMode = true;
 
     while (window.isOpen())
@@ -123,6 +125,9 @@ int main()
         break;
     case AppState::CARD:
         card(userSelection.selectedFlowers,currentState,userSelection.occasion);
+        break;
+    case AppState::CONFIRM:
+        confirm(userSelection.selectedFlowers,Cardsdata.message,window,userSelection,flowerTextures,Cardsdata);
         break;
     case AppState::EXIT:
         window.close();

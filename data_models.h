@@ -122,3 +122,11 @@ extern std::vector<Flower> flowerList;
 extern std::vector<Container> containerList;
 
 BudgetRange calculateActualBudget(const std::string& occasion, const Container& container);
+
+struct OrderCardData {
+    bool haveCard;
+    char recipient[128] = "";
+    char sender[128] = "";
+    char message[100] = "";
+    //sf::Texture coverImage;
+};

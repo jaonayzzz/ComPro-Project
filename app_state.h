@@ -7,5 +7,6 @@ enum class AppState {
     PRESET_PAGE,
     SUMMARY,
     CARD,
+    CONFIRM,
     EXIT
 };

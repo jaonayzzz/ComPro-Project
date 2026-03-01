@@ -17,12 +17,6 @@
 using namespace std;
 using namespace ImGui;
 
-struct OrderCardData {
-    char recipient[64] = "";
-    char sender[64] = "";
-    char message[256] = "";
-    //sf::Texture coverImage;
-};
 
 OrderCardData cardData;
 
@@ -33,6 +27,7 @@ static bool        show_receipt = false;
 static int         randindex    = 0;
 static char nameBuf[128] = "";
 static bool isCustommode = false;
+static bool havecard = false;
 
 struct cards {
     string occasion, greeting;
@@ -109,7 +104,7 @@ static void showRandomCard(string& message,string &finalmsg, int random) {
 }
 
 
-static void showCustomCard(string& message) {
+/*static void showCustomCard(string& message) {
     ImGui::PushStyleColor(ImGuiCol_FrameBg,        ImVec4(1.0f, 1.0f, 1.0f, 1.0f));
     ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, ImVec4(0.9f, 0.9f, 0.9f, 1.0f));
     ImGui::PushStyleColor(ImGuiCol_FrameBgActive,  ImVec4(0.8f, 0.8f, 0.8f, 1.0f));
@@ -123,10 +118,10 @@ static void showCustomCard(string& message) {
 
     ImGui::PopStyleColor(4);
     ImGui::PopStyleVar(2);
-}
+}*/
 
 
-void ShowReceiptModal(bool* open, const std::vector<Flower>& items, const std::string& cardmessage,float& currentheight) {
+/*void ShowReceiptModal(bool* open, const std::vector<Flower>& items, const std::string& cardmessage,float& currentheight) {
     if (*open) ImGui::OpenPopup("ReceiptPopup");
     float targetheight = 450.0f;
     float printspeed = 150.0f; //ความเร็ว
@@ -213,9 +208,9 @@ void ShowReceiptModal(bool* open, const std::vector<Flower>& items, const std::s
         ImGui::PopStyleColor(4);
         ImGui::PopStyleVar(1); 
     }
-}
+}*/
 
-void DrawOrderSystemUI(OrderCardData& cardData,bool &isCustommode,string &finalmsg) {
+void DrawOrderSystemUI(OrderCardData& cardData,bool &isCustommode,string &finalmsg,AppState& app) {
     // กำหนดขนาดหน้าต่างหลัก
     ImVec2 center = GetMainViewport()->GetCenter();
     SetNextWindowPos(center,ImGuiCond_Appearing,ImVec2(0.5f,0.5f));
@@ -280,14 +275,15 @@ void DrawOrderSystemUI(OrderCardData& cardData,bool &isCustommode,string &finalm
         ImGui::Spacing();
 
         // ปุ่มยืนยันออเดอร์และพิมพ์ใบเสร็จ
-        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.2f, 0.6f, 0.3f, 1.0f)); // เปลี่ยนปุ่มเป็นสีเขียว
-        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.3f, 0.7f, 0.4f, 1.0f));
+        ImGui::PushStyleColor(ImGuiCol_Button, COLOR_BUTTON); // เปลี่ยนปุ่มเป็นสีเขียว
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, COLOR_BUTTON_HOVER);
         if (ImGui::Button("Confirm Order & Generate Receipt", ImVec2(-FLT_MIN, 40))) {
-            // โค้ดสำหรับบันทึกข้อมูล ตัดสต๊อกดอกไม้ หรือสร้างไฟล์ใบเสร็จรับเงิน
-            printf("Order Confirmed for: %s\n", cardData.recipient);
-            printf("Generating Receipt...\n");
+            app = AppState::CONFIRM;
+            cout << "Order Confirmed for: "<< cardData.recipient << endl;
+            cout << "Generating Receipt...\n";
             finalmsg = string(cardData.message);
-            show_receipt = true; 
+            show_receipt = true;
+            
         }
         ImGui::PopStyleColor(2); // คืนค่าสีปุ่ม
         PopFont();

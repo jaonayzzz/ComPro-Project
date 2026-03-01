@@ -8,7 +8,7 @@ void card(const std::vector<Flower>& u, AppState& appstate,
     //,sf::RenderWindow &window,UserSelection &selection,vector<sf::Texture> &flowerTextures) {
 
     float windowWidth    = 480.f;
-    static float receiptheight = 0.0f; //initial height of receipt
+    
     
 
     ImVec2 center = ImGui::GetMainViewport()->GetCenter();
@@ -55,11 +55,13 @@ void card(const std::vector<Flower>& u, AppState& appstate,
         ImGui::SetCursorPos(ImVec2((windowWidth - totalbuttonwth) * 0.5f, 240.f));
 
         if (ImGui::Button("Yes", ImVec2(80, 30))) {
+            cardData.haveCard = true;
             currentpage = 1; //go to random or custom
         }
         ImGui::SameLine(0.f, 60.f);
         if (ImGui::Button("No", ImVec2(80, 30))) {
-            currentpage = 5; //ต้องแก้เซม go to print receipt
+            cardData.haveCard = false;
+            appstate = AppState::CONFIRM; //ต้องแก้เซม go to print receipt
         }
         SetCursorPos(ImVec2((windowWidth - 80.f)*0.5f,290.f));
         if(Button("Back",ImVec2(80,30))){
@@ -101,6 +103,7 @@ void card(const std::vector<Flower>& u, AppState& appstate,
 
         ImGui::SetCursorPos(ImVec2((windowWidth - 80.f) * 0.5f, 310.f));
         if (ImGui::Button("< Back", ImVec2(80, 30))) {
+            cardData.haveCard = false;
             currentpage = 0; //ask want card **may be change to summary dee kuaw**
         }
 
@@ -187,6 +190,6 @@ void card(const std::vector<Flower>& u, AppState& appstate,
     
     if(currentpage == 5){
         //renderBouquet(window,selection,flowerTextures);
-        DrawOrderSystemUI(cardData,isCustommode,finalmessage);
+        DrawOrderSystemUI(cardData,isCustommode,finalmessage,appstate);
     }
 }
