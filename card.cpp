@@ -3,14 +3,10 @@
 
 using namespace ImGui;
 
-void card(const std::vector<Flower>& u, AppState& appstate, 
-    std::string occassions){
+void card(UserSelection &user, AppState& appstate){
     //,sf::RenderWindow &window,UserSelection &selection,vector<sf::Texture> &flowerTextures) {
 
     float windowWidth    = 480.f;
-    
-    
-
     ImVec2 center = ImGui::GetMainViewport()->GetCenter();
     ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.75f));
     ImGui::SetNextWindowSize(ImVec2(windowWidth, 460.f), ImGuiCond_Always);
@@ -65,7 +61,7 @@ void card(const std::vector<Flower>& u, AppState& appstate,
         }
         SetCursorPos(ImVec2((windowWidth - 80.f)*0.5f,290.f));
         if(Button("Back",ImVec2(80,30))){
-            currentpage = 0; //ต้องแก้อยู่ ลิ้งกับ random หรือ custom
+            appstate = user.getReturnState(); 
         }
 
         ImGui::PopStyleColor(2);
@@ -87,7 +83,7 @@ void card(const std::vector<Flower>& u, AppState& appstate,
             // ✅ ใช้ getRandomMessage() แทน randomCard()
             // set message ครั้งเดียวตอนกดปุ่ม ไม่ใช่ทุก frame
             randindex = rand()%5;
-            message     = getRandomMessage(occassions, randindex);
+            message     = getRandomMessage(user.occasion, randindex);
             isCustommode = false;
             currentpage = 3; //โชว์ข้อความแรนด้อม
         }
@@ -140,7 +136,7 @@ void card(const std::vector<Flower>& u, AppState& appstate,
         if(Button("Re-Random",ImVec2(buttonwidth,buttonheight))){
             memset(nameBuf,0,sizeof(nameBuf));
             randindex   = rand()%5;
-            message     = getRandomMessage(occassions, randindex);
+            message     = getRandomMessage(user.occasion, randindex);
             isCustommode = false;
         }
         ImGui::SameLine(0.f, spacing);

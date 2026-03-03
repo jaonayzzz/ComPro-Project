@@ -124,10 +124,10 @@ int main()
         drawSummaryPage(window,currentState, userSelection,flowerTextures);
         break;
     case AppState::CARD:
-        card(userSelection.selectedFlowers,currentState,userSelection.occasion);
+        card(userSelection,currentState);
         break;
     case AppState::CONFIRM:
-        confirm(userSelection.selectedFlowers,Cardsdata.message,window,userSelection,flowerTextures,Cardsdata);
+        confirm(userSelection.selectedFlowers,Cardsdata.message,window,userSelection,flowerTextures,Cardsdata,containerList,currentState);
         break;
     case AppState::EXIT:
         window.close();

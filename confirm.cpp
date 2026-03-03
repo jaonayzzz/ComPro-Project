@@ -1,11 +1,13 @@
 #include "confirm.h"
 #include "flowerRender.h"
 
+
 using namespace ImGui;
 using namespace std;
 
 void confirm(const vector<Flower>& items, const string& cardmessage,
-    sf::RenderWindow& window, const UserSelection& selection, const vector<sf::Texture>& flowerTextures,const OrderCardData carddata){
+    sf::RenderWindow& window, const UserSelection& selection,const vector<sf::Texture>& flowerTextures,
+    const OrderCardData carddata,const vector<Container>& container,AppState &appstate){
     ImVec2 center = ImGui::GetMainViewport()->GetCenter();
     ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.75f));
     ImGui::SetNextWindowSize(ImVec2(480.f, 460.f), ImGuiCond_Always);
@@ -33,8 +35,11 @@ void confirm(const vector<Flower>& items, const string& cardmessage,
         if(cardData.haveCard){
             showcard(cardData);
         }
-        renderBouquet(window,selection,flowerTextures);
-        ImGui::Dummy(ImVec2(0.0f, 20.0f));
+        if(selection.getReturnState() == AppState::PRESET_PAGE){
+            printpreset(window,selection);
+        }else{
+            renderBouquet(window,selection,flowerTextures);
+        }
 
         // 3. กำหนดขนาดของปุ่มที่ต้องการ
         float buttonWidth = 150.0f;
@@ -60,7 +65,7 @@ void confirm(const vector<Flower>& items, const string& cardmessage,
 
     }else if(currentpages == 1){
         showreceipt = true;
-        ShowReceiptModal(&showreceipt,items,string(cardData.message),receiptheight,selection);
+        ShowReceiptModal(&showreceipt,items,string(cardData.message),receiptheight,selection,container,appstate);
     }
     End();
 }

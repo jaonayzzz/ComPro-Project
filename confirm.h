@@ -3,13 +3,23 @@
 #include "card.h"
 #include "app_state.h"
 #include <cmath>
+#include <fstream>
+#include <iomanip>
+#include <chrono>
+#include <algorithm>
 
 using namespace ImGui;
+using namespace std;
 
 static int currentpages;
 static bool showreceipt = false;
+static float price = 0.f;
+static float total = 0.f;
 
-void ShowReceiptModal(bool* open, const std::vector<Flower>& items, const std::string& cardmessage,float& currentheight,const UserSelection &user) {
+void printreceipt(const vector<Flower> &,const UserSelection &,const string &,float);
+
+void ShowReceiptModal(bool* open, const std::vector<Flower>& items, const std::string& cardmessage,
+    float& currentheight,const UserSelection &user,const vector<Container> &container,AppState &appstate){
     if (*open) ImGui::OpenPopup("ReceiptPopup");
     float targetheight = 450.0f;
     float printspeed = 150.0f; //ความเร็ว
@@ -54,16 +64,33 @@ void ShowReceiptModal(bool* open, const std::vector<Flower>& items, const std::s
         ImGui::Separator();
         ImGui::Spacing();
 
-        float total = 0.f;
-        for (const auto& item : items) {
-            ImGui::Text("%-20s", item.name.c_str());
-            ImGui::SameLine(220);
-            ImGui::Text("%.2f", static_cast<float>(item.price));
-            total += item.price;
-        }
-        if (!user.containerType.empty()) {
-            ImGui::Text("%-20s", user.containerType.c_str());
-            ImGui::Text("Size: %s", user.containerSize.c_str());
+        total = 0.f;
+
+        if(user.getReturnState() == AppState::PRESET_PAGE){
+            Text("%-20s",user.presetName.c_str());
+            SameLine(220);
+            total += user.totalAmount;
+            Text("%.2f",total);
+        }else{
+            for (const auto& item : items) {
+                ImGui::Text("%-20s", item.name.c_str());
+                ImGui::SameLine(220);
+                ImGui::Text("%.2f", static_cast<float>(item.price));
+                total += item.price;
+            }
+            if (!user.containerType.empty()) {
+                ImGui::Text("%-20s", user.containerType.c_str());
+                ImGui::Text("Size: %s", user.containerSize.c_str());
+                SameLine(220);
+                for(int i=0;i<sizeof(containerList);i++){
+                    if(containerList[i].type == user.containerType && containerList[i].size == user.containerSize){
+                        price = containerList[i].basePrice;
+                        break;
+                    }
+                }
+                Text("%.2f",price);
+                total += price;
+            }
         }
 
         ImGui::Spacing();
@@ -87,12 +114,19 @@ void ShowReceiptModal(bool* open, const std::vector<Flower>& items, const std::s
         ImGui::Spacing();
 
         float btnWidth = 120.f;
+        PushFont(FONT_BODY);
         ImGui::SetCursorPosX((windowWidth - btnWidth) * 0.5f);
         if (ImGui::Button("Close Receipt", ImVec2(btnWidth, 30))) {
             ImGui::CloseCurrentPopup();
             *open = false;
             CloseCurrentPopup();
+            appstate = AppState::EXIT;
         }
+        ImGui::SetCursorPosX((windowWidth - btnWidth) * 0.5f);
+        if(Button("Print Receipt",ImVec2(btnWidth,30))){
+            printreceipt(items,user,cardmessage,total);
+        }
+        PopFont();
 
         ImGui::PopStyleColor(4);
         ImGui::PopStyleVar(1);
@@ -110,8 +144,12 @@ void showcard(OrderCardData cardData) {
     static bool isTextureLoaded = false;
 
     if (!isTextureLoaded) {
-        cardBgBack.loadFromFile("../picture/card.png");
-        cardBgFront.loadFromFile("../picture/card_back.png"); 
+        if (!cardBgBack.loadFromFile("../picture/card.png")) {
+            cout << "Failed to load card.png!" << endl;
+        }
+        if (!cardBgFront.loadFromFile("../picture/card_back.png")) {
+            cout << "Failed to load card_back.png!" << std::endl;
+        }
         isTextureLoaded = true;
         cout << "picture loaded successful!" << endl;
     }
@@ -242,4 +280,85 @@ void showcard(OrderCardData cardData) {
     PopFont();
 
     ImGui::EndChild();
+}
+
+string filenames(){
+        auto now = chrono::system_clock::now();
+        time_t now_c = chrono::system_clock::to_time_t(now);
+        stringstream ss;
+        ss << "../Receipt/receipt_" << put_time(localtime(&now_c),"%Y%m%d_%H%M%S") << ".txt";
+        return ss.str();
+    }
+
+void printreceipt(const vector<Flower> &flowers,const UserSelection &user,const string &cardmessage,float total){
+    string filename = filenames(); 
+    ofstream dest(filename);
+    if(dest.is_open()){
+        dest << "                Receipt        \n";
+        dest << "           Chonampay Florist   \n";
+        dest << "----------------------------------------\n";
+
+        for(const auto& flower : flowers){
+            dest << std::left << std::setw(30) << flower.name
+                    << std::right << std::setw(10) << std::fixed << std::setprecision(2) << flower.price << "\n";
+        }
+        dest << user.containerType << endl;
+        dest << "Size : " << user.containerSize << endl;
+        dest << "----------------------------------------\n";
+
+        dest << "Card Message:\n";
+        dest << cardmessage << endl;
+        dest << "----------------------------------------\n";
+
+        dest << std::left << std::setw(30) << "TOTAL"
+                << std::right << std::setw(10) << std::fixed << std::setprecision(2) << total << "\n";
+        dest << "----------------------------------------\n";
+
+        dest.close(); // ปิดไฟล์เมื่อเขียนเสร็จ
+        cout << "print receipt  " << filename << " successfully !\n";
+        string command;
+        #ifdef _WIN32
+            command = "notepad " + filename;
+        #elif __APPLE__
+            command = "open " + filename;
+        #endif
+        system(command.c_str());
+    } else {
+        cout << "can't not open file\n";
+    }
+}
+
+void printpreset(sf::RenderWindow &window,const UserSelection &selection){
+    static sf::Texture flowerpreset;
+    static string loadedimagepath = "";
+    if(loadedimagepath != selection.presetImagePath){
+        if(!flowerpreset.loadFromFile(selection.presetImagePath)){
+            cout << "load flowerpreset unsuccessfully" << endl;
+        }else{
+            loadedimagepath = selection.presetImagePath;
+        }
+    }
+    sf::Sprite preset(flowerpreset);
+    float maxTargetwidth =480.0f;
+    float maxTargetheight = 600.0f;
+    // ดึงขนาดดั้งเดิมของรูปภาพ
+    float originalWidth = preset.getLocalBounds().size.x;
+    float originalHeight = preset.getLocalBounds().size.y;
+
+    // คำนวณอัตราส่วนที่ต้องย่อลง
+    float scaleX = maxTargetwidth / originalWidth;
+    float scaleY = maxTargetheight / originalHeight;
+
+    // เลือกอัตราส่วนที่ "น้อยกว่า" เพื่อให้รูปพอดีกรอบและสัดส่วนไม่เพี้ยน (Keep Aspect Ratio)
+    float finalScale = std::min(scaleX, scaleY);
+
+    // สั่งย่อรูปภาพ (ส่งค่า x และ y เท่ากันเพื่อคงสัดส่วนเดิมไว้)
+    preset.setScale(sf::Vector2f(finalScale, finalScale));
+    float paddingright = 50.0f;
+    float paddingtop = 50.0f;
+    float imagewidth = preset.getGlobalBounds().size.x;
+    float posx = WINDOW_WIDTH - imagewidth - paddingright;
+    float posy = paddingtop;
+    preset.setPosition(sf::Vector2f(posx,posy));
+    window.draw(preset);
 }
