@@ -134,7 +134,7 @@ void ShowReceiptModal(bool* open, const std::vector<Flower>& items, const std::s
             ImGui::CloseCurrentPopup();
             *open = false;
             CloseCurrentPopup();
-            appstate = AppState::EXIT;
+            appstate = AppState::MAIN_MENU;
         }
         ImGui::SetCursorPosX((windowWidth - btnWidth) * 0.5f);
         if(Button("Print Receipt",ImVec2(btnWidth,30))){

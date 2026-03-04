@@ -38,6 +38,7 @@ void confirm(const vector<Flower>& items, const string& cardmessage,
             float textwidth = CalcTextSize("Click to flip the card!").x;
             SetCursorPos(ImVec2((screenSize.x-textwidth)*0.5,600.0f));
             Text("Click the card to flip it!");
+            PopFont();
         }
         if(selection.getReturnState() == AppState::PRESET_PAGE){
             printpreset(window,selection);
@@ -53,6 +54,7 @@ void confirm(const vector<Flower>& items, const string& cardmessage,
         ImGui::SetCursorPos(ImVec2((screenSize.x - buttonWidth) * 0.5f , 650.0f));
 
         // 5. สร้างปุ่ม Check out พร้อมแอบตกแต่งสีปุ่มให้เข้ากับธีมร้านดอกไม้
+        PushFont(FONT_BODY);
         ImGui::PushStyleColor(ImGuiCol_Button, COLOR_BUTTON);         // สีปุ่มปกติ (ชมพูตุ่นๆ)
         ImGui::PushStyleColor(ImGuiCol_ButtonHovered, COLOR_BUTTON_HOVER); // สีตอนเอาเมาส์ชี้
         ImGui::PushStyleColor(ImGuiCol_ButtonActive, COLOR_BUTTON_ACTIVE);   // สีตอนคลิก
