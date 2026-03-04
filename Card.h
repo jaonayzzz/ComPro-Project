@@ -210,7 +210,7 @@ static void showRandomCard(string& message,string &finalmsg, int random) {
     }
 }*/
 
-void DrawOrderSystemUI(OrderCardData& cardData,bool &isCustommode,string &finalmsg,AppState& app) {
+void DrawOrderSystemUI(OrderCardData& cardData,bool &isCustommode,string &finalmsg,AppState& app,int&currentpage) {
     // กำหนดขนาดหน้าต่างหลัก
     ImVec2 center = GetMainViewport()->GetCenter();
     SetNextWindowPos(center,ImGuiCond_Appearing,ImVec2(0.5f,0.5f));
@@ -260,15 +260,9 @@ void DrawOrderSystemUI(OrderCardData& cardData,bool &isCustommode,string &finalm
         // ช่องกรอกข้อความอวยพร (Message) แบบหลายบรรทัด
         ImGui::Text("Greeting Message:");
         // ImVec2(-FLT_MIN, ...) หมายถึงให้ความกว้างขยายเต็มพื้นที่ที่เหลือ ส่วนความสูงกำหนดไว้ที่ประมาณ 4 บรรทัด
-        if(!isCustommode){
-            ImGui::InputTextMultiline("##Message", cardData.message, IM_ARRAYSIZE(cardData.message), 
-                                  ImVec2(-FLT_MIN, ImGui::GetTextLineHeight() * 4),ImGuiInputTextFlags_ReadOnly);
-        }else{
-            ImGui::InputTextMultiline("##Message", cardData.message, IM_ARRAYSIZE(cardData.message), 
+        ImGui::InputTextMultiline("##Message", cardData.message, IM_ARRAYSIZE(cardData.message), 
                                   ImVec2(-FLT_MIN, ImGui::GetTextLineHeight() * 4));
-        }
         
-
         ImGui::Spacing();
         ImGui::Spacing();
         ImGui::Separator();
@@ -283,7 +277,9 @@ void DrawOrderSystemUI(OrderCardData& cardData,bool &isCustommode,string &finalm
             cout << "Generating Receipt...\n";
             finalmsg = string(cardData.message);
             show_receipt = true;
-            
+        }
+        if(Button("Back",ImVec2(-FLT_MIN,40))){
+            currentpage = 3;
         }
         ImGui::PopStyleColor(2); // คืนค่าสีปุ่ม
         PopFont();

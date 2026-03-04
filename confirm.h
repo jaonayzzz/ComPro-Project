@@ -8,6 +8,7 @@
 #include <chrono>
 #include <algorithm>
 #include <sstream>
+#include <map>
 
 using namespace ImGui;
 using namespace std;
@@ -73,11 +74,23 @@ void ShowReceiptModal(bool* open, const std::vector<Flower>& items, const std::s
             total += user.totalAmount;
             Text("%.2f",total);
         }else{
-            for (const auto& item : items) {
-                ImGui::Text("%-20s", item.name.c_str());
-                ImGui::SameLine(220);
-                ImGui::Text("%.2f", static_cast<float>(item.price));
-                total += item.price;
+            map<string,int> itemcount;
+            map<string,float> itemprice;
+            for(const auto& item:items){
+                itemcount[item.name]++;
+                itemprice[item.name] = static_cast<float>(item.price);
+            }
+            for (const auto& pair : itemcount) {
+                string name = pair.first;
+                int qty = pair.second;
+                float price = itemprice[name];
+                float subtotal = price*qty;
+                ImGui::Text("%-20s", name.c_str());
+                ImGui::SameLine(170);
+                ImGui::Text("x %d", qty);
+                SameLine(220);
+                Text("%.2f",subtotal);
+                total += subtotal;
             }
             if (!user.containerType.empty()) {
                 ImGui::Text("%-20s", user.containerType.c_str());
@@ -299,10 +312,26 @@ void printreceipt(const vector<Flower> &flowers,const UserSelection &user,const 
         dest << "           Chonampay Florist   \n";
         dest << "----------------------------------------\n";
 
-        for(const auto& flower : flowers){
-            dest << std::left << std::setw(30) << flower.name
-                    << std::right << std::setw(10) << std::fixed << std::setprecision(2) << flower.price << "\n";
+        std::map<std::string, int> flowerCount;
+        std::map<std::string, float> flowerPrice;
+
+        for (const auto& flower : flowers) {
+            flowerCount[flower.name]++;
+            flowerPrice[flower.name] = flower.price;
         }
+
+        // 2. ลูปแสดงผลจาก Map ที่จับกลุ่มแล้ว
+        for(const auto& pair : flowerCount){
+            std::string name = pair.first;
+            int qty = pair.second;
+            float price = flowerPrice[name];
+            float subtotal = price * qty; // ราคารวมต่อรายการ
+            
+            dest << std::left << std::setw(20) << name          // คอลัมน์ชื่อดอกไม้
+                 << "x " << std::left << std::setw(5) << qty    // คอลัมน์จำนวน
+                 << std::right << std::setw(10) << std::fixed << std::setprecision(2) << subtotal << "\n"; // คอลัมน์ราคารวม
+        }
+        
         dest << user.containerType << endl;
         dest << "Size : " << user.containerSize << endl;
         dest << "----------------------------------------\n";

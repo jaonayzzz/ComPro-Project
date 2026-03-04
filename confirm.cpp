@@ -34,6 +34,10 @@ void confirm(const vector<Flower>& items, const string& cardmessage,
     if(currentpages == 0){
         if(cardData.haveCard){
             showcard(cardData);
+            PushFont(FONT_BODY);
+            float textwidth = CalcTextSize("Click to flip the card!").x;
+            SetCursorPos(ImVec2((screenSize.x-textwidth)*0.5,600.0f));
+            Text("Click the card to flip it!");
         }
         if(selection.getReturnState() == AppState::PRESET_PAGE){
             printpreset(window,selection);
@@ -52,12 +56,11 @@ void confirm(const vector<Flower>& items, const string& cardmessage,
         ImGui::PushStyleColor(ImGuiCol_Button, COLOR_BUTTON);         // สีปุ่มปกติ (ชมพูตุ่นๆ)
         ImGui::PushStyleColor(ImGuiCol_ButtonHovered, COLOR_BUTTON_HOVER); // สีตอนเอาเมาส์ชี้
         ImGui::PushStyleColor(ImGuiCol_ButtonActive, COLOR_BUTTON_ACTIVE);   // สีตอนคลิก
-        PushFont(FONT_BODY);
         if (ImGui::Button("Check out", ImVec2(buttonWidth, buttonHeight))) {
             std::cout << "กำลังดำเนินการชำระเงิน...\n";
             currentpages = 1;
         }
-
+    
         // 6. อย่าลืมคืนค่าสีกลับเป็นปกติให้ระบบด้วยนะคะ (คืนค่า 3 ครั้งตามที่ Push ไป)
         ImGui::PopStyleColor(3);
         PopFont();
