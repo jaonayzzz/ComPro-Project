@@ -335,10 +335,12 @@ void printreceipt(const vector<Flower> &flowers,const UserSelection &user,const 
         dest << user.containerType << endl;
         dest << "Size : " << user.containerSize << endl;
         dest << "----------------------------------------\n";
-
-        dest << "Card Message:\n";
-        dest << cardmessage << endl;
-        dest << "----------------------------------------\n";
+        
+        if(!cardmessage.empty()){
+            dest << "Card Message:\n";
+            dest << cardmessage << endl;
+            dest << "----------------------------------------\n";
+        }
 
         dest << std::left << std::setw(30) << "TOTAL"
                 << std::right << std::setw(10) << std::fixed << std::setprecision(2) << total << "\n";
