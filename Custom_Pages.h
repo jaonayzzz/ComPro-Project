@@ -87,19 +87,26 @@ inline void Custom_Pages(std::vector<Flower>& flowerList,std::vector<Flower>& se
 
             // 2.วาดรูปดอกไม้ (ขยับตำแหน่งขึ้นโดยเว้นชื่อและราคา)
             if (i < (int)flowerList.size()) {
-            ImVec2 imgPos = ImVec2(boxPos.x + (boxSize - imgSize) / 2.0f, boxPos.y + 15.0f);//คำนวณตำแหน่งเริ่มต้น (มุมซ้ายบน)           
+            ImVec2 imgPos = ImVec2(boxPos.x + (boxSize - imgSize) / 2.0f, boxPos.y + 25.0f);//คำนวณตำแหน่งเริ่มต้น (มุมซ้ายบน)           
             ImVec2 imgMax = ImVec2(imgPos.x + imgSize, imgPos.y + imgSize);// คำนวณตำแหน่งสิ้นสุด (มุมขวาล่าง) 
             draw_list->AddImage((void*)(intptr_t)flowerList[i].texture.getNativeHandle(), imgPos, imgMax);// 4. วาดรูปโดยดึงจาก flowerList 
             }
             // 3. แสดงชื่อและราคาบนสี่เหลี่ยมเลย (ตรงกลาง)
             std::string nameText = flowerList[i].name;//แสดงชื่อดอกไม้
             float nameWidth = ImGui::CalcTextSize(nameText.c_str()).x;
-            draw_list->AddText(ImVec2(boxPos.x + (boxSize - nameWidth) / 2.0f, boxPos.y + 110.0f), ImColor(0, 0, 0, 255), nameText.c_str());
-
+            draw_list->AddText(ImVec2(boxPos.x + (boxSize - nameWidth) / 2.0f, boxPos.y + 10.0f), ImColor(0, 0, 0, 255), nameText.c_str());//ปรับเป็น 110.0f ถ้าต้องการเลื่อนไปด้านล่าง
             std::string priceText = std::to_string(flowerList[i].price) + " THB";// แสดงราคาดอกไม้
             float priceWidth = ImGui::CalcTextSize(priceText.c_str()).x;
-            draw_list->AddText(ImVec2(boxPos.x + (boxSize - priceWidth) / 2.0f, boxPos.y + 128.0f),ImColor(0, 0, 0, 255), priceText.c_str());
-
+            draw_list->AddText(ImVec2(boxPos.x + (boxSize - priceWidth) / 2.0f, boxPos.y + 115.0f),ImColor(0, 0, 0, 255), priceText.c_str());
+            std::string occasionText = flowerList[i].occasion;//แสดงชื่อดอกไม้
+            std::string formOccasion = "[" + flowerList[i].occasion + "]";
+            float occasionWidth = ImGui::CalcTextSize(formOccasion.c_str()).x;
+            draw_list->AddText(
+            ImVec2(boxPos.x + (boxSize - occasionWidth) / 2.0f, boxPos.y + 132.0f), 
+            ImColor(0, 0, 0, 255), 
+            formOccasion.c_str()
+            );
+            
             // 4. ระบบ Interaction & Tooltip สำหรับความหมาย
             ImGui::SetCursorScreenPos(boxPos);
             ImGui::PushID(i);
@@ -263,6 +270,7 @@ inline void Custom_Pages(std::vector<Flower>& flowerList,std::vector<Flower>& se
             ImGui::SetCursorScreenPos(ImVec2(backX, btnY));
             if (ImGui::Button("<< Back", ImVec2(btnW, btnH))) {
                 state = AppState::MAIN_MENU;
+                selectedFlowers.clear();
             }
 
 
