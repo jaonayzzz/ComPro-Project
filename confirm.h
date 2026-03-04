@@ -7,6 +7,7 @@
 #include <iomanip>
 #include <chrono>
 #include <algorithm>
+#include <sstream>
 
 using namespace ImGui;
 using namespace std;
