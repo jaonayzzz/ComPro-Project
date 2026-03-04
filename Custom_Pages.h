@@ -18,6 +18,8 @@
 #include "FlowerRenderer.h"
 #include "for_testing.h"
 
+void ShowBackWarningPopup(bool& showBackWarning, std::vector<Flower>& selectedFlowers, AppState& state);
+void ShowContainerFullPopup(bool& show, int& currentPage, Container& selectedCont, std::vector<Container>& containerList, UserSelection& selection);
 inline void SendYourFeelings();
 inline void OrderSummary();
 
@@ -27,6 +29,7 @@ inline void Custom_Pages(std::vector<Flower>& flowerList,std::vector<Flower>& se
     float displayDuration = 2.0f;          // ให้แสดงค้างไว้ 2 วินาที
     static bool showWarning = false; // สำหรับเปิด/ปิด Modal เตือน
     static bool openFullPopup = false;
+    static bool showBackWarning = false;
     std::map<std::string, int> flowerCounts;
     std::map<std::string, int> flowerPrices;
 
@@ -70,6 +73,18 @@ inline void Custom_Pages(std::vector<Flower>& flowerList,std::vector<Flower>& se
             const float spacing = 20.0f;     
             const float boxSize = 150.0f;    // เพิ่มขนาดกล่องนิดหน่อยเพื่อให้มีที่วางข้อความ
             const float imgSize = 90.0f;     // ขนาดรูปภาพ
+
+        if (!selection.occasion.empty()) {
+        std::stable_sort(flowerList.begin(), flowerList.end(), [&](const Flower& a, const Flower& b) {
+            bool aMatches = (a.occasion == selection.occasion);
+            bool bMatches = (b.occasion == selection.occasion);
+            
+            // ถ้า a ตรง แต่ b ไม่ตรง -> a มาก่อน (true)
+            if (aMatches && !bMatches) return true;
+            // กรณีอื่นๆ ให้คงลำดับเดิมไว้
+            return false;
+        });
+}
 
         for (int i = 0; i < (int)flowerList.size(); i++) {
             int row = i / columns;
@@ -115,9 +130,7 @@ inline void Custom_Pages(std::vector<Flower>& flowerList,std::vector<Flower>& se
             if (selectedFlowers.size() < (size_t)max) {
                 selectedFlowers.push_back(flowerList[i]);
             } else {
-                ImGui::PopID(); 
                 openFullPopup = true;
-                ImGui::PushID(i);
             }
             }
 
@@ -141,10 +154,6 @@ inline void Custom_Pages(std::vector<Flower>& flowerList,std::vector<Flower>& se
         }//จบ loop ดอกไม้
         
         ImGui::EndChild();
-        if (openFullPopup) {
-        ImGui::OpenPopup("ContainerFullOptions"); // สั่งให้ ImGui รู้ว่าจะเปิด Popup ชื่อนี้
-        openFullPopup = false;                   // รีเซ็ตตัวแปรทันที ไม่ต้องรอเฟรมหน้า
-        }
         //เซตตำแหน่ง pop up
         ImVec2 center = ImGui::GetMainViewport()->GetCenter();// 1.คำนวณจุดกึ่งกลางของหน้าต่างโปรแกรม
         // สั่งให้ Window ถัดไป (ซึ่งคือ Popup) วางตัวตรงกลาง
@@ -153,62 +162,6 @@ inline void Custom_Pages(std::vector<Flower>& flowerList,std::vector<Flower>& se
 
         //วาด popup
         
-        ImGui::PushStyleColor(ImGuiCol_TitleBgActive, ImVec4(0.25f, 0.35f, 0.55f, 1.0f)); // สีน้ำเงิน : โฟกัส
-        ImGui::PushStyleColor(ImGuiCol_TitleBg, ImVec4(0.20f, 0.30f, 0.50f, 1.0f)); // สีน้ำเงิน : ไม่โฟกัส
-        ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, 1.0f, 1.0f));// สีขาว : สีข้อความบนแถบ 
-        if (ImGui::BeginPopupModal("ContainerFullOptions", NULL, ImGuiWindowFlags_AlwaysAutoResize)){
-        float buttonWidth = 180.0f; //ขนาดปุ่ม
-        float buttonLength1 = 30.0f; //ขนาดปุ่มใหญ่
-        float buttonLength2 = 20.0f; //ขนาดปุ่มเล็ก
-        ImGui::TextColored(ImVec4(1.0f, 0.4f, 0.4f, 1.0f), "Container is Full!");
-        ImGui::Text("You have reached the maximum limit of %d flowers.", max);
-        ImGui::Separator();
-
-        // 1. ปุ่มปรับแก้ดอกไม้ -> ไปหน้า Summary (currentPage 1)
-        if (ImGui::Button("Complete Selection", ImVec2(buttonWidth,buttonLength1))) {
-            currentPage = 1; 
-            ImGui::CloseCurrentPopup();
-        }
-
-        ImGui::SameLine();
-
-        // 2. Logic เช็กการอัปเกรด (ชนิดเดียวกันแต่ไซส์ใหญ่ขึ้น)
-        bool hasLarger = false;
-        Container* largerContainer = nullptr;
-        for (auto& c : containerList) {
-            if (c.type == selectedCont.type && c.maxF > selectedCont.maxF) {
-                if (largerContainer == nullptr || c.maxF < largerContainer->maxF) {
-                    largerContainer = &c;
-                    hasLarger = true;
-                }
-            }
-        }
-
-        // ถ้าไม่มีไซส์ใหญ่กว่า ให้ปุ่มซีดลง
-        if (!hasLarger) ImGui::BeginDisabled();
-            
-        if (ImGui::Button("Upgrade Size", ImVec2(buttonWidth,buttonLength1))) {
-            if (largerContainer != nullptr) {
-                // อัปเกรดข้อมูล
-                selection.containerType = largerContainer->type;
-                selection.containerSize = largerContainer->size;
-                // หมายเหตุ: ตรงนี้อาจต้องมีการอัปเดตตัวแปร selectedCont 
-                // หรือให้ UI refresh ใหม่ในรอบถัดไป
-                ImGui::CloseCurrentPopup();
-                }
-        }
-
-        if (!hasLarger) ImGui::EndDisabled();
-
-        // setting ปุ่ม close
-        float posX = (ImGui::GetWindowSize().x - buttonWidth) * 0.5f;// คำนวณหาจุดเริ่มวาดเพื่อให้ปุ่มอยู่กลางหน้าต่าง
-        ImGui::SetCursorPosX(posX);// ย้าย Cursor ไปที่ตำแหน่งกลางตามที่คำนวณ
-        if (ImGui::Button("Close", ImVec2(buttonWidth,buttonLength2))) {
-            ImGui::CloseCurrentPopup();
-        }
-        ImGui::EndPopup();
-        }
-        ImGui::PopStyleColor(3); //ล้างสี : ContainerFullOptions
 
             // ตั้งค่าเพิ่มเติมการเลื่อนดูดอกไม้
             int totalRows = ((int)flowerList.size() + 5) / 6; 
@@ -269,8 +222,7 @@ inline void Custom_Pages(std::vector<Flower>& flowerList,std::vector<Flower>& se
             // ปุ่ม Back
             ImGui::SetCursorScreenPos(ImVec2(backX, btnY));
             if (ImGui::Button("<< Back", ImVec2(btnW, btnH))) {
-                state = AppState::MAIN_MENU;
-                selectedFlowers.clear();
+                showBackWarning = true;
             }
 
 
@@ -283,8 +235,6 @@ inline void Custom_Pages(std::vector<Flower>& flowerList,std::vector<Flower>& se
             ImGui::PopStyleColor(1);
         }
        
-            
-        
         else if (currentPage == 1) {
             
         ImGui::PushFont(FONT_TITLE);
@@ -417,9 +367,15 @@ inline void Custom_Pages(std::vector<Flower>& flowerList,std::vector<Flower>& se
                         selectedFlowers.push_back(*it); 
                     }
                 }
+                else {
+                    openFullPopup = true;
+                }
+                
             }
             ImGui::PopID();
         }
+        void ShowContainerFullPopup(bool& show, int& currentPage, Container& selectedCont, std::vector<Container>& containerList, UserSelection& selection);
+
         //วาดเส้นกั้น
         ImVec2 totallineCursorPos = ImGui::GetCursorScreenPos(); // ดึงตำแหน่งปัจจุบันของตัวหนังสือ
         float line2Margin = 15.0f; 
@@ -440,7 +396,7 @@ inline void Custom_Pages(std::vector<Flower>& flowerList,std::vector<Flower>& se
         float linetotalY = totallineCursorPos.y + 2.0f;
         // เลื่อน Cursor ลงมาด้านล่างเส้น เพื่อให้ตัวหนังสือบรรทัดถัดไปไม่ทับเส้น
         ImGui::SetCursorScreenPos(ImVec2(totalCursorPos.x, linetotalY + 10.0f));
-        ImGui::Text("Total Flower: %d", totalFlower);
+        ImGui::Text("Total Flower: %d / %d", totalFlower,selectedCont.maxF);
         ImGui::Text("Total Price: %d THB", totalAll);
         ImGui::PopStyleColor(1);
         ImGui::EndGroup();
@@ -578,7 +534,18 @@ inline void Custom_Pages(std::vector<Flower>& flowerList,std::vector<Flower>& se
         ImGui::PopStyleColor(3);
     }
 
-
+        // เช็คเพื่อสั่งเปิด Popup
+        if (openFullPopup) {
+            ImGui::OpenPopup("ContainerFullOptions");
+            openFullPopup = false; 
+        }
+        ShowContainerFullPopup(openFullPopup, currentPage, selectedCont, containerList, selection);
+        if (showBackWarning) {
+            ImGui::OpenPopup("BackWarningPopup");
+            showBackWarning = false; 
+        }
+        ShowBackWarningPopup(showBackWarning, selectedFlowers, state);
+        
         ImGui::PopStyleColor(3); 
         ImGui::PopStyleVar(2); 
         ImGui::End(); 
