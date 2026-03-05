@@ -13,9 +13,9 @@
 #include "Summary_Page.cpp"
 #include "FlowerRender.cpp"
 #include "ui_start.h"
-#include "card.cpp"
+#include "card.h"
 #include "ui_preset_page.h"
-#include "confirm.cpp"
+#include "confirm.h"
 
 int main()
 {
