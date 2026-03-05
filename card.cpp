@@ -3,6 +3,8 @@
 
 using namespace ImGui;
 
+static bool back_card = false;
+
 void card(UserSelection &user, AppState& appstate){
     //,sf::RenderWindow &window,UserSelection &selection,vector<sf::Texture> &flowerTextures) {
 
@@ -61,7 +63,7 @@ void card(UserSelection &user, AppState& appstate){
         }
         SetCursorPos(ImVec2((windowWidth - 80.f)*0.5f,290.f));
         if(Button("Back",ImVec2(80,30))){
-            appstate = user.getReturnState(); 
+            appstate = AppState::SUMMARY; 
         }
 
         ImGui::PopStyleColor(2);
@@ -186,6 +188,6 @@ void card(UserSelection &user, AppState& appstate){
     
     if(currentpage == 5){
         //renderBouquet(window,selection,flowerTextures);
-        DrawOrderSystemUI(cardData,isCustommode,finalmessage,appstate);
+        DrawOrderSystemUI(cardData,isCustommode,finalmessage,appstate,currentpage);
     }
 }
