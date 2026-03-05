@@ -280,7 +280,7 @@ void DrawOrderSystemUI(OrderCardData& cardData,bool &isCustommode,string &finalm
             show_receipt = true;
         }
         if(Button("Back",ImVec2(-FLT_MIN,40))){
-            currentpage = 3;
+            currentpage = 1;
         }
         ImGui::PopStyleColor(2); // คืนค่าสีปุ่ม
         PopFont();
