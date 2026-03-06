@@ -278,6 +278,7 @@ void DrawOrderSystemUI(OrderCardData& cardData,bool &isCustommode,string &finalm
             cout << "Generating Receipt...\n";
             finalmsg = string(cardData.message);
             show_receipt = true;
+            currentpage = 0;
         }
         if(Button("Back",ImVec2(-FLT_MIN,40))){
             currentpage = 1;

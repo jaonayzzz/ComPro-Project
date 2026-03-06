@@ -21,7 +21,7 @@ int main()
 {
     sf::RenderWindow window(
         sf::VideoMode({WINDOW_WIDTH, WINDOW_HEIGHT}),
-        WINDOW_TITLE
+        WINDOW_TITLE,sf::Style::Titlebar | sf::Style::Close 
     );
     window.setFramerateLimit(TARGET_FPS);
 

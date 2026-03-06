@@ -21,7 +21,7 @@ static float total = 0.f;
 
 void printreceipt(const vector<Flower> &,const UserSelection &,const string &,float);
 
-void ShowReceiptModal(bool* open, const std::vector<Flower>& items, const std::string& cardmessage,
+void ShowReceiptModal(bool* open, const std::vector<Flower>& items,OrderCardData &cardData,
     float& currentheight,const UserSelection &user,const vector<Container> &container,AppState &appstate){
     if (*open) ImGui::OpenPopup("ReceiptPopup");
     float targetheight = 450.0f;
@@ -112,9 +112,9 @@ void ShowReceiptModal(bool* open, const std::vector<Flower>& items, const std::s
         ImGui::Separator();
         ImGui::Spacing();
 
-        if (!cardmessage.empty()) {
+        if (cardData.message[0] != '\0') {
             ImGui::Text("Card Message:");
-            ImGui::TextWrapped("%s", cardmessage.c_str());
+            ImGui::TextWrapped("%s", cardData.message);
             ImGui::Spacing();
             ImGui::Separator();
             ImGui::Spacing();
@@ -134,12 +134,13 @@ void ShowReceiptModal(bool* open, const std::vector<Flower>& items, const std::s
         if (ImGui::Button("Close Receipt", ImVec2(btnWidth, 30))) {
             ImGui::CloseCurrentPopup();
             *open = false;
-            CloseCurrentPopup();
             appstate = AppState::MAIN_MENU;
+            cardData.Clear();
+            nameBuf[0] = '\0';
         }
         ImGui::SetCursorPosX((windowWidth - btnWidth) * 0.5f);
         if(Button("Print Receipt",ImVec2(btnWidth,30))){
-            printreceipt(items,user,cardmessage,total);
+            printreceipt(items,user,cardData.message,total);
         }
         PopFont();
 
@@ -461,7 +462,7 @@ void confirm(const vector<Flower>& items, const string& cardmessage,
 
     }else if(currentpages == 1){
         showreceipt = true;
-        ShowReceiptModal(&showreceipt,items,string(cardData.message),receiptheight,selection,container,appstate);
+        ShowReceiptModal(&showreceipt,items,cardData,receiptheight,selection,container,appstate);
     }
     End();
 }

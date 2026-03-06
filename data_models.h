@@ -125,8 +125,13 @@ BudgetRange calculateActualBudget(const std::string& occasion, const Container& 
 
 struct OrderCardData {
     bool haveCard;
-    char recipient[128] = "";
-    char sender[128] = "";
+    char recipient[64] = "";
+    char sender[64] = "";
     char message[100] = "";
     //sf::Texture coverImage;
+    void Clear() {
+        message[0] = '\0';    // เคลียร์ข้อความให้กลายเป็น String ว่าง
+        recipient[0] = '\0'; // เคลียร์ชื่อคนส่ง
+        sender[0] = '\0';        // รีเซ็ตสไตล์การ์ด
+    }
 };
