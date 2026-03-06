@@ -15,7 +15,7 @@
 #include "font_manager.h"
 #include "ui_mainmenu.h"
 #include "data_models.h"
-#include "FlowerRenderer.h"
+#include "FlowerRender.h"
 #include "for_testing.h"
 
 void ShowBackWarningPopup(bool& showBackWarning, std::vector<Flower>& selectedFlowers, AppState& state);

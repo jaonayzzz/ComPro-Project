@@ -22,7 +22,7 @@ static float total = 0.f;
 void printreceipt(const vector<Flower> &,const UserSelection &,const string &,float);
 
 void ShowReceiptModal(bool* open, const std::vector<Flower>& items,OrderCardData &cardData,
-    float& currentheight,const UserSelection &user,const vector<Container> &container,AppState &appstate){
+    float& currentheight,const UserSelection &user,const vector<Container> &container,AppState &appstate,int &currentpages){
     if (*open) ImGui::OpenPopup("ReceiptPopup");
     float targetheight = 450.0f;
     float printspeed = 150.0f; //ความเร็ว
@@ -137,6 +137,7 @@ void ShowReceiptModal(bool* open, const std::vector<Flower>& items,OrderCardData
             appstate = AppState::MAIN_MENU;
             cardData.Clear();
             nameBuf[0] = '\0';
+            currentpages = 0;
         }
         ImGui::SetCursorPosX((windowWidth - btnWidth) * 0.5f);
         if(Button("Print Receipt",ImVec2(btnWidth,30))){
@@ -158,7 +159,6 @@ void showcard(OrderCardData cardData) {
     static sf::Texture cardBgFront; 
     static sf::Texture cardBgBack; // ต้องมีรูปปกหลังการ์ดด้วย
     static bool isTextureLoaded = false;
-
     if (!isTextureLoaded) {
         if (!cardBgBack.loadFromFile("../picture/card.png")) {
             cout << "Failed to load card.png!" << endl;
@@ -431,7 +431,35 @@ void confirm(const vector<Flower>& items, const string& cardmessage,
             SetCursorPos(ImVec2((screenSize.x-textwidth)*0.5,600.0f));
             Text("Click the card to flip it!");
             PopFont();
-        }/*else ใส่รูปด้านหน้า*/
+        }else{
+            static sf::Texture emptyCardTexture;
+            static bool isTextureLoad = false;
+
+            // 2. ถ้ายังไม่เคยโหลดรูป ให้โหลดเข้ามา
+            if (!isTextureLoad) {
+                // *** อย่าลืมเปลี่ยนชื่อไฟล์และ path ให้ตรงกับไฟล์รูปของคุณนะคะ ***
+                if (emptyCardTexture.loadFromFile("../picture/card_no.png")) {
+                    // แนะนำให้เปิด Smooth เพื่อให้รูปดูเนียนขึ้นเมื่อย่อขยาย
+                    emptyCardTexture.setSmooth(true); 
+                } else {
+                    cout << "Error: can't load card_no.png \n";
+                }
+                isTextureLoad = true; // จำไว้ว่าโหลดเสร็จแล้ว จะได้ไม่ทำซ้ำ
+            }
+
+            // 3. กำหนดขนาดและตำแหน่งของการ์ดเปล่า (ปรับค่าตามต้องการ)
+            // ให้ไปอยู่ทางซ้าย เพื่อเว้นที่ขวาไว้ให้ช่อดอกไม้
+            float emptyCardWidth = 400.0f;
+            float emptyCardHeight = 600.0f;
+            
+            // ปรับตำแหน่งแกน X, Y ให้การ์ดอยู่ตรงกลางๆ ค่อนไปทางซ้าย
+            float cardPosX = (screenSize.x * 0.25f) - (emptyCardWidth * 0.5f); 
+            float cardPosY = 50.0f;
+
+            // 4. สั่งวาดรูปลงไปในหน้าจอ
+            ImGui::SetCursorPos(ImVec2(cardPosX, cardPosY));
+            ImGui::Image(emptyCardTexture, ImVec2(emptyCardWidth, emptyCardHeight));
+        }
         if(selection.getReturnState() == AppState::PRESET_PAGE){
             printpreset(window,selection);
         }else{
@@ -462,7 +490,7 @@ void confirm(const vector<Flower>& items, const string& cardmessage,
 
     }else if(currentpages == 1){
         showreceipt = true;
-        ShowReceiptModal(&showreceipt,items,cardData,receiptheight,selection,container,appstate);
+        ShowReceiptModal(&showreceipt,items,cardData,receiptheight,selection,container,appstate,currentpages);
     }
     End();
 }
