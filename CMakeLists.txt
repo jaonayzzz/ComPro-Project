@@ -38,12 +38,12 @@ FetchContent_MakeAvailable(imgui-sfml)
 
 # 4. ระบุชื่อไฟล์หลักของโปรแกรม
 add_executable(MyProgram
-    main.cpp
-    ui_mainmenu.cpp
-    data_repository.cpp
-    font_manager.cpp
-    ui_start.cpp
-    ui_preset_page.cpp
+    src/main.cpp
+    src/ui/Start.cpp
+    src/ui/MainMenu.cpp
+    src/ui/Preset.cpp
+    src/core/FontManager.cpp
+    src/data/DataRepository.cpp
 )
 
 # 5. เชื่อมต่อ Library ทุกตัวเข้าด้วยกัน
@@ -54,3 +54,5 @@ target_link_libraries(MyProgram
     sfml-system 
     ImGui-SFML::ImGui-SFML
 )
+
+target_include_directories(MyProgram PRIVATE include)
