@@ -438,7 +438,7 @@ void confirm(const vector<Flower>& items, const string& cardmessage,
             // 2. ถ้ายังไม่เคยโหลดรูป ให้โหลดเข้ามา
             if (!isTextureLoad) {
                 // *** อย่าลืมเปลี่ยนชื่อไฟล์และ path ให้ตรงกับไฟล์รูปของคุณนะคะ ***
-                if (emptyCardTexture.loadFromFile("../picture/card_no.png")) {
+                if (emptyCardTexture.loadFromFile("../assets/picture/card_no.png")) {
                     // แนะนำให้เปิด Smooth เพื่อให้รูปดูเนียนขึ้นเมื่อย่อขยาย
                     emptyCardTexture.setSmooth(true); 
                 } else {
