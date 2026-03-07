@@ -38,7 +38,7 @@ FetchContent_MakeAvailable(imgui-sfml)
 
 # 4. ระบุชื่อไฟล์หลักของโปรแกรม
 add_executable(MyProgram
-    src/main.cpp
+    main.cpp
     src/ui/Start.cpp
     src/ui/MainMenu.cpp
     src/ui/Preset.cpp

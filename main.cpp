@@ -6,12 +6,12 @@
 #include "ui/MainMenu.h"
 #include "Config.h"
 #include "ui/Custom.h"
-#include "ui/Random.cpp"
+#include "src/ui/Random.cpp"
 #include "core/FontManager.h"
 #include <iostream>
 #include <optional>
-#include "ui/Summary.cpp"
-#include "render/FlowerRender.cpp"
+#include "src/ui/Summary.cpp"
+#include "src/render/FlowerRender.cpp"
 #include "ui/Start.h"
 #include "ui/Card.h"
 #include "ui/Preset.h"
