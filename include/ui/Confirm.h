@@ -21,60 +21,61 @@ static float total = 0.f;
 
 void printreceipt(const vector<Flower> &,const UserSelection &,const string &,float);
 
-void ShowReceiptModal(bool* open, const std::vector<Flower>& items,OrderCardData &cardData,
+void ShowReceiptModal(bool* open, const vector<Flower>& items,OrderCardData &cardData,
     float& currentheight,const UserSelection &user,const vector<Container> &container,AppState &appstate,int &currentpages){
-    if (*open) ImGui::OpenPopup("ReceiptPopup");
+    if (*open) OpenPopup("ReceiptPopup");
     float targetheight = 450.0f;
     float printspeed = 150.0f; //ความเร็ว
     if(currentheight < targetheight){
-        currentheight += printspeed*ImGui::GetIO().DeltaTime;
+        currentheight += printspeed*GetIO().DeltaTime; //get time/frame rate to create animation
         if(currentheight > targetheight){
             currentheight = targetheight;
         }
     }
-    const ImGuiViewport* viewport = ImGui::GetMainViewport();
+    const ImGuiViewport* viewport = GetMainViewport();
     float marginTop = 100.0f; // ระยะห่างจากขอบบนหน้าจอเกมที่ต้องการ
 
-    ImGui::SetNextWindowPos(
+    SetNextWindowPos(
     ImVec2(viewport->Pos.x + viewport->Size.x * 0.5f, viewport->Pos.y + marginTop), 
     ImGuiCond_Always, 
     ImVec2(0.5f, 0.0f) // ให้ "หัว" ของหน้าต่างทุกอันเริ่มที่จุด marginTop เดียวกัน
     );
-    ImGui::SetNextWindowSize(ImVec2(300.f, currentheight), ImGuiCond_Always);
-    ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 10.f);
-    ImGui::PushStyleColor(ImGuiCol_PopupBg,      ImVec4(1.0f, 1.0f, 1.0f, 1.0f));
-    ImGui::PushStyleColor(ImGuiCol_Text,         ImVec4(0.0f, 0.0f, 0.0f, 1.0f));
-    ImGui::PushStyleColor(ImGuiCol_TitleBgActive,ImVec4(0.9f, 0.9f, 0.9f, 1.0f));
-    ImGui::PushStyleColor(ImGuiCol_TitleBg,      ImVec4(0.9f, 0.9f, 0.9f, 1.0f));
+    SetNextWindowSize(ImVec2(300.f, currentheight), ImGuiCond_Always);
+    PushStyleVar(ImGuiStyleVar_WindowRounding, 10.f);
+    PushStyleColor(ImGuiCol_PopupBg,      ImVec4(1.0f, 1.0f, 1.0f, 1.0f));
+    PushStyleColor(ImGuiCol_Text,         ImVec4(0.0f, 0.0f, 0.0f, 1.0f));
+    PushStyleColor(ImGuiCol_TitleBgActive,ImVec4(0.9f, 0.9f, 0.9f, 1.0f));
+    PushStyleColor(ImGuiCol_TitleBg,      ImVec4(0.9f, 0.9f, 0.9f, 1.0f));
 
-    if (ImGui::BeginPopupModal("ReceiptPopup", nullptr, 
+    if (BeginPopupModal("ReceiptPopup", nullptr, 
                                 ImGuiWindowFlags_NoResize |
                                 ImGuiWindowFlags_NoCollapse | 
                                 ImGuiWindowFlags_NoTitleBar | 
                                 ImGuiWindowFlags_NoMove |
                                 ImGuiWindowFlags_NoScrollbar |         
                                 ImGuiWindowFlags_NoScrollWithMouse)) {
-        float windowWidth = ImGui::GetWindowWidth();
+        float windowWidth = GetWindowWidth();
 
-        float tw1 = ImGui::CalcTextSize("Receipt").x;
-        ImGui::SetCursorPosX((windowWidth - tw1) * 0.5f);
-        ImGui::Text("Receipt");
+        float tw1 = CalcTextSize("Receipt").x;
+        SetCursorPosX((windowWidth - tw1) * 0.5f);
+        Text("Receipt");
 
-        float tw2 = ImGui::CalcTextSize("Chonampay Florist").x;
-        ImGui::SetCursorPosX((windowWidth - tw2) * 0.5f);
-        ImGui::Text("Chonampay Florist");
+        float tw2 = CalcTextSize("Chonampay Florist").x;
+        SetCursorPosX((windowWidth - tw2) * 0.5f);
+        Text("Chonampay Florist");
 
-        ImGui::Separator();
-        ImGui::Spacing();
+        Separator();
+        Spacing();
 
         total = 0.f;
 
-        if(user.getReturnState() == AppState::PRESET_PAGE){
+        if(user.getReturnState() == AppState::PRESET_PAGE){ //if from preset
             Text("%-20s",user.presetName.c_str());
             SameLine(220);
             total += user.totalAmount;
             Text("%.2f",total);
-        }else{
+        }else{ //from others
+            //count each type of flower
             map<string,int> itemcount;
             map<string,float> itemprice;
             for(const auto& item:items){
@@ -86,16 +87,16 @@ void ShowReceiptModal(bool* open, const std::vector<Flower>& items,OrderCardData
                 int qty = pair.second;
                 float price = itemprice[name];
                 float subtotal = price*qty;
-                ImGui::Text("%-20s", name.c_str());
-                ImGui::SameLine(170);
-                ImGui::Text("x %d", qty);
+                Text("%-20s", name.c_str());
+                SameLine(170);
+                Text("x %d", qty);
                 SameLine(220);
                 Text("%.2f",subtotal);
                 total += subtotal;
             }
             if (!user.containerType.empty()) {
-                ImGui::Text("%-20s", user.containerType.c_str());
-                ImGui::Text("Size: %s", user.containerSize.c_str());
+                Text("%-20s", user.containerType.c_str());
+                Text("Size: %s", user.containerSize.c_str());
                 SameLine(220);
                 for(int i=0;i<sizeof(containerList);i++){
                     if(containerList[i].type == user.containerType && containerList[i].size == user.containerSize){
@@ -108,79 +109,77 @@ void ShowReceiptModal(bool* open, const std::vector<Flower>& items,OrderCardData
             }
         }
 
-        ImGui::Spacing();
-        ImGui::Separator();
-        ImGui::Spacing();
+        Spacing();
+        Separator();
+        Spacing();
 
         if (cardData.message[0] != '\0') {
-            ImGui::Text("Card Message:");
-            ImGui::TextWrapped("%s", cardData.message);
-            ImGui::Spacing();
-            ImGui::Separator();
-            ImGui::Spacing();
+            Text("Card Message:");
+            TextWrapped("%s", cardData.message);
+            Spacing();
+            Separator();
+            Spacing();
         }
 
-        ImGui::Text("TOTAL");
-        ImGui::SameLine(220);
-        ImGui::Text("%.2f", total);
+        Text("TOTAL");
+        SameLine(220);
+        Text("%.2f", total);
 
-        ImGui::Spacing();
-        ImGui::Separator();
-        ImGui::Spacing();
+        Spacing();
+        Separator();
+        Spacing();
 
         float btnWidth = 120.f;
         PushFont(FONT_BODY);
-        ImGui::SetCursorPosX((windowWidth - btnWidth) * 0.5f);
-        if (ImGui::Button("Close Receipt", ImVec2(btnWidth, 30))) {
-            ImGui::CloseCurrentPopup();
+        SetCursorPosX((windowWidth - btnWidth) * 0.5f);
+        if (Button("Close Receipt", ImVec2(btnWidth, 30))) {
+            CloseCurrentPopup();
             *open = false;
             appstate = AppState::MAIN_MENU;
+            //clear data
             cardData.Clear();
             nameBuf[0] = '\0';
             currentpages = 0;
         }
-        ImGui::SetCursorPosX((windowWidth - btnWidth) * 0.5f);
+        SetCursorPosX((windowWidth - btnWidth) * 0.5f);
         if(Button("Print Receipt",ImVec2(btnWidth,30))){
             printreceipt(items,user,cardData.message,total);
         }
         PopFont();
 
-        ImGui::PopStyleColor(4);
-        ImGui::PopStyleVar(1);
-        ImGui::EndPopup();
+        PopStyleColor(4);
+        PopStyleVar(1);
+        EndPopup();
     } else {
-        ImGui::PopStyleColor(4);
-        ImGui::PopStyleVar(1); 
+        PopStyleColor(4);
+        PopStyleVar(1); 
     }
 }
 
 void showcard(OrderCardData cardData) {
     // โหลดรูปหน้าการ์ดและหลังการ์ด
     static sf::Texture cardBgFront; 
-    static sf::Texture cardBgBack; // ต้องมีรูปปกหลังการ์ดด้วย
+    static sf::Texture cardBgBack; 
     static bool isTextureLoaded = false;
     if (!isTextureLoaded) {
         if (!cardBgBack.loadFromFile("../assets/picture/card.png")) {
             cout << "Failed to load card.png!" << endl;
         }
         if (!cardBgFront.loadFromFile("../assets/picture/card_back.png")) {
-            cout << "Failed to load card_back.png!" << std::endl;
+            cout << "Failed to load card_back.png!" << endl;
         }
         isTextureLoaded = true;
         cout << "picture loaded successful!" << endl;
     }
 
-    // ----------------------------------------------------
-    // ตัวแปรควบคุมแอนิเมชันการพลิกการ์ด
-    // ----------------------------------------------------
+    //flip card part
     static float flipTimer = 0.0f;
-    static bool isFlipped = false;   // ตอนนี้อยู่ด้านหลังหรือเปล่า?
-    static bool isAnimating = false; // กำลังเล่นแอนิเมชันอยู่ไหม?
-    float flipSpeed = 3.0f;          // ความเร็วในการพลิก (ยิ่งค่าน้อย ยิ่งช้า)
+    static bool isFlipped = false;   
+    static bool isAnimating = false; 
+    float flipSpeed = 3.0f;          
 
-    // อัปเดตแอนิเมชันทุกเฟรม
     if (isAnimating) {
-        flipTimer += ImGui::GetIO().DeltaTime * flipSpeed;
+        flipTimer += GetIO().DeltaTime * flipSpeed;
         if (flipTimer >= 3.14159f) { // ใช้ค่า Pi (ครบรอบการพลิก 1 ครั้ง)
             flipTimer = 0.0f;
             isAnimating = false;
@@ -194,9 +193,8 @@ void showcard(OrderCardData cardData) {
     float baseWidth = 400.0f;
     float cardHeight = 600.0f;
     
-    // ใช้ฟังก์ชัน Cosine สร้างความสมูท: 
-    // ค่า scaleX จะค่อยๆ ลดจาก 1.0 -> 0.0 -> 1.0
-    float scaleX = std::abs(std::cos(isAnimating ? flipTimer : 0.0f)); 
+    //use cos to flip
+    float scaleX = abs(cos(isAnimating ? flipTimer : 0.0f)); 
     float currentWidth = baseWidth * scaleX; 
 
     ImGuiWindowFlags flags = ImGuiWindowFlags_NoResize   |
@@ -208,19 +206,16 @@ void showcard(OrderCardData cardData) {
                              ImGuiWindowFlags_NoMove |
                              ImGuiWindowFlags_NoScrollWithMouse;
 
-    ImGui::BeginChild("CardPanel", ImVec2(600.0,-100.0f), false, flags);
+    BeginChild("CardPanel", ImVec2(600.0,-100.0f), false, flags);
     
-    ImVec2 panelSize = ImGui::GetWindowSize();
+    ImVec2 panelSize = GetWindowSize();
     
     // จัดตำแหน่งกึ่งกลางเสมอ (แม้การ์ดจะหดเล็กลง)
     float posX = (panelSize.x - currentWidth) * 0.5f;
     float posY = ((panelSize.y - cardHeight) * 0.5f) - 10.0f;
 
-    ImGui::SetCursorPos(ImVec2(posX, posY));
+    SetCursorPos(ImVec2(posX, posY));
 
-    // ----------------------------------------------------
-    // ตัดสินใจว่าจะโชว์รูปหน้าไหน (ถ้าพลิกเกินครึ่งทางแล้วให้เปลี่ยนรูป)
-    // ----------------------------------------------------
     bool showBackSide = isFlipped;
     if (isAnimating) {
         // ถ้าอยู่ในช่วงแอนิเมชันเกินครึ่งทาง (Pi/2) ให้สลับการแสดงผลล่วงหน้า
@@ -230,81 +225,73 @@ void showcard(OrderCardData cardData) {
     }
 
     // สร้างปุ่มแบบมองไม่เห็นครอบการ์ดไว้ (กดรูปเพื่อพลิก)
-    // 1. ตั้งค่าระยะห่าง (Padding) และความหนาของเส้นขอบให้เป็น 0
-    ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
-    ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0.0f);
+    PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
+    PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0.0f);
 
-    // 2. ตั้งค่าสีของปุ่มและสีของเส้นขอบให้โปร่งใส (Alpha = 0)
-    ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
-    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0, 0, 0, 0));
-    ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0, 0, 0, 0));
-    ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0, 0, 0, 0));
+    PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
+    PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0, 0, 0, 0));
+    PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0, 0, 0, 0));
+    PushStyleColor(ImGuiCol_Border, ImVec4(0, 0, 0, 0));
 
-    // 3. วาดปุ่มรูปภาพ
+    //draw picture
     if (showBackSide) {
-        if (ImGui::ImageButton("BackCard", cardBgBack, sf::Vector2f(currentWidth, cardHeight))) {
+        if (ImageButton("BackCard", cardBgBack, sf::Vector2f(currentWidth, cardHeight))) {
             if (!isAnimating) isAnimating = true; // กดเพื่อพลิกกลับ
         }
     } else {
-        if (ImGui::ImageButton("FrontCard", cardBgFront, sf::Vector2f(currentWidth, cardHeight))) {
+        if (ImageButton("FrontCard", cardBgFront, sf::Vector2f(currentWidth, cardHeight))) {
             if (!isAnimating) isAnimating = true; // กดเพื่อพลิกไปด้านหลัง
         }
     }
 
-    // 4. คืนค่าสไตล์และสีกลับเป็นปกติ (มี PopStyleColor 4 ตัว และ PopStyleVar 2 ตัว)
-    ImGui::PopStyleColor(4);
-    ImGui::PopStyleVar(2);
+    PopStyleColor(4);
+    PopStyleVar(2);
 
-    // ----------------------------------------------------
-    // วาดข้อความ (เฉพาะตอนที่อยู่ด้านหน้าและไม่ได้พลิกอยู่)
-    // ----------------------------------------------------
+    //place message
     PushFont(FONT_BODY);
     if (showBackSide && !isAnimating) {
-        ImGui::SetCursorPos(ImVec2(posX + 100, posY + 150));
-        ImGui::Text("To : %s", cardData.recipient);
+        SetCursorPos(ImVec2(posX + 100, posY + 150));
+        Text("To : %s", cardData.recipient);
 
     float paddingX = 50.0f;
     
     // ความกว้างสูงสุดที่ข้อความจะแสดงได้ก่อนถูกปัดบรรทัด
     float wrapWidth = currentWidth- (paddingX * 2.0f); 
 
-    // คำนวณขนาดของก้อนข้อความ "หลังจาก" ถูกตัดบรรทัดแล้ว (สังเกตพารามิเตอร์ตัวสุดท้าย)
-    ImVec2 textSize = ImGui::CalcTextSize(cardData.message, NULL, false, wrapWidth);
+    // คำนวณขนาดของก้อนข้อความ "หลังจาก" ถูกตัดบรรทัดแล้ว 
+    ImVec2 textSize = CalcTextSize(cardData.message, NULL, false, wrapWidth);
 
-    // เซ็ตตำแหน่งให้ก้อนข้อความอยู่กึ่งกลางการ์ดพอดี
-    ImGui::SetCursorPos(ImVec2(
+    SetCursorPos(ImVec2(
         posX + paddingX, 
         posY + (cardHeight - textSize.y) * 0.5f
     ));
 
-    // สั่งให้ ImGui เริ่มระบบตัดบรรทัด (Wrap) โดยอิงจากความกว้างที่ตั้งไว้
-    ImGui::PushTextWrapPos(ImGui::GetCursorPosX() + wrapWidth);
+    //การตัดบรรทัดข้อความ
+    PushTextWrapPos(GetCursorPosX() + wrapWidth);
     
-    // วาดข้อความลงไป
-    ImGui::Text("%s", cardData.message);
+    Text("%s", cardData.message);
     
-    // ปิดระบบตัดบรรทัด (สำคัญมาก ต้องมีปิดท้ายเสมอ)
-    ImGui::PopTextWrapPos();
+    PopTextWrapPos();
 
-        ImVec2 senderSize = ImGui::CalcTextSize(cardData.sender);
-        ImGui::SetCursorPos(ImVec2(
+        ImVec2 senderSize = CalcTextSize(cardData.sender);
+        SetCursorPos(ImVec2(
             posX + currentWidth - senderSize.x - 190, 
             posY + cardHeight - senderSize.y - 90
         ));
-        ImGui::Text("From : %s", cardData.sender);
+        Text("From : %s", cardData.sender);
     }
     PopFont();
 
-    ImGui::EndChild();
+    EndChild();
 }
 
 string filenames(){
-        auto now = chrono::system_clock::now();
-        time_t now_c = chrono::system_clock::to_time_t(now);
-        stringstream ss;
-        ss << "../Receipt/receipt_" << put_time(localtime(&now_c),"%Y%m%d_%H%M%S") << ".txt";
-        return ss.str();
-    }
+    auto now = chrono::system_clock::now();
+    time_t now_c = chrono::system_clock::to_time_t(now);
+    stringstream ss;
+    ss << "../Receipt/receipt_" << put_time(localtime(&now_c),"%Y%m%d_%H%M%S") << ".txt";
+    return ss.str();
+}
 
 void printreceipt(const vector<Flower> &flowers,const UserSelection &user,const string &cardmessage,float total){
     string filename = filenames(); 
@@ -314,24 +301,23 @@ void printreceipt(const vector<Flower> &flowers,const UserSelection &user,const 
         dest << "           Chonampay Florist   \n";
         dest << "----------------------------------------\n";
 
-        std::map<std::string, int> flowerCount;
-        std::map<std::string, float> flowerPrice;
+        map<string, int> flowerCount;
+        map<string, float> flowerPrice;
 
         for (const auto& flower : flowers) {
             flowerCount[flower.name]++;
             flowerPrice[flower.name] = flower.price;
         }
 
-        // 2. ลูปแสดงผลจาก Map ที่จับกลุ่มแล้ว
         for(const auto& pair : flowerCount){
-            std::string name = pair.first;
+            string name = pair.first;
             int qty = pair.second;
             float price = flowerPrice[name];
-            float subtotal = price * qty; // ราคารวมต่อรายการ
+            float subtotal = price * qty; 
             
-            dest << std::left << std::setw(20) << name          // คอลัมน์ชื่อดอกไม้
-                 << "x " << std::left << std::setw(5) << qty    // คอลัมน์จำนวน
-                 << std::right << std::setw(10) << std::fixed << std::setprecision(2) << subtotal << "\n"; // คอลัมน์ราคารวม
+            dest << left << setw(20) << name          
+                 << "x " << left << setw(5) << qty    
+                 << right << setw(10) << fixed << setprecision(2) << subtotal << "\n"; 
         }
         
         dest << user.containerType << endl;
@@ -344,11 +330,11 @@ void printreceipt(const vector<Flower> &flowers,const UserSelection &user,const 
             dest << "----------------------------------------\n";
         }
 
-        dest << std::left << std::setw(30) << "TOTAL"
-                << std::right << std::setw(10) << std::fixed << std::setprecision(2) << total << "\n";
+        dest << left << setw(30) << "TOTAL"
+                << right << setw(10) << fixed << setprecision(2) << total << "\n";
         dest << "----------------------------------------\n";
 
-        dest.close(); // ปิดไฟล์เมื่อเขียนเสร็จ
+        dest.close(); 
         cout << "print receipt  " << filename << " successfully !\n";
         string command;
         #ifdef _WIN32
@@ -375,18 +361,17 @@ void printpreset(sf::RenderWindow &window,const UserSelection &selection){
     sf::Sprite preset(flowerpreset);
     float maxTargetwidth =480.0f;
     float maxTargetheight = 600.0f;
-    // ดึงขนาดดั้งเดิมของรูปภาพ
+    
     float originalWidth = preset.getLocalBounds().size.x;
     float originalHeight = preset.getLocalBounds().size.y;
 
-    // คำนวณอัตราส่วนที่ต้องย่อลง
+    
     float scaleX = maxTargetwidth / originalWidth;
     float scaleY = maxTargetheight / originalHeight;
 
-    // เลือกอัตราส่วนที่ "น้อยกว่า" เพื่อให้รูปพอดีกรอบและสัดส่วนไม่เพี้ยน (Keep Aspect Ratio)
-    float finalScale = std::min(scaleX, scaleY);
+    
+    float finalScale = min(scaleX, scaleY);
 
-    // สั่งย่อรูปภาพ (ส่งค่า x และ y เท่ากันเพื่อคงสัดส่วนเดิมไว้)
     preset.setScale(sf::Vector2f(finalScale, finalScale));
     float paddingright = 50.0f;
     float paddingtop = 50.0f;
@@ -400,17 +385,16 @@ void printpreset(sf::RenderWindow &window,const UserSelection &selection){
 void confirm(const vector<Flower>& items, const string& cardmessage,
     sf::RenderWindow& window, const UserSelection& selection,const vector<sf::Texture>& flowerTextures,
     const OrderCardData carddata,const vector<Container>& container,AppState &appstate){
-    ImVec2 center = ImGui::GetMainViewport()->GetCenter();
-    ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.75f));
-    ImGui::SetNextWindowSize(ImVec2(480.f, 460.f), ImGuiCond_Always);
+    ImVec2 center = GetMainViewport()->GetCenter();
+    SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.75f));
+    SetNextWindowSize(ImVec2(480.f, 460.f), ImGuiCond_Always);
 
     static float receiptheight = 0.0f; //initial height of receipt
 
-    ImVec2 screenSize = ImGui::GetIO().DisplaySize; 
+    ImVec2 screenSize = GetIO().DisplaySize; 
 
-    // 1. ล็อกตำแหน่งให้อยู่ชิดมุมซ้ายบนสุด (X=0, Y=0) และขยายให้เต็มจอ
-    ImGui::SetNextWindowPos(ImVec2(0.0f, 0.0f), ImGuiCond_Always); 
-    ImGui::SetNextWindowSize(screenSize, ImGuiCond_Always);
+    SetNextWindowPos(ImVec2(0.0f, 0.0f), ImGuiCond_Always); 
+    SetNextWindowSize(screenSize, ImGuiCond_Always);
         
     ImGuiWindowFlags flags = ImGuiWindowFlags_NoResize   |
                              ImGuiWindowFlags_NoCollapse |
@@ -424,41 +408,33 @@ void confirm(const vector<Flower>& items, const string& cardmessage,
     Begin("Confirm page", nullptr, flags);
     
     if(currentpages == 0){
-        if(cardData.haveCard){
+        if(cardData.haveCard){ //card == yes
             showcard(cardData);
             PushFont(FONT_BODY);
             float textwidth = CalcTextSize("Click to flip the card!").x;
             SetCursorPos(ImVec2((screenSize.x-textwidth)*0.5,600.0f));
             Text("Click the card to flip it!");
             PopFont();
-        }else{
+        }else{//card == no
             static sf::Texture emptyCardTexture;
             static bool isTextureLoad = false;
 
-            // 2. ถ้ายังไม่เคยโหลดรูป ให้โหลดเข้ามา
             if (!isTextureLoad) {
-                // *** อย่าลืมเปลี่ยนชื่อไฟล์และ path ให้ตรงกับไฟล์รูปของคุณนะคะ ***
                 if (emptyCardTexture.loadFromFile("../assets/picture/card_no.png")) {
-                    // แนะนำให้เปิด Smooth เพื่อให้รูปดูเนียนขึ้นเมื่อย่อขยาย
                     emptyCardTexture.setSmooth(true); 
                 } else {
                     cout << "Error: can't load card_no.png \n";
                 }
-                isTextureLoad = true; // จำไว้ว่าโหลดเสร็จแล้ว จะได้ไม่ทำซ้ำ
+                isTextureLoad = true; 
             }
 
-            // 3. กำหนดขนาดและตำแหน่งของการ์ดเปล่า (ปรับค่าตามต้องการ)
-            // ให้ไปอยู่ทางซ้าย เพื่อเว้นที่ขวาไว้ให้ช่อดอกไม้
             float emptyCardWidth = 400.0f;
             float emptyCardHeight = 600.0f;
             
-            // ปรับตำแหน่งแกน X, Y ให้การ์ดอยู่ตรงกลางๆ ค่อนไปทางซ้าย
             float cardPosX = (screenSize.x * 0.25f) - (emptyCardWidth * 0.5f); 
             float cardPosY = 50.0f;
-
-            // 4. สั่งวาดรูปลงไปในหน้าจอ
-            ImGui::SetCursorPos(ImVec2(cardPosX, cardPosY));
-            ImGui::Image(emptyCardTexture, ImVec2(emptyCardWidth, emptyCardHeight));
+            SetCursorPos(ImVec2(cardPosX, cardPosY));
+            Image(emptyCardTexture, ImVec2(emptyCardWidth, emptyCardHeight));
         }
         if(selection.getReturnState() == AppState::PRESET_PAGE){
             printpreset(window,selection);
@@ -466,25 +442,20 @@ void confirm(const vector<Flower>& items, const string& cardmessage,
             renderBouquet(window,selection,flowerTextures);
         }
 
-        // 3. กำหนดขนาดของปุ่มที่ต้องการ
         float buttonWidth = 150.0f;
         float buttonHeight = 40.0f;
 
-        // 4. คำนวณหาจุดกึ่งกลางแนวนอน: (ความกว้างของหน้าต่างปัจจุบัน - ความกว้างของปุ่ม) / 2
-        ImGui::SetCursorPos(ImVec2((screenSize.x - buttonWidth) * 0.5f , 650.0f));
+        SetCursorPos(ImVec2((screenSize.x - buttonWidth) * 0.5f , 650.0f));
 
-        // 5. สร้างปุ่ม Check out พร้อมแอบตกแต่งสีปุ่มให้เข้ากับธีมร้านดอกไม้
         PushFont(FONT_BODY);
-        ImGui::PushStyleColor(ImGuiCol_Button, COLOR_BUTTON);         // สีปุ่มปกติ (ชมพูตุ่นๆ)
-        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, COLOR_BUTTON_HOVER); // สีตอนเอาเมาส์ชี้
-        ImGui::PushStyleColor(ImGuiCol_ButtonActive, COLOR_BUTTON_ACTIVE);   // สีตอนคลิก
-        if (ImGui::Button("Check out", ImVec2(buttonWidth, buttonHeight))) {
-            std::cout << "กำลังดำเนินการชำระเงิน...\n";
+        PushStyleColor(ImGuiCol_Button, COLOR_BUTTON);         
+        PushStyleColor(ImGuiCol_ButtonHovered, COLOR_BUTTON_HOVER);
+        PushStyleColor(ImGuiCol_ButtonActive, COLOR_BUTTON_ACTIVE);   
+        if (Button("Check out", ImVec2(buttonWidth, buttonHeight))) {
+            cout << "กำลังดำเนินการชำระเงิน...\n";
             currentpages = 1;
         }
-    
-        // 6. อย่าลืมคืนค่าสีกลับเป็นปกติให้ระบบด้วยนะคะ (คืนค่า 3 ครั้งตามที่ Push ไป)
-        ImGui::PopStyleColor(3);
+        PopStyleColor(3);
         PopFont();
         
 
