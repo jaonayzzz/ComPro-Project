@@ -22,7 +22,7 @@ static float total = 0.f;
 void printreceipt(const vector<Flower> &,const UserSelection &,const string &,float);
 
 void ShowReceiptModal(bool* open, const vector<Flower>& items,OrderCardData &cardData,
-    float& currentheight,const UserSelection &user,const vector<Container> &container,AppState &appstate,int &currentpages){
+    float& currentheight,UserSelection &user,const vector<Container> &container,AppState &appstate,int &currentpages){
     if (*open) OpenPopup("ReceiptPopup");
     float targetheight = 450.0f;
     float printspeed = 150.0f; //ความเร็ว
@@ -52,8 +52,7 @@ void ShowReceiptModal(bool* open, const vector<Flower>& items,OrderCardData &car
                                 ImGuiWindowFlags_NoCollapse | 
                                 ImGuiWindowFlags_NoTitleBar | 
                                 ImGuiWindowFlags_NoMove |
-                                ImGuiWindowFlags_NoScrollbar |         
-                                ImGuiWindowFlags_NoScrollWithMouse)) {
+                                ImGuiWindowFlags_NoScrollbar)) {
         float windowWidth = GetWindowWidth();
 
         float tw1 = CalcTextSize("Receipt").x;
@@ -140,6 +139,7 @@ void ShowReceiptModal(bool* open, const vector<Flower>& items,OrderCardData &car
             cardData.Clear();
             nameBuf[0] = '\0';
             currentpages = 0;
+            user.clear();
         }
         SetCursorPosX((windowWidth - btnWidth) * 0.5f);
         if(Button("Print Receipt",ImVec2(btnWidth,30))){
@@ -383,7 +383,7 @@ void printpreset(sf::RenderWindow &window,const UserSelection &selection){
 }
 
 void confirm(const vector<Flower>& items, const string& cardmessage,
-    sf::RenderWindow& window, const UserSelection& selection,const vector<sf::Texture>& flowerTextures,
+    sf::RenderWindow& window,UserSelection& selection,const vector<sf::Texture>& flowerTextures,
     const OrderCardData carddata,const vector<Container>& container,AppState &appstate){
     ImVec2 center = GetMainViewport()->GetCenter();
     SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.75f));

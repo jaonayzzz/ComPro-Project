@@ -98,6 +98,20 @@ struct UserSelection {
             default: return AppState::MAIN_MENU;
         }
     }
+    void clear() {
+        occasion.clear();
+        containerType.clear();
+        containerSize.clear();
+        isCustomMode = false;
+        
+        source = EntrySource::NONE;
+        presetName.clear();
+        presetImagePath.clear();
+        flowers.clear();
+        
+        selectedFlowers.clear();
+        totalAmount = 0;
+    }
 };
 
 struct BudgetRange {
