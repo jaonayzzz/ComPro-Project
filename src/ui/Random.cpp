@@ -51,6 +51,7 @@ vector<Flower> findBestBouquet(const vector<Flower>& pool, const Container& sele
     srand(static_cast<unsigned>(time(0)));
     int flowerBudget = budget - selectedContainer.basePrice;
     
+    
     // กรองดอกไม้ที่งบพอซื้อได้
     vector<Flower> affordablePool;
     for(const auto& f : pool) {
@@ -63,7 +64,7 @@ vector<Flower> findBestBouquet(const vector<Flower>& pool, const Container& sele
     sort(affordablePool.begin(), affordablePool.end(), [](const Flower& a, const Flower& b) {
         return a.price < b.price;
     });
-
+    int acceptableChange = affordablePool[0].price;
     vector<Flower> bestBouquet;
     int minChange = flowerBudget;
 
@@ -104,7 +105,7 @@ vector<Flower> findBestBouquet(const vector<Flower>& pool, const Container& sele
                 minChange = change;
                 bestBouquet = currentTry;
             }
-            if (minChange == 0) break;
+            if (minChange == acceptableChange) break;
         }
     }
     return bestBouquet;
@@ -112,27 +113,6 @@ vector<Flower> findBestBouquet(const vector<Flower>& pool, const Container& sele
 
 
 // แสดงผล
-void runBouquetLogic(const UserSelection& userSel, int budget) {
-    vector<Flower> pool = buildPool(userSel.occasion);
-    Container selectedContainer = selectContainer(userSel);
-    vector<Flower> bestBouquet = findBestBouquet(pool, selectedContainer, budget, userSel.isCustomMode);
-
-if (bestBouquet.empty()) {
-    cout << "ไม่พบชุดดอกไม้ที่เหมาะสมกับงบประมาณ" << endl;
-} else {
-    int totalFlowerPrice = 0;
-    for (const auto& f : bestBouquet) {
-        cout << "- " << f.name /*<< " (" << f.price << " THB)"*/ << endl;
-        totalFlowerPrice += f.price;
-    }
-    //cout << "Flowers Price : " << totalFlowerPrice << " THB" << endl;
-    //cout << "Container     : " << selectedContainer.basePrice << " THB" << endl;
-    //cout << "GRAND TOTAL   : " << totalFlowerPrice + selectedContainer.basePrice << " THB" << endl;
-    //cout << "CHANGE        : " << budget - (totalFlowerPrice + selectedContainer.basePrice) << " THB" << endl;
-    cout << "TOTAL FLOWERS : " << bestBouquet.size() << " pieces" << endl;
-    }
-}
-
 void Random_Pages(sf::RenderWindow& window, AppState& currentState, UserSelection& userSelection){
     static vector<Flower> bestBouquet;
     static Container selectedContainer;
