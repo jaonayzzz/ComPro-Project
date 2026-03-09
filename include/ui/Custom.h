@@ -18,13 +18,13 @@
 #include "render/FlowerRender.h"
 #include "SubCustom.h"
 
+static int currentPage = 0; 
 void ShowBackWarningPopup(bool& showBackWarning, std::vector<Flower>& selectedFlowers, AppState& state);
 void ShowContainerFullPopup(bool& show, int& currentPage, Container& selectedCont, std::vector<Container>& containerList, UserSelection& selection);
 inline void SendYourFeelings();
 inline void OrderSummary();
 
 inline void Custom_Pages(std::vector<Flower>& flowerList,std::vector<Flower>& selectedFlowers,AppState& state,UserSelection& selection){
-    static int currentPage = 0; 
     static float notificationTimer = 0.0f; // 0 คือไม่แสดง, > 0 คือกำลังแสดง
     float displayDuration = 2.0f;          // ให้แสดงค้างไว้ 2 วินาที
     static bool showWarning = false; // สำหรับเปิด/ปิด Modal เตือน
