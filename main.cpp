@@ -96,6 +96,7 @@ int main()
         userSelection = UserSelection();
         selectedFlowers.clear();
         Cardsdata.Clear();
+        currentPage = 0;
         drawMainMenu(window, currentState, userSelection);
         break;
 
