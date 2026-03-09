@@ -37,122 +37,124 @@ void renderBouquet(sf::RenderWindow& window, const UserSelection& selection, con
             if (selection.containerSize == "S") {
                 // ใช้พิกัดบวกเพิ่มจากจุดศูนย์กลางภาชนะ (Offset)
                 positions = { 
-                    canvasCenter + sf::Vector2f(0, -270),   // ดอกกลาง (ขยับขึ้นไปสูงขึ้น)
-                    canvasCenter + sf::Vector2f(-65, -240), // ดอกซ้าย
-                    canvasCenter + sf::Vector2f(65, -240),  // ดอกขวา
+                    canvasCenter + sf::Vector2f(-65, -240),  // ดอกซ้าย
+                    canvasCenter + sf::Vector2f(65, -240),   // ดอกขวา
+                    canvasCenter + sf::Vector2f(0, -270)     // ดอกกลาง
                 };
             }
             if (selection.containerSize == "M") {
                 // ใช้พิกัดบวกเพิ่มจากจุดศูนย์กลางภาชนะ (Offset)
                 positions = { 
-                    canvasCenter + sf::Vector2f(0, -270),   // ดอกกลาง (ขยับขึ้นไปสูงขึ้น)
-                    canvasCenter + sf::Vector2f(-65, -240), // ดอกซ้าย
-                    canvasCenter + sf::Vector2f(65, -240),  // ดอกขวา
-                    canvasCenter + sf::Vector2f(-30, -170), // ดอกเสริมซ้าย
-                    canvasCenter + sf::Vector2f(30, -170)   // ดอกเสริมขวา
+                    canvasCenter + sf::Vector2f(-30, -170),  // ดอกเสริมซ้าย
+                    canvasCenter + sf::Vector2f(30, -170),   // ดอกเสริมขวา
+                    canvasCenter + sf::Vector2f(-65, -240),  // ดอกซ้าย
+                    canvasCenter + sf::Vector2f(65, -240),   // ดอกขวา
+                    canvasCenter + sf::Vector2f(0, -270)     // ดอกกลาง (บนสุด)
                 };
             }
             if (selection.containerSize == "L") {
                 // ใช้พิกัดบวกเพิ่มจากจุดศูนย์กลางภาชนะ (Offset)
                 positions = { 
-                    canvasCenter + sf::Vector2f(0, -270),   // ดอกกลาง (ขยับขึ้นไปสูงขึ้น)
-                    canvasCenter + sf::Vector2f(-65, -240), // ดอกซ้าย
-                    canvasCenter + sf::Vector2f(65, -240),  // ดอกขวา
+
+                    canvasCenter + sf::Vector2f(-30, -170),  // ดอกเสริมซ้าย
+                    canvasCenter + sf::Vector2f(30, -170),   // ดอกเสริมขวา
                     canvasCenter + sf::Vector2f(-105, -200), // ดอกซ้ายล่าง
                     canvasCenter + sf::Vector2f(105, -200),  // ดอกขวาล่าง
-                    canvasCenter + sf::Vector2f(-30, -170), // ดอกเสริมซ้าย
-                    canvasCenter + sf::Vector2f(30, -170)   // ดอกเสริมขวา
+                    canvasCenter + sf::Vector2f(-65, -240),  // ดอกซ้าย
+                    canvasCenter + sf::Vector2f(65, -240),   // ดอกขวา
+                    canvasCenter + sf::Vector2f(0, -270)     // ดอกกลาง (บนสุด)
                 };
             }
         }
         if (selection.containerType == "Bouquet") {
             if (selection.containerSize == "S") {
                 positions = { 
-                    canvasCenter + sf::Vector2f(-10, -280),   // ดอกกลาง (ขยับขึ้นไปสูงขึ้น)
-                    canvasCenter + sf::Vector2f(-75, -250), // ดอกซ้าย
-                    canvasCenter + sf::Vector2f(55, -250),  // ดอกขวา
-                    canvasCenter + sf::Vector2f(-40, -180), // ดอกเสริมซ้าย
-                    canvasCenter + sf::Vector2f(20, -180) 
+                    canvasCenter + sf::Vector2f(-40, -180),   // ดอกเสริมซ้าย
+                    canvasCenter + sf::Vector2f(20, -180),    // ดอกเสริมขวา
+                    canvasCenter + sf::Vector2f(-75, -250),   // ดอกซ้าย
+                    canvasCenter + sf::Vector2f(55, -250),    // ดอกขวา
+                    canvasCenter + sf::Vector2f(-10, -280)    // ดอกกลาง (บนสุด)
                 };
             }
             if (selection.containerSize == "M") {
                 positions = { 
-                    canvasCenter + sf::Vector2f(-5, -200),   // ดอกกลาง (ขยับขึ้นไปสูงขึ้น)
-                    canvasCenter + sf::Vector2f(-85, -165), // ดอกซ้าย
-                    canvasCenter + sf::Vector2f(75, -165),  // ดอกขวา
-                    canvasCenter + sf::Vector2f(-125, -110), // ดอกซ้ายล่าง
-                    canvasCenter + sf::Vector2f(115, -110),  // ดอกขวาล่าง
-                    canvasCenter + sf::Vector2f(-5,-135), //ดอกกลางกลาง
-                    canvasCenter + sf::Vector2f(-85, -95),// ดอกล่างซ้าย
-                    canvasCenter + sf::Vector2f(75, -95), //ดอกล่างขวา
-                    canvasCenter + sf::Vector2f(-40, -70), // ดอกเสริมซ้าย
-                    canvasCenter + sf::Vector2f(30, -70), // ดอกเสริมขวา
+                    canvasCenter + sf::Vector2f(-40, -70),    // ดอกเสริมซ้าย
+                    canvasCenter + sf::Vector2f(30, -70),     // ดอกเสริมขวา
+                    canvasCenter + sf::Vector2f(-85, -95),    // ดอกล่างซ้าย
+                    canvasCenter + sf::Vector2f(75, -95),     // ดอกล่างขวา
+                    canvasCenter + sf::Vector2f(-125, -110),  // ดอกซ้ายล่าง
+                    canvasCenter + sf::Vector2f(115, -110),   // ดอกขวาล่าง
+                    canvasCenter + sf::Vector2f(-5, -135),    // ดอกกลางกลาง
+                    canvasCenter + sf::Vector2f(-85, -165),   // ดอกซ้าย
+                    canvasCenter + sf::Vector2f(75, -165),    // ดอกขวา
+                    canvasCenter + sf::Vector2f(-5, -200)     // ดอกกลาง (บนสุด)
                     
                 };
             }
             if (selection.containerSize == "L") {
                 positions = { 
-                    canvasCenter + sf::Vector2f(-5, -240),   // ดอกกลาง (ขยับขึ้นไปสูงขึ้น)
-                    canvasCenter + sf::Vector2f(-85, -205), // ดอกซ้าย
-                    canvasCenter + sf::Vector2f(75, -205),  // ดอกขวา
-                    canvasCenter + sf::Vector2f(-125, -150), // ดอกซ้ายล่าง
-                    canvasCenter + sf::Vector2f(115, -150),  // ดอกขวาล่าง
-                    canvasCenter + sf::Vector2f(-5,-170), //ดอกกลางกลาง
-                    canvasCenter + sf::Vector2f(-85, -135),// ดอกล่างซ้าย
-                    canvasCenter + sf::Vector2f(75, -135), //ดอกล่างขวา
-                    canvasCenter + sf::Vector2f(-40, -110), // ดอกเสริมซ้าย
-                    canvasCenter + sf::Vector2f(30, -110), // ดอกเสริมขวา
-                    canvasCenter + sf::Vector2f(-140, -120), //ดอกซ้ายสุด
-                    canvasCenter + sf::Vector2f(130, -120),//ดอกขวาสุด
-                    canvasCenter + sf::Vector2f(-80, -90),//ดอกกรองล่างซ้าย
-                    canvasCenter + sf::Vector2f(70, -90),//ดอกรองล้่างขวา
-                    canvasCenter + sf::Vector2f(-5, -60)//ดอกล่างสุด
+
+                    canvasCenter + sf::Vector2f(-5, -60),      // ดอกล่างสุด
+                    canvasCenter + sf::Vector2f(-80, -90),     // ดอกรองล่างซ้าย
+                    canvasCenter + sf::Vector2f(70, -90),      // ดอกรองล่างขวา
+                    canvasCenter + sf::Vector2f(-40, -110),    // ดอกเสริมซ้าย
+                    canvasCenter + sf::Vector2f(30, -110),     // ดอกเสริมขวา
+                    canvasCenter + sf::Vector2f(-140, -120),   // ดอกซ้ายสุด
+                    canvasCenter + sf::Vector2f(130, -120),    // ดอกขวาสุด
+                    canvasCenter + sf::Vector2f(-85, -135),    // ดอกล่างซ้าย
+                    canvasCenter + sf::Vector2f(75, -135),     // ดอกล่างขวา
+                    canvasCenter + sf::Vector2f(-125, -150),   // ดอกซ้ายล่าง
+                    canvasCenter + sf::Vector2f(115, -150),    // ดอกขวาล่าง
+                    canvasCenter + sf::Vector2f(-5, -170),     // ดอกกลางกลาง
+                    canvasCenter + sf::Vector2f(-85, -205),    // ดอกซ้าย
+                    canvasCenter + sf::Vector2f(75, -205),     // ดอกขวา
+                    canvasCenter + sf::Vector2f(-5, -240)      // ดอกกลาง (บนสุด)
                 };
             }
         }
         if (selection.containerType == "Basket") {
             if (selection.containerSize == "M") {
                 positions = { 
-                    canvasCenter + sf::Vector2f(110-7, -90), 
-                    canvasCenter + sf::Vector2f(45-7, -90),
-                    canvasCenter + sf::Vector2f(-20-7, -90),
-                    canvasCenter + sf::Vector2f(-85-7, -90),
-                    canvasCenter + sf::Vector2f(142.5-7, -40),
-                    canvasCenter + sf::Vector2f(77.5-7, -40),
-                    canvasCenter + sf::Vector2f(12.5-7, -40),
-                    canvasCenter + sf::Vector2f(-52.5-7, -40),
-                    canvasCenter + sf::Vector2f(-117.5-7, -40),
-                    canvasCenter + sf::Vector2f(170-7, 10),
-                    canvasCenter + sf::Vector2f(110-7, 10),
-                    canvasCenter + sf::Vector2f(45-7, 10),
-                    canvasCenter + sf::Vector2f(-20-7, 10),
-                    canvasCenter + sf::Vector2f(-85-7, 10),
                     canvasCenter + sf::Vector2f(-150-7, 10),
+                    canvasCenter + sf::Vector2f(-85-7, 10),
+                    canvasCenter + sf::Vector2f(-20-7, 10),
+                    canvasCenter + sf::Vector2f(45-7, 10),
+                    canvasCenter + sf::Vector2f(110-7, 10),
+                    canvasCenter + sf::Vector2f(170-7, 10),
+                    canvasCenter + sf::Vector2f(-117.5-7, -40),
+                    canvasCenter + sf::Vector2f(-52.5-7, -40),
+                    canvasCenter + sf::Vector2f(12.5-7, -40),
+                    canvasCenter + sf::Vector2f(77.5-7, -40),
+                    canvasCenter + sf::Vector2f(142.5-7, -40),
+                    canvasCenter + sf::Vector2f(-85-7, -90),
+                    canvasCenter + sf::Vector2f(-20-7, -90),
+                    canvasCenter + sf::Vector2f(45-7, -90),
+                    canvasCenter + sf::Vector2f(110-7, -90),
                 };
             }
             if (selection.containerSize == "L") {
                 positions = { 
-                    canvasCenter + sf::Vector2f(77.5-7, -140),
-                    canvasCenter + sf::Vector2f(12.5-7, -140),
-                    canvasCenter + sf::Vector2f(-52.5-7, -140),
-                    canvasCenter + sf::Vector2f(110-7, -90),
-                    canvasCenter + sf::Vector2f(45-7, -90),
-                    canvasCenter + sf::Vector2f(-20-7, -90),
-                    canvasCenter + sf::Vector2f(-85-7, -90),
-                    canvasCenter + sf::Vector2f(142.5-7, -40),
-                    canvasCenter + sf::Vector2f(77.5-7, -40),
-                    canvasCenter + sf::Vector2f(12.5-7, -40),
-                    canvasCenter + sf::Vector2f(-52.5-7, -40),
-                    canvasCenter + sf::Vector2f(-117.5-7, -40),
-                    canvasCenter + sf::Vector2f(170-7, 10),
-                    canvasCenter + sf::Vector2f(110-7, 10),
-                    canvasCenter + sf::Vector2f(45-7, 10),
-                    canvasCenter + sf::Vector2f(-20-7, 10),
-                    canvasCenter + sf::Vector2f(-85-7, 10),
-                    canvasCenter + sf::Vector2f(-150-7, 10),
-                    canvasCenter + sf::Vector2f(77.5-7, 60),
+                    canvasCenter + sf::Vector2f(-52.5-7, 60),
                     canvasCenter + sf::Vector2f(12.5-7, 60),
-                    canvasCenter + sf::Vector2f(-52.5-7, 60) 
+                    canvasCenter + sf::Vector2f(77.5-7, 60),
+                    canvasCenter + sf::Vector2f(-150-7, 10),
+                    canvasCenter + sf::Vector2f(-85-7, 10),
+                    canvasCenter + sf::Vector2f(-20-7, 10),
+                    canvasCenter + sf::Vector2f(45-7, 10),
+                    canvasCenter + sf::Vector2f(110-7, 10),
+                    canvasCenter + sf::Vector2f(170-7, 10),
+                    canvasCenter + sf::Vector2f(-117.5-7, -40),
+                    canvasCenter + sf::Vector2f(-52.5-7, -40),
+                    canvasCenter + sf::Vector2f(12.5-7, -40),
+                    canvasCenter + sf::Vector2f(77.5-7, -40),
+                    canvasCenter + sf::Vector2f(142.5-7, -40),
+                    canvasCenter + sf::Vector2f(-85-7, -90),
+                    canvasCenter + sf::Vector2f(-20-7, -90),
+                    canvasCenter + sf::Vector2f(45-7, -90),
+                    canvasCenter + sf::Vector2f(110-7, -90),
+                    canvasCenter + sf::Vector2f(-52.5-7, -140),
+                    canvasCenter + sf::Vector2f(12.5-7, -140),
+                    canvasCenter + sf::Vector2f(77.5-7, -140)
                 };
             }
         }
