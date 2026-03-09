@@ -236,7 +236,8 @@ if (hasResult && !bestBouquet.empty()) {
     if (ImGui::Button("Confirm Order")) {
         // บันทึกดอกไม้ลงใน UserSelection ก่อนย้ายหน้า
         userSelection.selectedFlowers = bestBouquet;
-        userSelection.source = EntrySource::RANDOM; 
+        bestBouquet.clear();
+        budget = 0;
         currentState = AppState::SUMMARY;
     }
 }
