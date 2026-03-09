@@ -22,9 +22,6 @@ void drawMainMenu(
 
     time += 0.01f;
     anim = std::min(anim + 0.03f, 1.f);
-    // ======================================================
-    // Background Gradient
-    // ======================================================
     static sf::Texture menuBgTexture;
     static sf::Sprite* menuBgSprite = nullptr;
     static bool bgLoaded = false;
@@ -43,9 +40,6 @@ void drawMainMenu(
     menuBgSprite->setColor(sf::Color(255,255,255,180));
     window.draw(*menuBgSprite);
 
-    // ======================================================
-    // ImGui Theme
-    // ======================================================
     ImGuiStyle& style = ImGui::GetStyle();
     style.Colors[ImGuiCol_Text] = COLOR_TEXT;
     style.Colors[ImGuiCol_WindowBg] = COLOR_WINDOW_BG;
@@ -63,9 +57,6 @@ void drawMainMenu(
     style.FrameRounding = ROUND_FRAME;
     style.PopupRounding = ROUND_POPUP;
 
-    // ======================================================
-    // Center Window
-    // ======================================================
     // คำนวณจุดกึ่งกลางจากค่า WINDOW_WIDTH และ WINDOW_HEIGHT
     ImGui::SetNextWindowPos(
         ImVec2((float)WINDOW_WIDTH / 2.f, (float)WINDOW_HEIGHT / 2.f), 
@@ -81,9 +72,6 @@ void drawMainMenu(
         ImGuiWindowFlags_NoMove
     );
 
-    // ======================================================
-    // Title
-    // ======================================================
     ImGui::PushFont(FONT_TITLE);
     ImGui::PushStyleVar(ImGuiStyleVar_Alpha, anim);
     
@@ -120,9 +108,7 @@ void drawMainMenu(
 
     ImGui::Combo("##Container", &containerIndex, items.data(), (int)items.size());
 
-    // ======================================================
-    // คำนวณราคาตรงนี้
-    // ======================================================
+    // คำนวณราคา
     const Container& selected = containerList[containerIndex];
     const char* selectedOccasion = occasionItems[occasionIndex];
     BudgetRange actualPrice = calculateActualBudget(selectedOccasion, selected);
@@ -145,14 +131,14 @@ void drawMainMenu(
 
     ImGui::SetCursorPosX(35); 
     if (ImGui::Button("Custom Mode", {200,45})) {
-        updateSelection(); // <- เรียกฟังก์ชันเก็บค่า
+        updateSelection();
         state = AppState::CUSTOM_MODE;
     }
 
     ImGui::SameLine();
 
     if (ImGui::Button("Random Mode", {200,45})) {
-        updateSelection(); // <- เรียกฟังก์ชันเก็บค่า
+        updateSelection();
         state = AppState::RANDOM_MODE;
     }
     

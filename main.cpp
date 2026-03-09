@@ -31,8 +31,6 @@ int main()
         return -1;
     }
 
-   
-    // ⭐ โหลดฟอนต์ (ครั้งเดียว)
     LoadFonts();
     std::vector<sf::Texture> flowerTextures;
     static std::vector<std::string> fileNames = {
@@ -52,26 +50,21 @@ int main()
     std::vector<Flower> selectedFlowers;
     initStartScreen();
 
-    //โหลดรูปภาพ
     for (auto& flower : flowerList) {
-    // โหลดรูปโดยใช้ path ที่ระบุไว้ใน flower.imagePath
     if (!flower.texture.loadFromFile(flower.imagePath)) {
-        // ถ้าโหลดไม่ได้ (เช่น พิมพ์ path ผิด หรือหาไฟล์ไม่เจอ)
         std::cerr << "Could not load image: " << flower.imagePath << std::endl;
     }else {
-            // สำคัญ: เซ็ตให้ Texture ทำงานราบรื่น (Smooth)
             flower.texture.setSmooth(true);
         }
-}
+    }
         
     for (const auto& path : fileNames) {
         sf::Texture tex;
         if (tex.loadFromFile(path)) {
             tex.setSmooth(true);
-            flowerTextures.push_back(tex); // ดันรูปเก็บเข้าตะกร้า
+            flowerTextures.push_back(tex);
         } else {
             std::cerr << "Could not load image: " << path << std::endl;
-            // ใส่ Texture เปล่าๆ เข้าไปกันพัง เผื่อไฟล์ภาพหาย
             flowerTextures.push_back(sf::Texture()); 
         }
     }
@@ -109,18 +102,13 @@ int main()
 
     case AppState::RANDOM_MODE:
         Random_Pages(window, currentState, userSelection);
-        /*ImGui::Begin("Random Mode");
-        ImGui::Text("Random Mode is not implemented yet.");
-        if (ImGui::Button("Back"))
-            currentState = AppState::MAIN_MENU;
-        ImGui::End();*/
         break;
 
     case AppState::PRESET_PAGE:
         drawPresetPage(window, currentState, userSelection);
         break;
 
-    case AppState::SUMMARY: // เพิ่ม case นี้
+    case AppState::SUMMARY:
         drawSummaryPage(window,currentState, userSelection,flowerTextures);
         break;
     case AppState::CARD:

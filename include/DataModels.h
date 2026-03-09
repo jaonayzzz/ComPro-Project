@@ -128,7 +128,6 @@ struct OrderCardData {
     char recipient[64] = "";
     char sender[64] = "";
     char message[100] = "";
-    //sf::Texture coverImage;
     void Clear() {
         message[0] = '\0';    // เคลียร์ข้อความให้กลายเป็น String ว่าง
         recipient[0] = '\0'; // เคลียร์ชื่อคนส่ง

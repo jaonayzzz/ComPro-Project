@@ -9,7 +9,6 @@
 #include <map>
 #include <string>
 
-// Texture Cache สำหรับการโหลดรูปอัตโนมัติ
 static std::map<std::string, sf::Texture> pageCache;
 
 static sf::Texture& getCachedTexture(const std::string& path) {
@@ -92,7 +91,6 @@ void drawPresetPage(
             if (ImGui::BeginChild("CardFrame", ImVec2(cardWidth, cardHeight), true, 
                 ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse)) 
             {
-                // --- รูปภาพ (Aspect Ratio คงที่) ---
                 sf::Texture& flowerTex = getCachedTexture(preset.imagePath);
                 if (flowerTex.getNativeHandle() != 0) {
                     float texW = (float)flowerTex.getSize().x;

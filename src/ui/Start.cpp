@@ -8,9 +8,6 @@
 #include <cmath>
 #include <iostream>
 
-// =====================================================
-// Resources
-// =====================================================
 static sf::Texture bgTexture;
 static sf::Texture logoTexture;
 static sf::Texture startBtnTexture;
@@ -19,22 +16,16 @@ static std::optional<sf::Sprite> bgSprite;
 static std::optional<sf::Sprite> logoSprite;
 static std::optional<sf::Sprite> startBtnSprite;
 
-// =====================================================
-// State
-// =====================================================
 static float swingTime = 0.f;
-static float logoY     = -20.f;   // ปรับระดับโลโก้
+static float logoY     = -20.f;
 static bool  pullingUp = false;
 static bool  initialized = false;
 
-// =====================================================
-// Init
-// =====================================================
 void initStartScreen()
 {
     if (initialized) return;
 
-    // ---------- Background ----------
+    // Background
     if (!bgTexture.loadFromFile("../assets/picture/Background.png"))
         std::cerr << "Failed to load Background.png\n";
 
@@ -44,7 +35,7 @@ void initStartScreen()
         (float)WINDOW_HEIGHT / bgTexture.getSize().y
     ));
 
-    // ---------- Logo ----------
+    // Logo
     if (!logoTexture.loadFromFile("../assets/picture/Logo.png"))
         std::cerr << "Failed to load Logo.png\n";
 
@@ -61,7 +52,7 @@ void initStartScreen()
         logoY
     ));
 
-    // ---------- Start Button (Image) ----------
+    // Start Button
     if (!startBtnTexture.loadFromFile("../assets/picture/Start-Button.png"))
         std::cerr << "Failed to load Start-Button.png\n";
 
@@ -73,7 +64,7 @@ void initStartScreen()
         startBtnTexture.getSize().y / 2.f
     ));
 
-    // วางตำแหน่งให้ต่ำลง (ปรับได้)
+    // วางตำแหน่งให้ต่ำลง
     startBtnSprite->setPosition(sf::Vector2f(
         WINDOW_WIDTH / 2.f,
         WINDOW_HEIGHT - 100.f
@@ -82,20 +73,18 @@ void initStartScreen()
     initialized = true;
 }
 
-// =====================================================
 // Draw
-// =====================================================
 void drawStartScreen(sf::RenderWindow& window, AppState& state)
 {
     if (!initialized) return;
 
     swingTime += 0.03f;
 
-    // ---------- Background ----------
+    // Background
     if (bgSprite)
         window.draw(*bgSprite);
 
-    // ---------- Logo Animation ----------
+    // Logo Animation
     if (logoSprite)
     {
         if (!pullingUp)
@@ -118,7 +107,7 @@ void drawStartScreen(sf::RenderWindow& window, AppState& state)
         window.draw(*logoSprite);
     }
 
-    // ---------- Start Button ----------
+    // Start Button
     if (startBtnSprite)
     {
         sf::Vector2i mouse = sf::Mouse::getPosition(window);
@@ -126,7 +115,7 @@ void drawStartScreen(sf::RenderWindow& window, AppState& state)
 
         bool hovered = startBtnSprite->getGlobalBounds().contains(mouseF);
 
-        // Hover effect เบา ๆ
+        // Hover effect
         if (hovered)
             startBtnSprite->setScale(sf::Vector2f(1.05f, 1.05f));
         else
