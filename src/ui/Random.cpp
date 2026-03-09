@@ -74,20 +74,27 @@ vector<Flower> findBestBouquet(const vector<Flower>& pool, const Container& sele
 
         // พยายามเติมให้ถึงจำนวนขั้นต่ำ (minF)
         while ((int)currentTry.size() < selectedContainer.minF) {
-            int randomIndex = rand() % affordablePool.size();
-            const Flower& picked = affordablePool[randomIndex];
-            
-            if (currentTotal + picked.price <= flowerBudget) {
-                currentTry.push_back(picked);
-                currentTotal += picked.price;
+
+            int remainingFlowers = selectedContainer.minF - currentTry.size();
+            int remainingBudget = flowerBudget - currentTotal;
+
+            const Flower* picked = nullptr;
+
+            if (remainingBudget / affordablePool[0].price == remainingFlowers) {
+             picked = &affordablePool[0];
             } else {
-                // ถ้างบไม่พอสำหรับตัวที่สุ่มได้ ให้ลองตัวที่ถูกที่สุดในลิสต์
-                if (currentTotal + affordablePool[0].price <= flowerBudget) {
-                    currentTry.push_back(affordablePool[0]);
-                    currentTotal += affordablePool[0].price;
-                } else break;
+                int randomIndex = rand() % affordablePool.size();
+                picked = &affordablePool[randomIndex];
+            }
+
+            if (currentTotal + picked->price <= flowerBudget) {
+                currentTry.push_back(*picked);
+                currentTotal += picked->price;
+            } else { break;
             }
         }
+
+
 
         // ตรวจสอบว่าผ่านเงื่อนไขขั้นต่ำไหม
         if ((int)currentTry.size() >= selectedContainer.minF) {
@@ -105,7 +112,7 @@ vector<Flower> findBestBouquet(const vector<Flower>& pool, const Container& sele
                 minChange = change;
                 bestBouquet = currentTry;
             }
-            if (minChange == acceptableChange) break;
+            if (minChange <= acceptableChange) break;
         }
     }
     return bestBouquet;
