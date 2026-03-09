@@ -93,6 +93,9 @@ int main()
         break;
         
     case AppState::MAIN_MENU:
+        userSelection = UserSelection();
+        selectedFlowers.clear();
+        Cardsdata.Clear();
         drawMainMenu(window, currentState, userSelection);
         break;
 
