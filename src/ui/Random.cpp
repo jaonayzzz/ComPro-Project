@@ -33,13 +33,7 @@ Container selectContainer(const UserSelection& userSel){
             break;
         }
     }
-    if(foundContainer){
-        cout << "Selected : " << result.type << " Size " << result.size << endl;
-        cout << "Base Price : " << result.basePrice << " THB" << endl;
-        cout << "Flowers   : " << result.minF << " - " << result.maxF << " pieces" << endl;
-        cout << "Total Range: " << result.minTotal << " - " << result.maxTotal << " THB" << endl;
-    } else { cout << "Error: Container not found!" << endl;
-    }
+    
 
     return result;
 }//ฟังก์ชันนี้มีไว้หาพาชนะใส่ดอกม้าย
