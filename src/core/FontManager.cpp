@@ -50,7 +50,7 @@ void LoadFonts()
     }
     else
     {
-        std::cout << "Thai fonts loaded successfully ✅\n";
+        std::cout << "Thai fonts loaded successfully\n";
     }
 
     ImGui::SFML::UpdateFontTexture();

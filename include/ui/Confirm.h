@@ -452,7 +452,7 @@ void confirm(const vector<Flower>& items, const string& cardmessage,
         PushStyleColor(ImGuiCol_ButtonHovered, COLOR_BUTTON_HOVER);
         PushStyleColor(ImGuiCol_ButtonActive, COLOR_BUTTON_ACTIVE);   
         if (Button("Check out", ImVec2(buttonWidth, buttonHeight))) {
-            cout << "กำลังดำเนินการชำระเงิน...\n";
+            cout << "processing payment...\n";
             currentpages = 1;
         }
         PopStyleColor(3);
